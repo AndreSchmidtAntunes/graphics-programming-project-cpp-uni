@@ -7,6 +7,9 @@
 
 struct Matrix4x4 {
 public:
+
+	static const int DIMENTIONS = 4;
+
 	Matrix4x4(
 		double m1_1, double m1_2, double m1_3, double m1_4,
 		double m2_1, double m2_2, double m2_3, double m2_4,
@@ -15,7 +18,7 @@ public:
 	);
 
 	Matrix4x4();
-	Matrix4x4(double[4][4]);
+	Matrix4x4(double[DIMENTIONS][DIMENTIONS]);
 	Matrix4x4(Vector4 row_1, Vector4 row_2, Vector4 row_3, Vector4 row_4);
 
 	Matrix4x4(Matrix3x3 matrix);
@@ -27,11 +30,8 @@ public:
 	static Matrix4x4 ScaleMatrix(Vector3 scale);
 	static Matrix4x4 RotationMatrix(Vector3 axis, double radians);
 	static Matrix4x4 TranslationMatrix(Vector3 translation);
+
 	static Matrix4x4 CrossProductMatrix(Vector3 direction);
-
-	double Trace();
-
-	void Transpose();
 
 	// Setters
 
@@ -73,8 +73,8 @@ public:
 	static const Matrix4x4 identity;
 	static const Matrix4x4 zero;
 
-	const int DIMENTIONS = 4;
+
 
 protected:
-	double mElements[4][4];
+	double mElements[DIMENTIONS][DIMENTIONS];
 };

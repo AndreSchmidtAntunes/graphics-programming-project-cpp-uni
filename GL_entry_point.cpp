@@ -3,6 +3,7 @@
 // Placed here so that GLUTCallbacks.h doesn't include itself, or any not needed libraries.
 #include "common.h"
 #include "customGLExtras.h"
+
 #include "GLUTCallbacks.h"
 #include <Windows.h>
 
@@ -13,7 +14,11 @@ const char* vertexShaderSource = "#version 330 core\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "}\0";
 
+#define REFRESH_RATE 16
+
 GL_entry_point::GL_entry_point(int argc, char* argv[]) {
+
+	rot = 0.0f;
 
 	glutInitWindowSize(800, 800);
 
@@ -21,12 +26,16 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutCreateWindow("Graphics Programming App");
-	
+		
 	glutDisplayFunc(GLUTCallbacks::Display);
+
 	glutKeyboardFunc(GLUTCallbacks::Keyboard);
 	glutKeyboardUpFunc(GLUTCallbacks::KeyboardUp);
+
 	glutSpecialFunc(GLUTCallbacks::Special);
 	glutSpecialUpFunc(GLUTCallbacks::SpecialUp);
+
+	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 
 	glutMainLoop();
 }
@@ -44,18 +53,47 @@ void GL_entry_point::Display() {
 }
 
 void GL_entry_point::DrawPolygons() {
-	glBegin(GL_POLYGON);
-	{
-		Vector3 offset = Vector3();
+	glPushMatrix();
+		glRotatef(rot, 0.0f, 0.0f, -1.0f);
 
-		glColor4f(1, 0, 0, 1);
-		VertexWrapper::AddVertex((Vector3(0, 0.5, 0) + offset));
+		Vector3 points[3] = { 
+			Vector3(0, 0.5, 0), 
+			Vector3(0.5, -0.5, 0), 
+			Vector3(-0.5, -0.5, 0) 
+		};
+		Colour colours[3] = { 
+			Colour::RED, 
+			Colour::GREEN, 
+			Colour::BLUE 
+		};
 
-		glColor4f(0, 1, 0, 1);
-		VertexWrapper::AddVertex(Vector3(0.5, -0.5, 0) + offset);
+		Poly triangle = Poly(points, colours, 3);
 
-		glColor4f(0, 0, 1, 1);
-		VertexWrapper::AddVertex(Vector3(-0.5, -0.5, 0) + offset);
-	}	
-	glEnd();
+
+		//glBegin(GL_POLYGON);
+		//	glColor4f(1, 0, 0, 1);
+		//	GLExtras::AddVertex(Vector3(0, 0.5, 0));
+		//	glColor4f(0, 1, 0, 1);
+		//	GLExtras::AddVertex(Vector3(0.5, -0.5, 0));
+		//	glColor4f(0, 0, 1, 1);
+		//	GLExtras::AddVertex(Vector3(-0.5, -0.5, 0));
+		//glEnd();
+
+		GLExtras::AddPolygon(triangle);
+	glPopMatrix();
+
+}
+
+void GL_entry_point::Update() {
+
+	glutPostRedisplay();
+		
+	std::cout << "udt!" << std::endl;
+	rot += 0.5f;
+	if (rot >= 360.0f)
+		rot = 0.0f;
+
+	//rot = (rot + 0.5f) >= 360.0f ? 0.0f :  rot + 0.5f;
+	return;
+
 }

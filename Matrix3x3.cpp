@@ -14,7 +14,7 @@ Matrix3x3::Matrix3x3() {
 	self = identity;
 }
 
-Matrix3x3::Matrix3x3(double elements[3][3]) {
+Matrix3x3::Matrix3x3(double elements[DIMENTIONS][DIMENTIONS]) {
 	for (int row = 0; row < DIMENTIONS; row++)
 		for (int col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] = elements[row][col];
@@ -61,26 +61,6 @@ Matrix3x3 Matrix3x3::CrossProductMatrix(Vector3 direction) {
 		direction.z, 0, -direction.x,
 		-direction.y, direction.x, 0
 	);
-}
-
-void Matrix3x3::Transpose() {
-	double swap_1_2, swap_1_3, swap_2_3;
-
-	swap_1_2 = mElements[0][1];
-	swap_1_3 = mElements[0][2];
-	swap_2_3 = mElements[1][2];
-
-	mElements[0][1] = mElements[1][0];
-	mElements[0][2] = mElements[2][0];
-	mElements[1][2] = mElements[2][1];
-
-	mElements[1][0] = swap_1_2;
-	mElements[2][0] = swap_1_3;
-	mElements[2][1] = swap_2_3;
-}
-
-double Matrix3x3::Trace() {
-	return mElements[0][0] + mElements[1][1] + mElements[2][2];
 }
 
 // Setters

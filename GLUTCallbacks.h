@@ -14,4 +14,6 @@ namespace GLUTCallbacks {
 
 	void Special(int, int, int);
 	void SpecialUp(int, int, int);
+
+	void Timer(int refreshRate);
 }

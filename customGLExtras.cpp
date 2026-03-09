@@ -2,28 +2,63 @@
 
 #include "common.h"
 
-namespace VertexWrapper {
+namespace GLExtras {
 
 	void AddVertex(const Vector3& position) {
 		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
 	}
 
-	void AddVertecies(Vector3* points_array, int length) {
+	void AddVertices(Vector3* points_array, int length) {
 		for (int i = 0; i < length; i++) {
-			VertexWrapper::AddVertex((points_array[i]));
+			AddVertex((points_array[i]));
 		}
 	}
 
-	void AddVertecies(float* points, int length) {
-
-		if (length % 3 == 0) 
-		for (int i = 0; i < length; i += 3) {
-			glVertex3d((GLdouble)points[0], (GLdouble)points[i + 1], (GLdouble)points[i + 2]);
+	void AddVerticesWithColours(Vector3* vertices, Colour* colours, int length) {
+		for (int i = 0; i < length; i++) {
+			SetColour(colours[i]);
+			AddVertex(vertices[i]);
 		}
+	}
 
-		else {
-			throw std::range_error("The float array's length was not a multiple of 3. 3 floats are required per point (x, y and z positions).");
+	//static void AddVertices(float* points, int length) {
+
+	//	if (length % 3 == 0) 
+	//	for (int i = 0; i < length; i += 3) {
+	//		glVertex3d((GLdouble)points[0], (GLdouble)points[i + 1], (GLdouble)points[i + 2]);
+	//	}
+
+	//	else {
+	//		throw std::range_error("The float array's length was not a multiple of 3. 3 floats are required per point (x, y and z positions).");
+	//	}
+	//}
+
+	void AddPolygon(const Poly& polygon) {
+		glBegin(GL_POLYGON);
+		{
+			AddVerticesWithColours(polygon.verts, polygon.colours, polygon.vert_count);
 		}
+		glEnd();
+	}
+
+	void AddPolygons(Poly* polygons, int length) {
+		for (int p = 0; p < length; p++)
+			AddPolygon(polygons[p]);
+	}
+
+	void SetColourHexRGBA(const uint32& Hex) {
+		SetColour(Colour::HexRGBAToColour(Hex));
+	}
+
+	void SetColourHexRGB(const uint32& Hex) {
+		SetColour(Colour::HexRGBToColour(Hex));
+	}
+
+	void SetColour(const short& r, const short& g, const short& b, const short& a) {
+		SetColour(Colour(r, g, b, a));
+	}
+
+	void SetColour(const Colour& colour) {
+		glColor4f(colour.r, colour.g, colour.b, colour.a);
 	}
 }
-

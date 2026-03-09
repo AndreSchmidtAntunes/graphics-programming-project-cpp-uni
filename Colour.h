@@ -15,6 +15,8 @@ struct Colour {
 
 	Colour() : r(0), g(0), b(0), a(0) {};
 
+	Colour(const Colour& colour) : r(colour.r), g(colour.g), b(colour.b), a(colour.a) {};
+
 	Colour operator * (const Colour &other) const;
 
 	Colour operator * (const short &value) const;
@@ -48,36 +50,41 @@ struct Colour {
 		return ostream;
 	}
 
-	static const Colour RED;
-	static const Colour GREEN;
-	static const Colour BLUE;
-
-	static const Colour BLACK;
-	static const Colour WHITE;
-	static const Colour EMPTY;
-	static const Colour NIL;
+	static const Colour 
+		RED, GREEN, BLUE, 
+		BLACK, WHITE,
+		EMPTY, NIL;
 
 	/// <summary>
 	/// Used to avoid Square rooting when possible.
 	/// </summary>
-	/// <returns>The magnitude(distance) of the given vector squared. <br/> <c>r^2 + g^2 + b^2</c></returns>
+	/// <returns>The magnitude(distance) of the given (r,g,b) vector squared. <br/> <c>r^2 + g^2 + b^2</c></returns>
 	double SquaredMagnitudeRGB();
 
 	/// <summary>
 	/// Uses the Quake fast inverse square root algorithm to normalise the vector.
 	/// </summary>
 	/// <returns>
-	/// A copy of the vector facing in the same direction, but where it's magnitude is equal to 1. <br/> 
+	/// A normalised copy of the current colour's red, green and blue components, keeping the same colour but maximising it's brightness. <br/> 
 	/// <c>[this] / sqrt(r^2 + g^2 + b^2)</c>
 	/// </returns>
 	Colour NormalisedRGB(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM);
 
 	/// <summary>
-	/// Normalises the current vector and assigns it to the current vector. <br/>
+	/// Normalises the current colour's red, green and blue components and assigns it to the current colour. <br/>
 	/// <c>[this] / sqrt(r^2 + g^2 + b^2)</c>
 	/// </summary>
+	/// 
+	/// <returns>
+	/// A referenced to the colour being normalised.
+	/// </returns>
 	Colour& NormaliseRGB(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM);
 
 	/// <returns>A copy of the vector where r, g, and b are absolute values.</returns>
 	Colour Abs();
+
+	#define uint32 uint_fast32_t
+
+	static Colour HexRGBAToColour(const uint32& hex);
+	static Colour HexRGBToColour(const uint32& hex);
 };

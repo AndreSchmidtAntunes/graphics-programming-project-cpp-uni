@@ -40,5 +40,7 @@ namespace GLUTCallbacks {
 
 	}
 
-	//private void move_camera()
+	void Timer(int refreshRate) {
+		entry_point->Update();
+	}
 }	

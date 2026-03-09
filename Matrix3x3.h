@@ -6,6 +6,9 @@
 
 struct Matrix3x3 {
 public:
+
+	static const int DIMENTIONS = 3;
+
 	Matrix3x3(
 		double m1_1, double m1_2, double m1_3,
 		double m2_1, double m2_2, double m2_3,
@@ -13,7 +16,7 @@ public:
 	);
 
 	Matrix3x3();
-	Matrix3x3(double[3][3]);
+	Matrix3x3(double[DIMENTIONS][DIMENTIONS]);
 	Matrix3x3(Vector3 row_1, Vector3 row_2, Vector3 row_3);
 
 	~Matrix3x3();
@@ -24,10 +27,6 @@ public:
 	static Matrix3x3 RotationMatrix(Vector3 axis, double radians);
 
 	static Matrix3x3 CrossProductMatrix(Vector3 direction);
-
-	double Trace();
-
-	void Transpose();
 
 	// Setters
 
@@ -68,10 +67,8 @@ public:
 	static const Matrix3x3 identity;
 	static const Matrix3x3 zero;
 
-	const int DIMENTIONS = 3;
-
 protected:
-	double mElements[3][3];
+	double mElements[DIMENTIONS][DIMENTIONS];
 
 };
 

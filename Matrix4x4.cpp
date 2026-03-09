@@ -16,7 +16,7 @@ Matrix4x4::Matrix4x4() {
 	self = identity;
 }
 
-Matrix4x4::Matrix4x4(double elements[4][4]) {
+Matrix4x4::Matrix4x4(double elements[DIMENTIONS][DIMENTIONS]) {
 	for (int row = 0; row < DIMENTIONS; row++)
 		for (int col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] = elements[row][col];
@@ -75,10 +75,6 @@ Matrix4x4 Matrix4x4::TranslationMatrix(Vector3 translation) {
 		0, 0, 1, translation.z,
 		0, 0, 0, 1
 	);
-}
-
-double Matrix4x4::Trace() {
-	return mElements[0][0] + mElements[1][1] + mElements[2][2] + mElements[3][3];
 }
 
 // Setters
