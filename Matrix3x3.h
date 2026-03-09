@@ -71,5 +71,3 @@ protected:
 	double mElements[DIMENTIONS][DIMENTIONS];
 
 };
-
-/// TODO: position matrix maker

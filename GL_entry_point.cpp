@@ -54,6 +54,7 @@ void GL_entry_point::Display() {
 
 void GL_entry_point::DrawPolygons() {
 	glPushMatrix();
+
 		glRotatef(rot, 0.0f, 0.0f, -1.0f);
 
 		Vector3 points[3] = { 
@@ -69,6 +70,7 @@ void GL_entry_point::DrawPolygons() {
 
 		Poly triangle = Poly(points, colours, 3);
 
+		GLExtras::AddPolygon(triangle);
 
 		//glBegin(GL_POLYGON);
 		//	glColor4f(1, 0, 0, 1);
@@ -79,7 +81,6 @@ void GL_entry_point::DrawPolygons() {
 		//	GLExtras::AddVertex(Vector3(-0.5, -0.5, 0));
 		//glEnd();
 
-		GLExtras::AddPolygon(triangle);
 	glPopMatrix();
 
 }
@@ -92,8 +93,4 @@ void GL_entry_point::Update() {
 	rot += 0.5f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
-
-	//rot = (rot + 0.5f) >= 360.0f ? 0.0f :  rot + 0.5f;
-	return;
-
 }

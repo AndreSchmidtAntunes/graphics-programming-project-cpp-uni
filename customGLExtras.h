@@ -23,14 +23,6 @@ namespace GLExtras {
 	/// <param name="length">The length of the array.</param>
 	void AddVertices(Vector3* points_array, int length);
 
-	/// <summary>
-	/// Add vertices to the scene. 3 vertices make a triangle.
-	/// </summary>
-	/// <param name="points">An array of floats representing {x, y, z, x, y, z, ...}. <br/>
-	/// This array's length must be a multiple of 3.</param>
-	/// <param name="length">The length of the array.</param>
-	//void AddVertices(float* points, int length);
-
 	void AddPolygon(const Poly& polygon);
 
 	void AddPolygons(Poly* polygons, int length);
