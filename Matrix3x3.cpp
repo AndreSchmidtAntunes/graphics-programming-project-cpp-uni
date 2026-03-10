@@ -93,8 +93,8 @@ Vector3 Matrix3x3::getColumn(int column_index) {
 	return Vector3(self[0][column_index], self[1][column_index], self[2][column_index]);
 }
 
-double* Matrix3x3::operator [] (int i) {
-	return mElements[i];
+double* Matrix3x3::operator [] (std::size_t idx) {
+	return mElements[idx];
 }
 
 Matrix3x3& Matrix3x3::operator = (Matrix3x3 other) {

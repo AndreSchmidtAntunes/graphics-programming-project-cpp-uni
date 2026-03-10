@@ -17,7 +17,7 @@ public:
 	~Mesh(void);
 
 	virtual void Draw();
-	static Mesh* GenerateTriangle();
+	//static Mesh* GenerateTriangle();
 
 protected:
 	void BufferData();

@@ -1,26 +1,35 @@
 #include "Colour.h"
 
-Colour Colour::operator * (const Colour &other) const {
+const Colour Colour::operator * (const Colour &other) const {
 	return Colour(r * other.r, g * other.g, b * other.b, a * other.a);
 }
 
-Colour Colour::operator * (const short &value) const {
+const Colour Colour::operator * (const short &value) const {
 	return Colour(r * value, g * value, b * value, a * value);
 }
 
-Colour Colour::operator / (const Colour &other) const {
+const Colour Colour::operator / (const Colour &other) const {
 	return Colour(r / other.r, g / other.g, b / other.b, a / other.a);
 }
 
-Colour Colour::operator / (const short &value) const {
+const Colour Colour::operator / (const short &value) const {
 	return Colour(r / value, g / value, b / value, a / value);
 }
-Colour Colour::operator + (const Colour &other) const {
+const Colour Colour::operator + (const Colour &other) const {
 	return Colour(r + other.r, g + other.g, b + other.b, a + other.a);
 }
 
-Colour Colour::operator - (const Colour &other) const {
+const Colour Colour::operator - (const Colour &other) const {
 	return Colour(r - other.r, g - other.g, b - other.b, a - other.a);
+}
+
+Colour& Colour::operator = (const Colour& other) {
+	r = other.r;
+	g = other.g;
+	b = other.b;
+	a = other.a;
+
+	return *this;
 }
 
 Colour& Colour::operator *= (const Colour& value) {
@@ -77,39 +86,19 @@ Colour& Colour::operator -= (const Colour& value) {
 	return *this;
 }
 
-Colour::operator bool() {
+Colour::operator bool() const {
 	return r || g || b || a;
 }
 
-short& Colour::operator [] (int i) {
-	try {
-		// Code that may throw an exception
-
-		switch (i) {
-		case 0:
-			return r;
-		case 1:
-			return g;
-		case 2:
-			return b;
-		case 3:
-			return a;
-		default:
-			throw 0;
-		}
-	}
-
-	catch (int) {
-		throw std::out_of_range("Index is out of range. Defaulted to 0");
-		return r;
-	}
+short& Colour::operator [] (std::size_t idx) {
+	return cElements[idx];
 }
 
-bool Colour::operator == (Colour other) {
+bool Colour::operator == (Colour other) const {
 	return (r == other.r) && (g == other.g) && (b == other.b) && (a == other.a);
 }
 
-bool Colour::operator != (Colour other) {
+bool Colour::operator != (Colour other) const {
 	return (r != other.r) || (g != other.g) || (b != other.b) || (a != other.a);
 }
 
@@ -123,11 +112,11 @@ const Colour Colour::WHITE = Colour(1, 1, 1, 1);
 const Colour Colour::EMPTY = Colour(0, 0, 0, 0); 
 const Colour Colour::NIL   = Colour(0, 0, 0, 0);
 
-double Colour::SquaredMagnitudeRGB() {
+double Colour::SquaredMagnitudeRGB() const {
 	return (r * r) + (g * g) + (b * b);
 }
 
-Colour Colour::NormalisedRGB(InvSqrtPrecision precision) {
+Colour Colour::NormalisedRGB(InvSqrtPrecision precision) const {
 	return Colour((*this)).NormaliseRGB(precision); /// Returns a copy of the current Colour multiplied by 1/sqrt(SquaredMagnitude())
 }
 

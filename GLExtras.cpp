@@ -1,6 +1,6 @@
-#include "customGLExtras.h"
+#include "GLExtras.h"
 
-#include "common.h"
+#include "Poly.h"
 
 namespace GLExtras {
 
@@ -8,13 +8,13 @@ namespace GLExtras {
 		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
 	}
 
-	void AddVertices(Vector3* points_array, int length) {
+	void AddVertices(const Vector3* points_array, int length) {
 		for (int i = 0; i < length; i++) {
 			AddVertex((points_array[i]));
 		}
 	}
 
-	void AddVerticesWithColours(Vector3* vertices, Colour* colours, int length) {
+	void AddVerticesWithColours(const Vector3* vertices, const Colour* colours, int length) {
 		for (int i = 0; i < length; i++) {
 			SetColour(colours[i]);
 			AddVertex(vertices[i]);
@@ -23,13 +23,11 @@ namespace GLExtras {
 
 	void AddPolygon(const Poly& polygon) {
 		glBegin(GL_POLYGON);
-		{
 			AddVerticesWithColours(polygon.verts, polygon.colours, polygon.vert_count);
-		}
 		glEnd();
 	}
 
-	void AddPolygons(Poly* polygons, int length) {
+	void AddPolygons(const Poly* polygons, int length) {
 		for (int p = 0; p < length; p++)
 			AddPolygon(polygons[p]);
 	}

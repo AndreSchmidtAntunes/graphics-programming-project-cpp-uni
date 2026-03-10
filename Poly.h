@@ -16,5 +16,5 @@ public:
 
 	~Poly();
 
-	inline Vector3& operator [] (int i);
+	Vector3& operator [] (std::size_t idx);
 };

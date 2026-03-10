@@ -66,7 +66,7 @@ public:
 	Matrix4x4 operator + (Matrix4x4 other);
 	Matrix4x4 operator - (Matrix4x4 other);
 
-	double* operator [] (int i);
+	double* operator [] (std::size_t idx);
 
 	// Constants
 

@@ -2,14 +2,13 @@
 
 class GL_entry_point {
 public:
+
 	float rot;
 
 	GL_entry_point(int argc, char* argv[]);
-
 	~GL_entry_point(void);
 
 	void Display();
-
 	void DrawPolygons();
 
 	void Update();

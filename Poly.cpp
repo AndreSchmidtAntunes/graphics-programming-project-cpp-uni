@@ -29,6 +29,6 @@ Poly::~Poly() {
 	delete[vert_count] colours;
 }
 
-Vector3& Poly::operator [] (int i) {
-	return verts[i];
+Vector3& Poly::operator[](std::size_t idx){
+	return this->verts[idx];
 }

@@ -2,8 +2,7 @@
 
 // Placed here so that GLUTCallbacks.h doesn't include itself, or any not needed libraries.
 #include "common.h"
-#include "customGLExtras.h"
-
+#include "GLExtras.h"
 #include "GLUTCallbacks.h"
 #include <Windows.h>
 
@@ -41,7 +40,7 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) {
 }
 
 GL_entry_point::~GL_entry_point(void) {
-
+	std::cout << "GL_END";
 }
 
 void GL_entry_point::Display() {
@@ -55,7 +54,7 @@ void GL_entry_point::Display() {
 void GL_entry_point::DrawPolygons() {
 	glPushMatrix();
 
-		glRotatef(rot, 0.0f, 0.0f, -1.0f);
+		//glRotatef(rot, 0.0f, 0.0f, -1.0f);
 
 		Vector3 points[3] = { 
 			Vector3(0, 0.5, 0), 
@@ -70,16 +69,16 @@ void GL_entry_point::DrawPolygons() {
 
 		Poly triangle = Poly(points, colours, 3);
 
-		GLExtras::AddPolygon(triangle);
+		//GLExtras::AddPolygon(triangle);
 
-		//glBegin(GL_POLYGON);
-		//	glColor4f(1, 0, 0, 1);
-		//	GLExtras::AddVertex(Vector3(0, 0.5, 0));
-		//	glColor4f(0, 1, 0, 1);
-		//	GLExtras::AddVertex(Vector3(0.5, -0.5, 0));
-		//	glColor4f(0, 0, 1, 1);
-		//	GLExtras::AddVertex(Vector3(-0.5, -0.5, 0));
-		//glEnd();
+		glBegin(GL_POLYGON);
+			glColor4f(1, 0, 0, 1);
+			GLExtras::AddVertex(Vector3(0, 0.5, 0));
+			glColor4f(0, 1, 0, 1);
+			GLExtras::AddVertex(Vector3(0.5, -0.5, 0));
+			glColor4f(0, 0, 1, 1);
+			GLExtras::AddVertex(Vector3(-0.5, -0.5, 0));
+		glEnd();
 
 	glPopMatrix();
 

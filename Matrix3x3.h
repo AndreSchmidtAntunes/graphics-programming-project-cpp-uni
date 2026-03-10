@@ -60,7 +60,7 @@ public:
 	Matrix3x3 operator + (Matrix3x3 other);
 	Matrix3x3 operator - (Matrix3x3 other);
 
-	double* operator [] (int i);
+	double* operator [] (std::size_t idx);
 
 	// Constants
 

@@ -107,8 +107,8 @@ Vector4 Matrix4x4::getColumn(int column_index) {
 	return Vector4(self[0][column_index], self[1][column_index], self[2][column_index], self[3][column_index]);
 }
 
-double* Matrix4x4::operator [] (int i) {
-	return mElements[i];
+double* Matrix4x4::operator [] (std::size_t idx) {
+	return mElements[idx];
 }
 
 Matrix4x4& Matrix4x4::operator = (Matrix4x4 other) {

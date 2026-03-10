@@ -24,15 +24,15 @@ Vector4 Vector4::operator - (const Vector4& other) const {
 	return Vector4(x - other.x, y - other.y, z - other.z, w - other.w);
 }
 
-Vector4::operator bool() {
+Vector4::operator bool() const {
 	return x || y || z || w;
 }
 
-bool Vector4::operator == (Vector4 other) {
+bool Vector4::operator == (Vector4 other) const {
 	return x == other.x && y == other.y && z == other.z && w == other.w;
 }
 
-bool Vector4::operator != (Vector4 other) {
+bool Vector4::operator != (Vector4 other) const {
 	return x != other.x || y != other.y || z != other.z || w != other.w;
 }
 
@@ -90,28 +90,8 @@ Vector4& Vector4::operator -= (const Vector4& value) {
 	return *this;
 }
 
-double& Vector4::operator [] (int i) {
-	try {
-		// Code that may throw an exception
-
-		switch (i) {
-		case 0:
-			return x;
-		case 1:
-			return y;
-		case 2:
-			return z;
-		case 3:
-			return w;
-		default:
-			throw 0;
-		}
-	}
-
-	catch (int) {
-		throw std::out_of_range("Index is out of range. Defaulted to 0");
-		return x;
-	}
+double& Vector4::operator [] (std::size_t idx) {
+	return vElements[idx];
 }
 
 const Vector4 Vector4::Up = Vector4(0, 1, 0, 0);
@@ -126,19 +106,19 @@ const Vector4 Vector4::Kata = Vector4(0, 0, 0, -1);
 const Vector4 Vector4::Zero = Vector4(0, 0, 0, 0);
 const Vector4 Vector4::One = Vector4(1, 1, 1, 1);
 
-double Vector4::SquaredMagnitude() {
+double Vector4::SquaredMagnitude() const {
 	return (x * x) + (y * y) + (z * z) + (w * w);
 }
 
-double Vector4::Magnitude() {
+double Vector4::Magnitude() const {
 	return sqrt(SquaredMagnitude());
 }
 
-float Vector4::MagnitudeF() {
+float Vector4::MagnitudeF() const {
 	return sqrtf((float)SquaredMagnitude());
 }
 
-Vector4 Vector4::Normalised(InvSqrtPrecision precision) {
+Vector4 Vector4::Normalised(InvSqrtPrecision precision) const {
 	return Vector4((*this)).Normalise(precision); /// Returns w copy of the current Vector4 multiplied by 1/sqrt(SquaredMagnitude())
 }
 
@@ -153,7 +133,7 @@ Vector4& Vector4::Normalise(InvSqrtPrecision precision) {
 	return *this;
 }
 
-Vector4 Vector4::Abs() {
+Vector4 Vector4::Abs() const {
 	return Vector4(fabs(x), fabs(y), fabs(z), fabs(w));
 }
 
