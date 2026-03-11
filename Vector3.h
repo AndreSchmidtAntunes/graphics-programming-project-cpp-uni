@@ -3,21 +3,61 @@
 #include "FastInvSqrt.h"
 #include <math.h>
 #include <ostream>
+#include <array>
+
+#include <iostream>
 
 struct Vector3 {
+protected:
 
-	double& x = vElements[0];
-	double& y = vElements[1];
-	double& z = vElements[2];
+	//std::array<double, 3> vElements = { };
 
-	Vector3() {};
+public:
 
-	Vector3(double x, double y, double z) : x(x), y(y), z(z) {};
+	//double& x(){ return vElements[0]; };
 
-	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z) {};
+	union {
+		struct { double x, y, z; };
+		std::array<double, 3> vElements = { };
+	};
 
-	Vector3(double value) : x(value), y(value), z(value) {};
+	//Vector3() : vElements(new double[3] {0,0,0}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};x
 
+	//Vector3(double x, double y, double z): vElements(new double[3] {x,y,z}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
+
+	//Vector3(const Vector3& other) : vElements(new double[3] {other.x, other.y, other.z}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
+
+	//Vector3(double value) : vElements(new double[3] {value, value, value}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
+
+	Vector3(double x, double y, double z) : x(x), y(y), z(z) {
+
+
+		//vElements[0] = x;
+		//vElements[1] = y;
+		//vElements[2] = z;
+
+	};
+
+	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z){
+
+		//vElements[0] = other.x;
+		//vElements[1] = other.y;
+		//vElements[2] = other.z;
+
+	};
+
+	Vector3(double value = 0) : x(value), y(value), z(value) {
+
+		//vElements[0] = value;
+		//vElements[1] = value;
+		//vElements[2] = value;
+
+	};
+
+	~Vector3() {
+		//delete[3] vElements;
+	};
+	
 	Vector3 operator * (const Vector3 &other) const;
 	Vector3 operator / (const Vector3 &other) const;
 	Vector3 operator + (const Vector3 &other) const;
@@ -38,7 +78,7 @@ struct Vector3 {
 	Vector3& operator *= (const double& value);
 	Vector3& operator /= (const double& value);
 
-	double& operator [] (std::size_t idx);
+	double& operator [] (const std::size_t idx);
 
 	operator bool() const;
 
@@ -94,9 +134,5 @@ struct Vector3 {
 	static double Dot(Vector3 lhs, Vector3 rhs);
 
 	static Vector3 Cross(Vector3 lhs, Vector3 rhs);
-
-protected:
-
-	double vElements[3] = { };
 
 };

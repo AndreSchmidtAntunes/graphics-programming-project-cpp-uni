@@ -3,19 +3,57 @@
 #include "FastInvSqrt.h"
 #include <math.h>
 #include <ostream>
+#include <array>
 
 struct Colour {
+protected:
 
-	short& r = cElements[0];
-	short& g = cElements[1];
-	short& b = cElements[2];
-	short& a = cElements[3];
+	//std::array<short, 4> cElements = { };
 
-	Colour() {};
+public:
 
-	Colour(short r, short g, short b, short a) : r(r), g(g), b(b), a(a) {};
+	union {
+		struct { short r, g, b, a; };
+		std::array<short, 4> cElements = { };
+	};
 
-	Colour(const Colour& colour) : r(colour.r), g(colour.g), b(colour.b), a(colour.a) {};
+	//short& r = cElements[0];
+	//short& g = cElements[1];
+	//short& b = cElements[2];
+	//short& a = cElements[3];
+
+	//Colour() : cElements(new short[4] {0, 0, 0, 0}), r(cElements[0]), g(cElements[1]), b(cElements[2]), a(cElements[3]) {};
+
+	Colour(short r, short g, short b, short a) : r(r), g(g), b(b), a(a) {
+		//cElements[0] = r;
+		//cElements[1] = g;
+		//cElements[2] = b;
+		//cElements[3] = a;
+	};
+
+	Colour(const Colour& other) : r(other.r), g(other.g), b(other.b), a(other.a) {
+		//cElements[0] = other.r;
+		//cElements[1] = other.g;
+		//cElements[2] = other.b;
+		//cElements[3] = other.a;
+	
+
+	
+	};
+
+	Colour(short value = 0) : r(value), g(value), b(value), a(value) {
+	
+		//cElements[0] = value;
+		//cElements[1] = value;
+		//cElements[2] = value;
+		//cElements[3] = value;
+
+	
+	};
+
+	~Colour() {
+		//delete[4] cElements;
+	}
 
 	const Colour operator * (const Colour &other) const;
 
@@ -24,7 +62,7 @@ struct Colour {
 	const Colour operator / (const Colour &other) const;
 
 	const Colour operator / (const short &value) const;
-
+	
 	const Colour operator + (const Colour &other) const;
 
 	const Colour operator - (const Colour &other) const;
@@ -63,7 +101,7 @@ struct Colour {
 	/// Used to avoid Square rooting when possible.
 	/// </summary>
 	/// <returns>The magnitude(distance) of the given (r,g,b) vector squared. <br/> <c>r^2 + g^2 + b^2</c></returns>
-	double SquaredMagnitudeRGB() const;
+	float SquaredMagnitudeRGB() const;
 
 	/// <summary>
 	/// Uses the Quake fast inverse square root algorithm to normalise the vector.
@@ -87,13 +125,9 @@ struct Colour {
 	/// <returns>A copy of the vector where r, g, and b are absolute values.</returns>
 	Colour Abs() const;
 
-	#define uint32 uint_fast32_t
+	#define uint unsigned int
 
-	static Colour HexRGBAToColour(const uint32& hex);
-	static Colour HexRGBToColour(const uint32& hex);
-
-protected:
-
-	short cElements[4] = { };
+	static Colour HexRGBAToColour(const uint& hex);
+	static Colour HexRGBToColour(const uint& hex);
 
 };

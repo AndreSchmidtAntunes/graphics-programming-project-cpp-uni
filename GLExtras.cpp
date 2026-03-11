@@ -2,13 +2,16 @@
 
 #include "Poly.h"
 
+#define DEFAULT_VERT_COLOUR Colour::RED
+
 namespace GLExtras {
 
 	void AddVertex(const Vector3& position) {
 		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
 	}
 
-	void AddVertices(const Vector3* points_array, int length) {
+	void AddVertices(Vector3* points_array, int length) {
+		SetColour(DEFAULT_VERT_COLOUR);
 		for (int i = 0; i < length; i++) {
 			AddVertex((points_array[i]));
 		}
@@ -16,14 +19,20 @@ namespace GLExtras {
 
 	void AddVerticesWithColours(const Vector3* vertices, const Colour* colours, int length) {
 		for (int i = 0; i < length; i++) {
-			SetColour(colours[i]);
+			SetColour(colours ? colours[i] : DEFAULT_VERT_COLOUR);			
 			AddVertex(vertices[i]);
+			std::cout << vertices[i];
 		}
 	}
 
 	void AddPolygon(const Poly& polygon) {
 		glBegin(GL_POLYGON);
+
+		if (polygon.colours)
 			AddVerticesWithColours(polygon.verts, polygon.colours, polygon.vert_count);
+		else
+			AddVertices(polygon.verts, polygon.vert_count);
+
 		glEnd();
 	}
 
@@ -32,11 +41,11 @@ namespace GLExtras {
 			AddPolygon(polygons[p]);
 	}
 
-	void SetColourHexRGBA(const uint32& Hex) {
+	void SetColourHexRGBA(const uint& Hex) {
 		SetColour(Colour::HexRGBAToColour(Hex));
 	}
 
-	void SetColourHexRGB(const uint32& Hex) {
+	void SetColourHexRGB(const uint& Hex) {
 		SetColour(Colour::HexRGBToColour(Hex));
 	}
 

@@ -25,21 +25,21 @@ namespace GLExtras {
 
 	void AddPolygon(const Poly& polygon);
 
-	void AddPolygons(Poly* polygons, int length);
+	void AddPolygons(const Poly* polygons, int length);
 
 	/// <summary>
 	/// Set The current vertex colour using a 8 digit hexadecimal code. <br/>
 	/// 2 digits for red, green, blue, and alpha.
 	/// </summary>
 	/// <param name="Hex">Example: <c>0xff0000ff</c> is the hex code for red.</param>
-	void SetColourHexRGBA(const uint32& hex);
+	void SetColourHexRGBA(const uint& hex);
 
 	/// <summary>
 	/// Set The current vertex colour using a 6 digit hexadecimal code. <br/>
 	/// 2 digits for red, green, and blue.
 	/// </summary>
 	/// <param name="Hex">Example: <c>0xff0000</c> is the hex code for red.</param>
-	void SetColourHexRGB(const uint32& hex);
+	void SetColourHexRGB(const uint& hex);
 
 	/// <summary>
 	/// Set The current vertex colour. 

@@ -1,11 +1,12 @@
 #include "GLUTCallbacks.h"
 
 #include <iostream>
+#include "GLExtras.h"
 
 namespace GLUTCallbacks {
 
 	namespace {
-		GL_entry_point* entry_point = nullptr;
+		static GL_entry_point* entry_point = nullptr;
 	}
 
 	void Init(GL_entry_point* new_entry_point) {
@@ -16,6 +17,14 @@ namespace GLUTCallbacks {
 		if (entry_point != nullptr) {
 			entry_point->Display();
 		}
+	}
+
+	void Timer(int refreshRate) {
+
+		entry_point->Update();
+
+		glutPostRedisplay();
+		glutTimerFunc(GLExtras::REFRESHRATE, Timer, 0);
 	}
 
 	void Keyboard(unsigned char c, int mouse_x, int mouse_y) {
@@ -40,7 +49,5 @@ namespace GLUTCallbacks {
 
 	}
 
-	void Timer(int refreshRate) {
-		entry_point->Update();
-	}
+
 }	

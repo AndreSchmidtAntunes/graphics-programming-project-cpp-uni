@@ -10,9 +10,11 @@ public:
 	Colour* colours;
 	int vert_count;
 
-	Poly(Vector3* verts, int vert_count);
+	Poly() : verts(NULL), colours(NULL), vert_count(0) {} ;
 
-	Poly(Vector3* vert, Colour* colours, int vert_count);
+	Poly(const Vector3* verts, int vert_count);
+	
+	Poly(const Vector3* vert, const Colour* colours, int vert_count);
 
 	~Poly();
 

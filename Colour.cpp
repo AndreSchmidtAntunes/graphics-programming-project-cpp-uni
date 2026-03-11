@@ -1,5 +1,13 @@
 #include "Colour.h"
 
+const Colour Colour::RED = Colour(1, 0, 0, 1);
+const Colour Colour::GREEN = Colour(0, 1, 0, 1);
+const Colour Colour::BLUE = Colour(0, 0, 1, 1);
+const Colour Colour::BLACK = Colour(0, 0, 0, 1);
+const Colour Colour::WHITE = Colour(1, 1, 1, 1);
+const Colour Colour::EMPTY = Colour(0, 0, 0, 0);
+const Colour Colour::NIL = Colour(0, 0, 0, 0);
+
 const Colour Colour::operator * (const Colour &other) const {
 	return Colour(r * other.r, g * other.g, b * other.b, a * other.a);
 }
@@ -102,18 +110,8 @@ bool Colour::operator != (Colour other) const {
 	return (r != other.r) || (g != other.g) || (b != other.b) || (a != other.a);
 }
 
-const Colour Colour::RED =	 Colour(1, 0, 0, 1);
-const Colour Colour::GREEN = Colour(0, 1, 0, 1);
-const Colour Colour::BLUE =  Colour(0, 0, 1, 1);
-
-const Colour Colour::BLACK = Colour(0, 0, 0, 1);
-const Colour Colour::WHITE = Colour(1, 1, 1, 1);
-
-const Colour Colour::EMPTY = Colour(0, 0, 0, 0); 
-const Colour Colour::NIL   = Colour(0, 0, 0, 0);
-
-double Colour::SquaredMagnitudeRGB() const {
-	return (r * r) + (g * g) + (b * b);
+float Colour::SquaredMagnitudeRGB() const {
+	return ((float)r * (float)r) + ((float)g * (float)g) + ((float)b * (float)b);
 }
 
 Colour Colour::NormalisedRGB(InvSqrtPrecision precision) const {
@@ -130,21 +128,21 @@ Colour& Colour::NormaliseRGB(InvSqrtPrecision precision) {
 	return *this;
 }
 
-Colour Colour::HexRGBAToColour(const uint32& hex) {
+Colour Colour::HexRGBAToColour(const uint& hex) {
 
 	const double div255 = 1.0 / 255.0;
 
 	Colour result;
 
-	const uint32 r_mask	= 0xff000000;
-	const uint32 g_mask = 0x00ff0000;
-	const uint32 b_mask	= 0x0000ff00;
-	const uint32 a_mask = 0x000000ff;
+	const uint r_mask	= 0xff000000;
+	const uint g_mask = 0x00ff0000;
+	const uint b_mask	= 0x0000ff00;
+	const uint a_mask = 0x000000ff;
 
-	uint32 masked_r = hex & r_mask;
-	uint32 masked_g = hex & g_mask;
-	uint32 masked_b = hex & b_mask;
-	uint32 masked_a = hex & a_mask;
+	uint masked_r = hex & r_mask;
+	uint masked_g = hex & g_mask;
+	uint masked_b = hex & b_mask;
+	uint masked_a = hex & a_mask;
 
 	result.r = short(double(masked_r >> 24) * div255);
 	result.g = short(double(masked_g >> 16) * div255);
@@ -154,19 +152,19 @@ Colour Colour::HexRGBAToColour(const uint32& hex) {
 	return result;
 }	
 
-Colour Colour::HexRGBToColour(const uint32& hex) {
+Colour Colour::HexRGBToColour(const uint& hex) {
 
 	const double div255 = 1.0 / 255.0;
 
 	Colour result;
 
-	const uint32 r_mask = 0xff0000;
-	const uint32 g_mask = 0x00ff00;
-	const uint32 b_mask = 0x0000ff;
+	const uint r_mask = 0xff0000;
+	const uint g_mask = 0x00ff00;
+	const uint b_mask = 0x0000ff;
 
-	uint32 masked_r = hex & r_mask;
-	uint32 masked_g = hex & g_mask;
-	uint32 masked_b = hex & b_mask;
+	uint masked_r = hex & r_mask;
+	uint masked_g = hex & g_mask;
+	uint masked_b = hex & b_mask;
 
 	result.r = short(double(masked_r >> 16) * div255);
 	result.g = short(double(masked_g >>  8) * div255);
