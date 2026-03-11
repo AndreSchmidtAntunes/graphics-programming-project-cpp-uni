@@ -6,7 +6,7 @@
 //#include "Vector3.h"
 //#include "Vector4.h"
 
-#include "Poly.h"
+#include "Mesh.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>

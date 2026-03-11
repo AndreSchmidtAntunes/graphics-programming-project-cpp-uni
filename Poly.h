@@ -3,20 +3,27 @@
 #include "Vector3.h"
 #include "Colour.h"
 
+#define self (*this)
+
+struct Mesh;
+
 struct Poly {
 public:
 
-	Vector3* verts;
+	uint* indices;
 	Colour* colours;
-	int vert_count;
+	uint vert_count;
 
-	Poly() : verts(NULL), colours(NULL), vert_count(0) {} ;
+	/// <summary> Pointer to the mesh this polygon is holding indices for. </summary>
+	//Mesh* owner;
 
-	Poly(const Vector3* verts, int vert_count);
-	
-	Poly(const Vector3* vert, const Colour* colours, int vert_count);
+	Poly() : indices(NULL), colours(NULL), vert_count(0)/*, owner(nullptr)*/ {};
+
+	Poly(const uint* indices, const uint vert_count/*, Mesh* owner = nullptr*/);
+
+	Poly(const uint* indices, const Colour* colours, const uint vert_count/*, Mesh* owner = nullptr*/);
 
 	~Poly();
 
-	Vector3& operator [] (std::size_t idx);
+	//Vector3& operator [] (const uint idx);
 };

@@ -1,28 +1,32 @@
-#include "Poly.h"
+#include "Poly.h";
 
-Poly::Poly(const Vector3* verts, int vert_count) : verts(NULL), colours(NULL) {
+Poly::Poly(const uint* indices, const uint vert_count/*, Mesh* owner*/)/* : owner(owner)*/ {
 
-	this->verts = new Vector3[vert_count];	
+	this->indices = new uint[vert_count];
 	this->colours = NULL;
 	this->vert_count = vert_count;
 
-	for (int i = 0; i < vert_count; i++) {
-		this->verts[i] = verts[i];
+	for (uint i = 0; i < vert_count; i++) {
+		this->indices[i] = indices[i];
 	}
 }
 
-Poly::Poly(const Vector3* verts, const Colour* colours, int vert_count) : verts(NULL), colours(NULL) {
+Poly::Poly(const uint* indices, const Colour* colours, const uint vert_count/*, Mesh* owner*/)/* : owner(owner)*/ {
 
 	this->vert_count = vert_count;
 
-	this->verts = new Vector3[vert_count];
-	for (int i = 0; i < vert_count; i++) {
-		this->verts[i] = verts[i];
+	this->indices = new uint[vert_count];
+	for (uint i = 0; i < vert_count; i++) {
+		this->indices[i] = indices[i];
 	}
+
+	uint test0 = this->indices[0];
+	uint test1 = this->indices[1];
+	uint test2 = this->indices[2];
 
 	if (colours) {
 		this->colours = new Colour[vert_count];
-		for (int i = 0; i < vert_count; i++) {
+		for (uint i = 0; i < vert_count; i++) {
 			this->colours[i] = colours[i];
 		}
 	}
@@ -31,12 +35,14 @@ Poly::Poly(const Vector3* verts, const Colour* colours, int vert_count) : verts(
 }
 
 Poly::~Poly() {
-	delete[vert_count] verts;
-
+	delete[vert_count] indices;
 	if (colours)
 		delete[vert_count] colours;
 }
 
-Vector3& Poly::operator[](std::size_t idx){
-	return this->verts[idx];
-}
+//#include "Mesh.h"
+//
+//Vector3& Poly::operator[] (const uint idx) {
+//	return owner->vertices[indices[idx]];
+//}
+

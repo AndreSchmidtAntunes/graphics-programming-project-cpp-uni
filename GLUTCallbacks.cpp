@@ -22,9 +22,9 @@ namespace GLUTCallbacks {
 	void Timer(int refreshRate) {
 
 		entry_point->Update();
-
+		
+		glutTimerFunc(GLExtras::REFRESHRATE, Timer, GLExtras::REFRESHRATE);
 		glutPostRedisplay();
-		glutTimerFunc(GLExtras::REFRESHRATE, Timer, 0);
 	}
 
 	void Keyboard(unsigned char c, int mouse_x, int mouse_y) {

@@ -21,11 +21,13 @@ namespace GLExtras {
 	/// </summary>
 	/// <param name="points_array">Each Vector3 represents the x, y, and z of a vertex.</param>
 	/// <param name="length">The length of the array.</param>
-	void AddVertices(Vector3* points_array, int length);
+	void AddVertices(Vector3* points_array, const uint length);
 
-	void AddPolygon(const Poly& polygon);
+	void AddPolygon(const Poly& polygon, const Vector3* vertices);
 
-	void AddPolygons(const Poly* polygons, int length);
+	void AddPolygons(const Poly* polygons, const uint length, const Vector3* vertices);
+
+	void AddMesh(const Mesh& mesh);
 
 	/// <summary>
 	/// Set The current vertex colour using a 8 digit hexadecimal code. <br/>
