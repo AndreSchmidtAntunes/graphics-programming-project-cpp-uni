@@ -26,4 +26,7 @@ public:
 	Vector3& getVertex(const Poly* polygon, uint edge_index) {
 		return vertices[polygon->indices[edge_index]];
 	}
+
+	bool LoadFromFile(const std::string& filename);
+
 };

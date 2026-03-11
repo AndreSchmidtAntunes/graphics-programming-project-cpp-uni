@@ -95,3 +95,66 @@ Mesh::~Mesh() {
 	delete[this->vertices_count] vertices;
 	delete[this->polygons_count] polygons;
 }
+
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+bool Mesh::LoadFromFile(const std::string& filename) {
+
+	std::vector<Vector3> vertices;
+	std::vector<Poly> polygons;
+
+	std::ifstream file(filename);
+	if (!file.is_open()) {
+		std::cerr << "Error opening file: " << filename << std::endl;
+		return false;
+	}
+	std::string line;
+	while (std::getline(file, line)) {
+		std::istringstream iss(line);
+		char type;
+		iss >> type;
+		switch (type)
+		{
+		case 'v': { // If we are reading a vertex
+			float x, y, z;
+			iss >> x >> y >> z;
+			vertices.push_back(Vector3(x, y, z));
+
+			break;
+		}
+
+		case 'f': { // If we are reading a face definition
+
+			std::vector<uint> indices;
+
+			// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
+			uint index;
+			while (iss >> index) {
+				indices.push_back(index - 1);
+			}
+
+			polygons.push_back(*(new Poly(indices.data(), indices.size())));
+
+			break;
+		}
+
+		default: break;
+		}
+	}
+	
+	this->vertices_count = vertices.size();
+	this->polygons_count = polygons.size();
+
+	delete[this->vertices_count] this->vertices;
+	delete[this->polygons_count] this->polygons;
+
+	this->vertices = new Vector3[vertices_count] { };
+	this->polygons = new Poly[polygons_count] { };
+
+	std::copy(vertices.begin(), vertices.end(), this->vertices);
+	std::copy(polygons.begin(), polygons.end(), this->polygons);
+	
+	return true;
+}

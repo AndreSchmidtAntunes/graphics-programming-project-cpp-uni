@@ -115,7 +115,6 @@ const Vector3* ratVerts = new Vector3[62] {
 	Vector3(-1.8,-30,-2.5),//60
 	Vector3(-2.8,-30,-3.5)
 };
-
 const Poly* ratPolygons = new Poly[103] {
 	Poly(new uint[3]{0, 1, 2}, 3),
 	Poly(new uint[3]{1, 3, 2}, 3),
@@ -242,8 +241,8 @@ void GL_entry_point::DrawPolygons() {
 
 #define RATPOLYGONSIDESCOUNT 4
 
-		Mesh rat_mesh = Mesh(ratVerts, 62, ratPolygons, 103);
-
+		Mesh rat_mesh(ratVerts, 62, ratPolygons, 103);
+		rat_mesh.LoadFromFile("teapot.obj");
 		GLExtras::AddMesh(rat_mesh);
 
 

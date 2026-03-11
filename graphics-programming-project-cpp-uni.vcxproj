@@ -158,6 +158,11 @@
     <ClCompile Include="GLExtras.h" />
     <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="teapot.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

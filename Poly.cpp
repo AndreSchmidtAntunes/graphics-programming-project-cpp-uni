@@ -20,10 +20,6 @@ Poly::Poly(const uint* indices, const Colour* colours, const uint vert_count/*, 
 		this->indices[i] = indices[i];
 	}
 
-	uint test0 = this->indices[0];
-	uint test1 = this->indices[1];
-	uint test2 = this->indices[2];
-
 	if (colours) {
 		this->colours = new Colour[vert_count];
 		for (uint i = 0; i < vert_count; i++) {
