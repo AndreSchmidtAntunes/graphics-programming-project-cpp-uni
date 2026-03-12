@@ -51,9 +51,6 @@
     <ClInclude Include="GLLibs.h">
       <Filter>Header Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
@@ -70,6 +67,9 @@
       <Filter>Header Files\Helpers\Structs</Filter>
     </ClInclude>
     <ClInclude Include="Poly.h">
+      <Filter>Header Files\Helpers\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
       <Filter>Header Files\Helpers\Structs</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,9 +91,6 @@
     </ClCompile>
     <ClCompile Include="GLExtras.h">
       <Filter>Header Files\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\Classes</Filter>
@@ -119,12 +116,18 @@
     <ClCompile Include="Poly.cpp">
       <Filter>Source Files\Helpers\Structs</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Helpers\Structs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Object Include="rat.obj">
       <Filter>Resource Files</Filter>
     </Object>
     <Object Include="teapot.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="utah_teapot.obj">
       <Filter>Resource Files</Filter>
     </Object>
   </ItemGroup>

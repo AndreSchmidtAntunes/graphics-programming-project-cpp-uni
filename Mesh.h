@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Colour.h"
 #include "GLLibs.h"
 #include "Poly.h"
 
@@ -29,4 +28,8 @@ public:
 
 	bool LoadFromFile(const std::string& filename);
 
+	Mesh(const std::string& filename) {
+		self.LoadFromFile(filename);
+	}
 };
+

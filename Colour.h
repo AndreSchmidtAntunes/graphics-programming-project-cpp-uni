@@ -1,15 +1,12 @@
 #pragma once
 
 #include "FastInvSqrt.h"
+#include <array>
 #include <math.h>
 #include <ostream>
-#include <array>
+#include <stdexcept>
 
 struct Colour {
-protected:
-
-	//std::array<short, 4> cElements = { };
-
 public:
 
 	union {
@@ -17,55 +14,25 @@ public:
 		std::array<short, 4> cElements = { };
 	};
 
-	//short& r = cElements[0];
-	//short& g = cElements[1];
-	//short& b = cElements[2];
-	//short& a = cElements[3];
+	Colour(short r, short g, short b, short a) : r(r), g(g), b(b), a(a) {};
 
-	//Colour() : cElements(new short[4] {0, 0, 0, 0}), r(cElements[0]), g(cElements[1]), b(cElements[2]), a(cElements[3]) {};
+	Colour(const Colour& other) : r(other.r), g(other.g), b(other.b), a(other.a) {};
 
-	Colour(short r, short g, short b, short a) : r(r), g(g), b(b), a(a) {
-		//cElements[0] = r;
-		//cElements[1] = g;
-		//cElements[2] = b;
-		//cElements[3] = a;
-	};
+	Colour(short value = 0) : r(value), g(value), b(value), a(value) {};
 
-	Colour(const Colour& other) : r(other.r), g(other.g), b(other.b), a(other.a) {
-		//cElements[0] = other.r;
-		//cElements[1] = other.g;
-		//cElements[2] = other.b;
-		//cElements[3] = other.a;
+	~Colour() { }
+
+	const Colour operator * (const Colour& other) const;
+
+	const Colour operator * (const short& value) const;
+
+	const Colour operator / (const Colour& other) const;
+
+	const Colour operator / (const short& value) const;
 	
+	const Colour operator + (const Colour& other) const;
 
-	
-	};
-
-	Colour(short value = 0) : r(value), g(value), b(value), a(value) {
-	
-		//cElements[0] = value;
-		//cElements[1] = value;
-		//cElements[2] = value;
-		//cElements[3] = value;
-
-	
-	};
-
-	~Colour() {
-		//delete[4] cElements;
-	}
-
-	const Colour operator * (const Colour &other) const;
-
-	const Colour operator * (const short &value) const;
-
-	const Colour operator / (const Colour &other) const;
-
-	const Colour operator / (const short &value) const;
-	
-	const Colour operator + (const Colour &other) const;
-
-	const Colour operator - (const Colour &other) const;
+	const Colour operator - (const Colour& other) const;
 
 	Colour& operator = (const Colour& value);
 	Colour& operator *= (const Colour& value);
@@ -116,7 +83,6 @@ public:
 	/// Normalises the current colour's red, green and blue components and assigns it to the current colour. <br/>
 	/// <c>[this] / sqrt(r^2 + g^2 + b^2)</c>
 	/// </summary>
-	/// 
 	/// <returns>
 	/// A referenced to the colour being normalised.
 	/// </returns>

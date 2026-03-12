@@ -99,6 +99,7 @@ Mesh::~Mesh() {
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <iostream>
 
 bool Mesh::LoadFromFile(const std::string& filename) {
 
@@ -147,13 +148,20 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 					continue;
 				}
-
-				case '#': // comment
+				case 'o': { // comment
 					continue;
+				}
 
-				default: 
+				case '#': { // comment
+					continue;
+				} 
+
+
+				default: { // erroneous first istring
 					std::cerr << "Erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
 					continue;
+				}
+
 			}
 	}
 	

@@ -17,13 +17,11 @@ public:
 	/// <summary> Pointer to the mesh this polygon is holding indices for. </summary>
 	//Mesh* owner;
 
-	Poly() : indices(NULL), colours(NULL), vert_count(0)/*, owner(nullptr)*/ {};
+	Poly() : indices(NULL), colours(NULL), vert_count(0) { };
 
-	Poly(const uint* indices, const uint vert_count/*, Mesh* owner = nullptr*/);
+	Poly(const uint* indices, const uint vert_count);
 
-	Poly(const uint* indices, const Colour* colours, const uint vert_count/*, Mesh* owner = nullptr*/);
+	Poly(const uint* indices, const Colour* colours, const uint vert_count);
 
 	~Poly();
-
-	//Vector3& operator [] (const uint idx);
 };

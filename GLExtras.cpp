@@ -21,23 +21,15 @@ namespace GLExtras {
 		for (uint i = 0; i < length; i++) {
 			SetColour(colours ? colours[i] : DEFAULT_VERT_COLOUR);			
 			AddVertex(vertices[i]);
-			std::cout << vertices[i];
 		}
 	}
 
 	void AddPolygon(const Poly& polygon, const Vector3* vertices) {
 		glBegin(GL_POLYGON);
 
-		//SetColour(polygon.colours ? polygon.colours[i] : DEFAULT_VERT_COLOUR);
-		//		//AddVerticesWithColours(polygon.owner->vertices + uint(polygon.indices), polygon.colours, polygon.vert_count);
-		//		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
-
-
-
 		for (uint i = 0; i < polygon.vert_count; i++) {
 			SetColour(polygon.colours ? polygon.colours[i] : DEFAULT_VERT_COLOUR);
 			AddVertex(vertices[polygon.indices[i]]);
-			//std::cout << polygon.owner->vertices[polygon.indices[i]];
 		}
 
 		glEnd();

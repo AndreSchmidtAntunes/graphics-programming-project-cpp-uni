@@ -1,35 +1,18 @@
 #pragma once
 
 #include "FastInvSqrt.h"
+#include <array>
 #include <math.h>
 #include <ostream>
-#include <array>
+#include <stdexcept>
 
 struct Vector4 {
-protected:
-
-	//double* vElements = new double[4] { };
-
 public:
 
 	union {
 		struct { double x, y, z, w; };
-		std::array<double, 4> vElements = { };
+		std::array<double, 4> vElements { };
 	};
-
-
-	//double& x = vElements[0];
-	//double& y = vElements[1];
-	//double& z = vElements[2];
-	//double& w = vElements[3];
-
-	//Vector4() : vElements(new double[4] {0, 0, 0, 0}), x(vElements[0]), y(vElements[1]), z(vElements[2]), w(vElements[3]) {};
-
-	//Vector4(double x, double y, double z, double w) : vElements(new double[4] {x, y, z, w}), x(vElements[0]), y(vElements[1]), z(vElements[2]), w(vElements[3]) {};
-
-	//Vector4(const Vector4& other) : vElements(new double[4] {other.x, other.y, other.z, other.w}), x(vElements[0]), y(vElements[1]), z(vElements[2]), w(vElements[3]) {};
-
-	//Vector4(double value) : vElements(new double[4] {value, value, value, value}), x(vElements[0]), y(vElements[1]), z(vElements[2]), w(vElements[3]) {};
 
 	Vector4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {};
 
@@ -37,9 +20,7 @@ public:
 
 	Vector4(double value = 0) : x(value), y(value), z(value), w(value) {};
 
-	~Vector4() {
-		//delete[4] vElements;
-	}
+	~Vector4() { }
 
 	Vector4 operator * (const Vector4 &other) const;
 	Vector4 operator / (const Vector4 &other) const;

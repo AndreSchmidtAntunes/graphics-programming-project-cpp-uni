@@ -1,62 +1,26 @@
 #pragma once
 
 #include "FastInvSqrt.h"
+#include <array>
 #include <math.h>
 #include <ostream>
-#include <array>
-
-#include <iostream>
+#include <stdexcept>
 
 struct Vector3 {
-protected:
-
-	//std::array<double, 3> vElements = { };
-
 public:
-
-	//double& x(){ return vElements[0]; };
 
 	union {
 		struct { double x, y, z; };
-		std::array<double, 3> vElements = { };
+		std::array<double, 3> vElements { };
 	};
 
-	//Vector3() : vElements(new double[3] {0,0,0}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};x
+	Vector3(double x, double y, double z) : x(x), y(y), z(z) {};
 
-	//Vector3(double x, double y, double z): vElements(new double[3] {x,y,z}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
+	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z){};
 
-	//Vector3(const Vector3& other) : vElements(new double[3] {other.x, other.y, other.z}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
+	Vector3(double value = 0) : x(value), y(value), z(value) {};
 
-	//Vector3(double value) : vElements(new double[3] {value, value, value}), x(vElements[0]), y(vElements[1]), z(vElements[2]) {};
-
-	Vector3(double x, double y, double z) : x(x), y(y), z(z) {
-
-
-		//vElements[0] = x;
-		//vElements[1] = y;
-		//vElements[2] = z;
-
-	};
-
-	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z){
-
-		//vElements[0] = other.x;
-		//vElements[1] = other.y;
-		//vElements[2] = other.z;
-
-	};
-
-	Vector3(double value = 0) : x(value), y(value), z(value) {
-
-		//vElements[0] = value;
-		//vElements[1] = value;
-		//vElements[2] = value;
-
-	};
-
-	~Vector3() {
-		//delete[3] vElements;
-	};
+	~Vector3() { };
 	
 	Vector3 operator * (const Vector3 &other) const;
 	Vector3 operator / (const Vector3 &other) const;
