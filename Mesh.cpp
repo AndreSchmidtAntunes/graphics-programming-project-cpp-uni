@@ -103,45 +103,58 @@ Mesh::~Mesh() {
 bool Mesh::LoadFromFile(const std::string& filename) {
 
 	std::vector<Vector3> vertices;
-	std::vector<Poly> polygons;
+	std::vector<Poly*> polygons;
 
 	std::ifstream file(filename);
 	if (!file.is_open()) {
 		std::cerr << "Error opening file: " << filename << std::endl;
 		return false;
 	}
-	std::string line;
+	std::string line = "";
+
+	uint _current_line = 0;
 	while (std::getline(file, line)) {
 		std::istringstream iss(line);
+
+		_current_line++;
+
 		char type;
-		iss >> type;
-		switch (type)
-		{
-		case 'v': { // If we are reading a vertex
-			float x, y, z;
-			iss >> x >> y >> z;
-			vertices.push_back(Vector3(x, y, z));
 
-			break;
-		}
+		if (iss >> type)
+			switch (type)
+			{
+				case 'v': { // If we are reading a vertex
 
-		case 'f': { // If we are reading a face definition
+					double x, y, z;
 
-			std::vector<uint> indices;
+					if (iss >> x >> y >> z)
+						vertices.emplace_back(Vector3(x, y, z));
 
-			// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
-			uint index;
-			while (iss >> index) {
-				indices.push_back(index - 1);
+					continue;
+				}
+
+				case 'f': { // If we are reading a face definition
+
+					std::vector<uint> indices;
+
+					// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
+					uint index;
+					while (iss >> index) {
+						indices.push_back(index);
+					}
+					if (indices.size())
+						polygons.emplace_back(new Poly(indices.data(), indices.size()));
+
+					continue;
+				}
+
+				case '#': // comment
+					continue;
+
+				default: 
+					std::cerr << "Erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
+					continue;
 			}
-
-			polygons.push_back(*(new Poly(indices.data(), indices.size())));
-
-			break;
-		}
-
-		default: break;
-		}
 	}
 	
 	this->vertices_count = vertices.size();
@@ -153,8 +166,14 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 	this->vertices = new Vector3[vertices_count] { };
 	this->polygons = new Poly[polygons_count] { };
 
-	std::copy(vertices.begin(), vertices.end(), this->vertices);
-	std::copy(polygons.begin(), polygons.end(), this->polygons);
+	for (int i = 0; i < vertices_count; i++)
+		this->vertices[i] = vertices[i];
+
+	for (int i = 0; i < polygons_count; i++)
+		this->polygons[i] = *polygons[i];
+
+	//std::copy(vertices.begin(), vertices.end(), this->vertices);
+	//std::copy(polygons.begin(), polygons.end(), this->polygons);
 	
 	return true;
 }

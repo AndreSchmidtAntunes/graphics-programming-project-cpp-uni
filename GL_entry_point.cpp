@@ -241,8 +241,10 @@ void GL_entry_point::DrawPolygons() {
 
 #define RATPOLYGONSIDESCOUNT 4
 
-		Mesh rat_mesh(ratVerts, 62, ratPolygons, 103);
-		rat_mesh.LoadFromFile("teapot.obj");
+		Mesh rat_mesh/*(ratVerts, 62, ratPolygons, 103)*/;
+		
+		rat_mesh.LoadFromFile("rat.obj");
+		
 		GLExtras::AddMesh(rat_mesh);
 
 
