@@ -72,6 +72,9 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Helpers\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="UserInput.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GL_entry_point.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Helpers\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInput.cpp">
+      <Filter>Source Files\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -52,7 +52,7 @@ namespace GLExtras {
 		SetColour(Colour::HexRGBToColour(Hex));
 	}
 
-	void SetColour(const short& r, const short& g, const short& b, const short& a) {
+	void SetColour(const float& r, const float& g, const float& b, const float& a) {
 		SetColour(Colour(r, g, b, a));
 	}
 

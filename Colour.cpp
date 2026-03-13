@@ -12,7 +12,7 @@ const Colour Colour::operator * (const Colour &other) const {
 	return Colour(r * other.r, g * other.g, b * other.b, a * other.a);
 }
 
-const Colour Colour::operator * (const short &value) const {
+const Colour Colour::operator * (const float &value) const {
 	return Colour(r * value, g * value, b * value, a * value);
 }
 
@@ -20,7 +20,7 @@ const Colour Colour::operator / (const Colour &other) const {
 	return Colour(r / other.r, g / other.g, b / other.b, a / other.a);
 }
 
-const Colour Colour::operator / (const short &value) const {
+const Colour Colour::operator / (const float &value) const {
 	return Colour(r / value, g / value, b / value, a / value);
 }
 const Colour Colour::operator + (const Colour &other) const {
@@ -49,7 +49,7 @@ Colour& Colour::operator *= (const Colour& value) {
 	return *this;
 }
 
-Colour& Colour::operator *= (const short& value) {
+Colour& Colour::operator *= (const float& value) {
 	r *= value;
 	g *= value;
 	b *= value;
@@ -67,7 +67,7 @@ Colour& Colour::operator /= (const Colour& value) {
 	return *this;
 }
 
-Colour& Colour::operator /= (const short& value) {
+Colour& Colour::operator /= (const float& value) {
 	r /= value;
 	g /= value;
 	b /= value;
@@ -98,7 +98,7 @@ Colour::operator bool() const {
 	return r || g || b || a;
 }
 
-short& Colour::operator [] (std::size_t idx) {
+float& Colour::operator [] (std::size_t idx) {
 	return cElements[idx];
 }
 
@@ -121,9 +121,9 @@ Colour Colour::NormalisedRGB(InvSqrtPrecision precision) const {
 Colour& Colour::NormaliseRGB(InvSqrtPrecision precision) {
 	float invSqrtX = FastInvSqrt((float)Colour::SquaredMagnitudeRGB(), precision);
 
-	r = short(invSqrtX * r);
-	g = short(invSqrtX * g);
-	b = short(invSqrtX * b);
+	r = float(invSqrtX * r);
+	g = float(invSqrtX * g);
+	b = float(invSqrtX * b);
 
 	return *this;
 }
@@ -144,10 +144,10 @@ Colour Colour::HexRGBAToColour(const uint& hex) {
 	uint masked_b = hex & b_mask;
 	uint masked_a = hex & a_mask;
 
-	result.r = short(double(masked_r >> 24) * div255);
-	result.g = short(double(masked_g >> 16) * div255);
-	result.b = short(double(masked_b >>  8) * div255);
-	result.a = short(double(masked_a) *       div255);
+	result.r = float(double(masked_r >> 24) * div255);
+	result.g = float(double(masked_g >> 16) * div255);
+	result.b = float(double(masked_b >>  8) * div255);
+	result.a = float(double(masked_a) *       div255);
 
 	return result;
 }	
@@ -166,10 +166,10 @@ Colour Colour::HexRGBToColour(const uint& hex) {
 	uint masked_g = hex & g_mask;
 	uint masked_b = hex & b_mask;
 
-	result.r = short(double(masked_r >> 16) * div255);
-	result.g = short(double(masked_g >>  8) * div255);
-	result.b = short(double(masked_b) *		  div255);
-	result.a = short(1);
+	result.r = float(double(masked_r >> 16) * div255);
+	result.g = float(double(masked_g >>  8) * div255);
+	result.b = float(double(masked_b) *		  div255);
+	result.a = float(1);
 
 	return result;
 }

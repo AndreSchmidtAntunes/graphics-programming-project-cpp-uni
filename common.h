@@ -7,6 +7,7 @@
 //#include "Vector4.h"
 
 #include "Mesh.h"
+#include <bitset>
 #include <iostream>
 #include <stdexcept>
 #include <vector>

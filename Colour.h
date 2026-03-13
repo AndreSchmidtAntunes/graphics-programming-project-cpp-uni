@@ -8,27 +8,27 @@
 
 struct Colour {
 public:
-
+	
 	union {
-		struct { short r, g, b, a; };
-		std::array<short, 4> cElements = { };
+		struct { float r, g, b, a; };
+		std::array<float, 4> cElements = { };
 	};
 
-	Colour(short r, short g, short b, short a) : r(r), g(g), b(b), a(a) {};
+	Colour(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {};
 
 	Colour(const Colour& other) : r(other.r), g(other.g), b(other.b), a(other.a) {};
 
-	Colour(short value = 0) : r(value), g(value), b(value), a(value) {};
+	Colour(float value = 0) : r(value), g(value), b(value), a(value) {};
 
 	~Colour() { }
 
 	const Colour operator * (const Colour& other) const;
 
-	const Colour operator * (const short& value) const;
+	const Colour operator * (const float& value) const;
 
 	const Colour operator / (const Colour& other) const;
 
-	const Colour operator / (const short& value) const;
+	const Colour operator / (const float& value) const;
 	
 	const Colour operator + (const Colour& other) const;
 
@@ -36,13 +36,13 @@ public:
 
 	Colour& operator = (const Colour& value);
 	Colour& operator *= (const Colour& value);
-	Colour& operator *= (const short& value);
+	Colour& operator *= (const float& value);
 	Colour& operator /= (const Colour& value);
-	Colour& operator /= (const short& value);
+	Colour& operator /= (const float& value);
 	Colour& operator += (const Colour& value);
 	Colour& operator -= (const Colour& value);
 
-	short& operator [] (std::size_t idx);
+	float& operator [] (std::size_t idx);
 
 	Colour operator - () const { return Colour(-r, -g, -b, -a); };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+
 class GL_entry_point {
 public:
 
@@ -12,6 +13,4 @@ public:
 
 	void Display();
 	void DrawPolygons();
-
-
 };

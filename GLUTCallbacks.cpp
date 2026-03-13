@@ -21,33 +21,13 @@ namespace GLUTCallbacks {
 
 	void Timer(int refreshRate) {
 
+		int updateDuration = glutGet(GLUT_ELAPSED_TIME);
+
 		entry_point->Update();
+
+		updateDuration = glutGet(GLUT_ELAPSED_TIME) - updateDuration;
 		
-		glutTimerFunc(GLExtras::REFRESHRATE, Timer, GLExtras::REFRESHRATE);
+		glutTimerFunc(GLExtras::REFRESHRATE - updateDuration, Timer, GLExtras::REFRESHRATE);
 		glutPostRedisplay();
 	}
-
-	void Keyboard(unsigned char c, int mouse_x, int mouse_y) {
-		std::cout << "down: " << c << ": x=" << mouse_x << " y=" << mouse_y << std::endl;
-		switch (c) {
-		case 'w': {
-
-		}
-		}
-	}
-
-	void KeyboardUp(unsigned char c, int mouse_x, int mouse_y) {
-		std::cout << "up: " << c << ": x=" << mouse_x << " y=" << mouse_y << std::endl;
-
-	}
-
-	void Special(int key, int mouse_x, int mouse_y) {
-
-	}
-
-	void SpecialUp(int key, int mouse_x, int mouse_y) {
-
-	}
-
-
 }	

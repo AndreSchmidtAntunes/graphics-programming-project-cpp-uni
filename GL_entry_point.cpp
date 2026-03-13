@@ -1,9 +1,9 @@
 #include "GL_entry_point.h"
 
-// Placed here so that GLUTCallbacks.h doesn't include itself, or any not needed libraries.
-#include "common.h"
+#include "common.h" 
 #include "GLExtras.h"
-#include "GLUTCallbacks.h"
+#include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
+#include "UserInput.h"
 #include <Windows.h>
 
 const char* vertexShaderSource = "#version 330 core\n"
@@ -28,13 +28,17 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) {
 		
 	glutDisplayFunc(GLUTCallbacks::Display);
 
-	glutKeyboardFunc(GLUTCallbacks::Keyboard);
-	glutKeyboardUpFunc(GLUTCallbacks::KeyboardUp);
+	//glutKeyboardFunc(GLUTCallbacks::Keyboard);
+	//glutKeyboardUpFunc(GLUTCallbacks::KeyboardUp);
 
-	glutSpecialFunc(GLUTCallbacks::Special);
-	glutSpecialUpFunc(GLUTCallbacks::SpecialUp);
+	//glutSpecialFunc(GLUTCallbacks::Special);
+	//glutSpecialUpFunc(GLUTCallbacks::SpecialUp);
+
+	UserInput::Init();
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
+
+	glutInitDisplayMode(GLUT_DOUBLE);
 
 	glutMainLoop();
 }
@@ -49,6 +53,7 @@ void GL_entry_point::Display() {
 	DrawPolygons();
 
 	glFlush(); // Passes the scene draw to the graphics card
+	glutSwapBuffers();
 }
 
 static const Mesh teapot_mesh("teapot.obj");
@@ -93,7 +98,6 @@ void GL_entry_point::DrawPolygons() {
 
 		GLExtras::AddMesh(teapot_mesh);
 	glPopMatrix();
-
 }
 
 void GL_entry_point::Update() {
