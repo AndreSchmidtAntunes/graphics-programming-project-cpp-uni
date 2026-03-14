@@ -30,6 +30,9 @@ Poly::Poly(const uint* indices, const Colour* colours, const uint vert_count/*, 
 		this->colours = NULL;
 }
 
+Poly::Poly(const uint* indices, const Vector2* uvs, const uint vert_count);
+Poly::Poly(const uint* indices, const Vector2* uvs, const Colour* colours, const uint vert_count);
+
 Poly::~Poly() {
 	delete[vert_count] indices;
 	if (colours)

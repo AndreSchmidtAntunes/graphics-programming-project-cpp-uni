@@ -12,7 +12,7 @@ public:
 	Poly* polygons;
 	uint polygons_count;
 
-	Mesh() : vertices(nullptr), polygons(nullptr), vertices_count(0), polygons_count(0) {};
+	Mesh() : vertices(nullptr), polygons(nullptr), vertices_count(0), polygons_count(0) { };
 
 	Mesh(const Vector3* vertices, const uint vertices_length, const Poly* triangles, const uint triangles_length);
 
