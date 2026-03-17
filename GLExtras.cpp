@@ -7,7 +7,6 @@
 namespace GLExtras {
 
 	void AddVertex(const Vector3& position) {
-		glTexCoord2f()
 		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
 	}
 

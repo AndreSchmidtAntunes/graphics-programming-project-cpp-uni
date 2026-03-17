@@ -44,12 +44,15 @@ public:
 
 };
 
+#include <cstdarg>
+
 struct Poly {
 public:
 
 	uint* indices;
-	Colour* colours;
-	Vector2* texture_coordinates;
+	Colour* colours = NULL;
+	Vector2* texture_coordinates = NULL;
+	Vector3* normals = NULL;
 	uint vert_count;
 
 	/// <summary> Pointer to the mesh this polygon is holding indices for. </summary>
@@ -59,9 +62,38 @@ public:
 
 	Poly(const uint* indices, const uint vert_count);
 
-	Poly(const uint* indices, const Colour* colours, const uint vert_count);
-	Poly(const uint* indices, const Vector2* uvs, const uint vert_count);
-	Poly(const uint* indices, const Vector2* uvs, const Colour* colours, const uint vert_count);
+	Poly(const uint* indices, const Vector2* uvs, const uint vert_count) : Poly(indices, vert_count) { this->texture_coordinates = Init(uvs); };
+
+	Poly(const uint* indices, const Vector3* normals, const uint vert_count) : Poly(indices, vert_count) { this->normals = Init(normals); };
+
+	Poly(const uint* indices, const Colour* colours, const uint vert_count) : Poly(indices, vert_count) { this->colours = Init(colours); };
+
+	Poly(const uint* indices, const Vector2* uvs, const Colour* colours, const uint vert_count) : 
+		Poly(indices, uvs, vert_count) { 
+			this->colours = Init(colours);
+		};
+
+	Poly(const uint* indices, const Vector2* uvs, const Vector3* normals, const uint vert_count) :
+		Poly(indices, uvs, vert_count) {
+			this->normals = Init(normals);
+		};
+
+	Poly(const uint* indices, const Vector3* normals, const Colour* colours, const uint vert_count) :
+		Poly(indices, normals, vert_count) {
+			this->colours = Init(colours);
+		};
+
+	Poly(const uint* indices, const Vector2* uvs, const Vector3* normals, const Colour* colours, const uint vert_count) : 
+		Poly(indices, uvs, normals, vert_count) { 
+			this->colours = Init(colours); 
+		}
 
 	~Poly();
+
+private:
+
+	uint*& Init(const uint* indices);
+	Vector2*& Init(const Vector2* uvs);
+	Vector3*& Init(const Vector3* normals);
+	Colour*& Init(const Colour* colours);
 };

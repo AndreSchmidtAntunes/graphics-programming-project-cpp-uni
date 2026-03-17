@@ -101,6 +101,8 @@ Mesh::~Mesh() {
 #include <vector>
 #include <iostream>
 
+//enum ParseType { POLYGON, VERTEX, NORMAL, TEXTURE, INFO, MATERIALFILE };
+
 bool Mesh::LoadFromFile(const std::string& filename) {
 
 	std::vector<Vector3> vertices;
@@ -115,12 +117,11 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 	uint _current_line = 0;
 	while (std::getline(file, line)) {
-		std::istringstream iss(line);
+		std::stringstream iss(line);
 
 		_current_line++;
 
 		char type;
-
 		if (iss >> type)
 			switch (type)
 			{
@@ -137,11 +138,42 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 				case 'f': { // If we are reading a face definition
 
 					std::vector<uint> indices;
+					std::vector<uint> uv_indices;
+					std::vector<uint> normal_indices;
 
 					// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
-					uint index;
-					while (iss >> index) {
-						indices.push_back(index);
+
+					std::string vert_data;
+					
+					while (iss >> vert_data) {
+						std::string indices_str = "";
+						std::string uv_indices_str = "";
+						std::string normal_indices_str = "";
+
+						uint datatype = 0; // 0 = vert indices, 1 = uv indices, 2 = normal indices
+						for (int i = 0; i < vert_data.length(); i++) {
+
+							if (vert_data[i] == '/')
+								datatype++;
+
+							switch (datatype) {
+
+							case 0: indices_str += (vert_data[i]); break;
+							case 1: uv_indices_str += (vert_data[i]); break;
+							case 2: normal_indices_str += (vert_data[i]); break;
+
+							default: return false;
+							}
+
+							if (std::isspace(vert_data[i]))
+								return false;
+						}
+
+						char* strtol_output;
+
+						indices.push_back(std::strtol(indices_str.c_str(), &strtol_output, 10));
+						uv_indices.push_back(std::strtol(uv_indices_str.c_str(), &strtol_output, 10));
+						normal_indices.push_back(std::strtol(normal_indices_str.c_str(), &strtol_output, 10));
 					}
 					if (indices.size())
 						polygons.emplace_back(new Poly(indices.data(), indices.size()));
@@ -185,3 +217,48 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 	
 	return true;
 }
+
+/// Thank you to Zan Lynx for this int parser from a string, and thanks to LiveLaughLove for the original post on stack overflow.
+/// Answer Post: https://stackoverflow.com/a/48528969
+
+std::vector<int> parseInts(std::string str) {//23,4,56
+	std::vector<int>lifeishard;
+	std::stringstream output;
+	std::string lifeisgood = str;
+	output.str(lifeisgood);
+	int life;
+	char ch;
+	while (output >> life) {
+		lifeishard.push_back(life);
+		output >> ch;
+	}
+	return lifeishard;
+}
+
+
+///// Thank you to Evan Teran on this stack overflow for their trim function! 
+///// Post: https://stackoverflow.com/a/217605
+//#include <algorithm> 
+//#include <cctype>
+//#include <locale>
+//
+//// Trim from the start (in place)
+//inline void ltrim(std::string& s) {
+//	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+//		return !std::isspace(ch);
+//		}));
+//}
+//
+//// Trim from the end (in place)
+//inline void rtrim(std::string& s) {
+//	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+//		return !std::isspace(ch);
+//		}).base(), s.end());
+//}
+//
+//// Trim from both ends (in place)
+//inline void trim(std::string& s) {
+//	rtrim(s);
+//	ltrim(s);
+//}
+//
