@@ -214,7 +214,7 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 	//std::copy(vertices.begin(), vertices.end(), this->vertices);
 	//std::copy(polygons.begin(), polygons.end(), this->polygons);
-	
+
 	return true;
 }
 

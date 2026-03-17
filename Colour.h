@@ -6,6 +6,7 @@
 #include <ostream>
 #include <stdexcept>
 
+
 struct Colour {
 public:
 	
