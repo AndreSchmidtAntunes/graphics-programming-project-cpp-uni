@@ -59,18 +59,16 @@ namespace UserInput {
 		glutSpecialUpFunc(SpecialUpCallback);
 	}
 
-	std::unordered_map<char, std::vector<void*>> 
-		keyboard_down_callback_dict,	special_down_callback_dict,
-		keyboard_up_callback_dict,		special_up_callback_dict;
+	#define InputCallbackDict std::unordered_map<char, std::vector<void*>>
+
+
+	static InputCallbackDict
+	keyboard_down_callback_dict, special_down_callback_dict,
+	keyboard_up_callback_dict,	 special_up_callback_dict;
 	
 	template<class T_key, class T_value>
 	void AddOrUpdateInDictionary(std::unordered_map<T_key, T_value>& dictionary, const T_key key, const T_value value) {
-		std::unordered_map<T_key, T_value>::iterator it = dictionary.find(key);
-		if (it == dictionary.end()) {
-			dictionary.emplace()
-		}
-		else
-			(*it) = value;
+		dictionary.insert_or_assign(key, value);
 	}
 
 	template<class T_key, class T_value>
@@ -78,5 +76,74 @@ namespace UserInput {
 		std::unordered_map<T_key, T_value>::iterator it = dictionary.find(key);
 		if (it == dictionary.end())
 			return false;
+
+		dictionary.erase(it);
+		return true;
 	}
+
+	void AddKeyboardDownCallback(char key, void* callback) {
+		keyboard_down_callback_dict[key].push_back(callback);
+	}
+
+	void AddSpecialDownCallback(int key, void* callback) {
+		special_down_callback_dict[key].push_back(callback);
+	}
+
+	void AddKeyboardUpCallback(char key, void* callback) {
+		keyboard_up_callback_dict[key].push_back(callback);
+	}
+
+	void AddSpecialUpCallback(int key, void* callback) {
+		special_up_callback_dict[key].push_back(callback);
+	}
+
+	bool RemoveKeyboardDownCallback(char key, void* callback) {
+		auto& vect = keyboard_down_callback_dict[key];
+		auto it = std::find(vect.begin(), vect.end(), callback);
+
+		if (it == vect.end()) {
+			return false;
+		}
+
+		vect.erase(it);
+		return true;
+	}
+
+	bool RemoveSpecialDownCallback(int key, void* callback) {
+		auto& vect = special_down_callback_dict[key];
+		auto it = std::find(vect.begin(), vect.end(), callback);
+
+		if (it == vect.end()) {
+			return false;
+		}
+
+		vect.erase(it);
+		return true;
+	}
+
+	bool RemoveKeyboardUpCallback(char key, void* callback) {
+		auto& vect = keyboard_up_callback_dict[key];
+		auto it = std::find(vect.begin(), vect.end(), callback);
+
+		if (it == vect.end()) {
+			return false;
+		}
+
+		vect.erase(it);
+		return true;
+	}
+
+	bool RemoveSpecialUpCallback(int key, void* callback) {
+		auto& vect = special_up_callback_dict[key];
+		auto it = std::find(vect.begin(), vect.end(), callback);
+
+		if (it == vect.end()) {
+			return false;
+		}
+
+		vect.erase(it);
+		return true;
+	}
+
+	/// TODO: map each callback to when it's key is down in this script.
 }
