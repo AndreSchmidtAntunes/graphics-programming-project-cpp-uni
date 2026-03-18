@@ -92,7 +92,6 @@ public:
 
 private:
 
-	uint*& Init(const uint* indices);
 	Vector2*& Init(const Vector2* uvs);
 	Vector3*& Init(const Vector3* normals);
 	Colour*& Init(const Colour* colours);

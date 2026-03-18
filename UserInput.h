@@ -1,5 +1,11 @@
 #pragma once
 
+#include <functional>
+#define uchar unsigned char
+#define callbackfunc_ptr void (*callback)(void)
+
+typedef void funcT(void);
+//#define callbackfunc_ptr funcT callback
 namespace UserInput {	
 
 	enum SpecialKey : int 
@@ -13,7 +19,22 @@ namespace UserInput {
 
 	const void Init();
 
-	const inline bool IsKeyboardKeyDown(char key);
+	const bool IsKeyboardKeyDown(const uchar key);
+	const bool IsSpecialKeyDown(const SpecialKey key);
 
-	const inline bool IsSpecialKeyDown(SpecialKey key);
+	// Keyboard input callbacks
+
+	void AddKeyboardDownCallback(const uchar key, callbackfunc_ptr);
+	void AddKeyboardUpCallback(const uchar key, callbackfunc_ptr);
+
+	const bool RemoveKeyboardDownCallback(const uchar key, callbackfunc_ptr);
+	const bool RemoveKeyboardUpCallback(const uchar key, callbackfunc_ptr);
+
+	// Special input callbacks
+
+	void AddSpecialDownCallback(const int key, callbackfunc_ptr);
+	void AddSpecialUpCallback(const int key, callbackfunc_ptr);
+
+	const bool RemoveSpecialDownCallback(const int key, callbackfunc_ptr);
+	const bool RemoveSpecialUpCallback(const int key, callbackfunc_ptr);
 }

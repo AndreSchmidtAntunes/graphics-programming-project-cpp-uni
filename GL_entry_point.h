@@ -1,5 +1,6 @@
 #pragma once
 
+class Camera;
 
 class GL_entry_point {
 public:
@@ -13,4 +14,7 @@ public:
 
 	void Display();
 	void DrawPolygons();
+
+private:
+	Camera* camera;
 };

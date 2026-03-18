@@ -21,6 +21,8 @@ namespace GLUTCallbacks {
 
 	void Timer(int refreshRate) {
 
+		glLoadIdentity();
+
 		int updateDuration = glutGet(GLUT_ELAPSED_TIME);
 
 		entry_point->Update();

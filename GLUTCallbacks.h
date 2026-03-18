@@ -10,11 +10,5 @@ namespace GLUTCallbacks {
 
 	void Display();
 
-	void Keyboard(unsigned char, int, int);
-	void KeyboardUp(unsigned char, int, int);
-
-	void Special(int, int, int);
-	void SpecialUp(int, int, int);
-
 	void Timer(int refreshRate);
 }

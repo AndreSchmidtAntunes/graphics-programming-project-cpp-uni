@@ -75,6 +75,9 @@
     <ClInclude Include="UserInput.h">
       <Filter>Header Files\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Helpers\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GL_entry_point.cpp">
@@ -133,8 +136,8 @@
     <Object Include="teapot.obj">
       <Filter>Resource Files</Filter>
     </Object>
-    <Object Include="utah_teapot.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fixer.py" />
   </ItemGroup>
 </Project>
