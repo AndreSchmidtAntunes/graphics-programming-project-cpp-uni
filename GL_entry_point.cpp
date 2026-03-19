@@ -30,6 +30,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 		std::cout << "UP!!!" << std::endl;
 	}
 
+	void PRINTKEY(uint key, uint x, uint y) {
+		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
+	}
+
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0, 0)) {
 
 	rot = 0.0f;
@@ -53,7 +57,7 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0,
 		UserInput::RemoveKeyboardDownCallback('h', PrintHello);
 
 		UserInput::AddKeyboardDownCallback('h', PrintWorld);
-		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::UP, PrintUP);
+		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::LEFT_SHIFT, PrintUP);
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 

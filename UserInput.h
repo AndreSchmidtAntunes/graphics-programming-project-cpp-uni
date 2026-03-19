@@ -7,11 +7,15 @@ namespace UserInput {
 
 	const enum SpecialKey : int 
 	{
-		F1 = 1, 
+		F1 = 0, 
 		F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 		
-		LEFT = 13,
-		UP, RIGHT, DOWN, PAGE_UP, PAGE_DOWN, HOME, END, INSERT
+		LEFT = 12,
+		UP, RIGHT, DOWN, PAGE_UP, PAGE_DOWN, HOME, END, INSERT,
+
+		LEFT_SHIFT = 24,
+		RIGHT_SHIFT, LEFT_CTRL, RIGHT_CTRL, LEFT_ALT, RIGHT_ALT,
+
 	};
 
 	const int Init();

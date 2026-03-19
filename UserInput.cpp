@@ -11,7 +11,9 @@
 #define intptr_vec std::vector<intptr>
 #define intptr_vec_uint_umap std::unordered_map<uint, intptr_vec>
 
-typedef void funcT(void); // Used here to simplify the usage and storage of void callback pointers
+// This Typedef is used here to simplify the usage and storage of void callback pointers.
+// It is interchangeable with the type: void (*)(void)
+typedef void funcT(void); 
 
 namespace UserInput {
 
@@ -19,7 +21,7 @@ namespace UserInput {
 
 	static struct InputState {
 		std::bitset<128> keyboard = 0;
-		std::bitset<21> special = 0;
+		std::bitset<30> special = 0;
 	} inputState;
 
 	const bool IsKeyboardKeyDown(const uchar key) {
@@ -62,6 +64,8 @@ namespace UserInput {
 
 	void SpecialDownCallback(int key, int mouse_x, int mouse_y) {
 
+		key--; // move the key to be in the range of index 0 onwards.
+
 		// For some reason all other special keys 
 		// after number 12 (being the F12 key) continue from 100 onwards, 
 		// so this offsets them back to 13 onwards.
@@ -73,6 +77,8 @@ namespace UserInput {
 	}
 
 	void SpecialUpCallback(int key, int mouse_x, int mouse_y) {
+
+		key--;
 
 		if (key >= 100) key -= 87;
 
@@ -90,7 +96,7 @@ namespace UserInput {
 			glutSpecialUpFunc(SpecialUpCallback);
 
 			has_namespace_been_initialised = true;
-
+			
 			return 0;
 
 		}
@@ -99,32 +105,68 @@ namespace UserInput {
 		return -1;
 	}
 
-	void AddCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT callback) {
+	/// <summary>
+	/// Stores the given void callback into the array paired with the given key inside of the given dictionary.<br/>
+	/// When a void callback <c>Foo()</c> is given with the key being <c>a</c>, 
+	/// a pointer to <c>Foo()</c> would be pushed to the rear of an array in the given dictionary at the key <c>a</c>. 
+	/// </summary>
+	/// <param name="dictionary">The dictionary to store the callback pointer into.</param>
+	/// <param name="key">The key to the array you want to append the callback to.</param>
+	/// <param name="callback">The callback pointer you wish to add.</param>
+	void AddCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT* callback) {
 
 		if (dictionary.find(key) == dictionary.end()) {
 			dictionary[key] = intptr_vec();
 		}
 
-		dictionary[key].push_back((*(intptr*)(&callback))); //  (*(intptr*)(&callback))) retrieves the pointer to the callback.
+		dictionary[key].push_back((*(intptr*)(&callback))); 
 	}
 
-	void AddKeyboardDownCallback(const uchar key, funcT callback) {
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
+	/// </summary>
+	/// <param name="key">The keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is pressed down.</param>
+	void AddKeyboardDownCallback(const uchar key, voidcallback) {
 		AddCallback(keyboard_down_callback_dict, key, callback);
 	}
 
-	void AddKeyboardUpCallback(const uchar key, funcT callback) {
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
+	/// </summary>
+	/// <param name="key">The keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is released.</param>
+	void AddKeyboardUpCallback(const uchar key, voidcallback) {
 		AddCallback(keyboard_up_callback_dict, key, callback);
 	}
 
-	void AddSpecialDownCallback(const SpecialKey key, funcT callback) {
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
+	/// </summary>
+	/// <param name="key">The special keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is pressed down.</param>
+	void AddSpecialDownCallback(const SpecialKey key, voidcallback) {
 		AddCallback(special_down_callback_dict, key, callback);
 	}
 
-	void AddSpecialUpCallback(const SpecialKey key, funcT callback) {
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
+	/// </summary>
+	/// <param name="key">The special keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is released.</param>
+	void AddSpecialUpCallback(const SpecialKey key, voidcallback) {
 		AddCallback(special_up_callback_dict, key, callback);
 	}
 
-	const bool RemoveCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT callback) {
+	/// <summary>
+	/// Pops a stored reference to the given void callback from the array paired with the given key inside of the given dictionary.<br/>
+	/// When a void callback <c>Foo()</c> is given with the key being <c>a</c>, 
+	/// a pointer to <c>Foo()</c> would attempt to be removed from an array in the given dictionary at the key <c>a</c>. 
+	/// </summary>
+	/// <param name="dictionary">The dictionary holding the callback pointer to remove.</param>
+	/// <param name="key">The key to the array you want to pop a reference of the callback from.</param>
+	/// <param name="callback">The callback pointer you wish to pop from the array. </param>
+	const bool RemoveCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT* callback) {
 
 		if (dictionary.find(key) == dictionary.end()) return false;
 
@@ -143,21 +185,39 @@ namespace UserInput {
 		return true;
 	}
 
-	const bool RemoveKeyboardDownCallback(const uchar key, funcT callback) {
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given keyboard key is pressed down.
+	/// </summary>
+	/// <param name="key">The keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveKeyboardDownCallback(const uchar key, voidcallback) {
 		return RemoveCallback(keyboard_down_callback_dict, key, callback);
 	}
 
-	const bool RemoveKeyboardUpCallback(const uchar key, funcT callback) {
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given keyboard key is released.
+	/// </summary>
+	/// <param name="key">The keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveKeyboardUpCallback(const uchar key, voidcallback) {
 		return RemoveCallback(keyboard_up_callback_dict, key, callback);
 	}
 
-	const bool RemoveSpecialDownCallback(const SpecialKey key, funcT callback) {
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is pressed down.
+	/// </summary>
+	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveSpecialDownCallback(const SpecialKey key, voidcallback) {
 		return RemoveCallback(special_down_callback_dict, key, callback);
 	}
 
-	const bool RemoveSpecialUpCallback(const SpecialKey key, funcT callback) {
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is released.
+	/// </summary>
+	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveSpecialUpCallback(const SpecialKey key, voidcallback) {
 		return RemoveCallback(special_up_callback_dict, key, callback);
 	}
-
-	/// TODO: map each callback to when it's key is down in this script.
 }
