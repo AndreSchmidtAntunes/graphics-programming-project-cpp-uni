@@ -48,9 +48,12 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0,
 	// below block is to test new input callback system
 
 		UserInput::AddKeyboardDownCallback('h', PrintHello);
-		UserInput::AddKeyboardDownCallback('h', PrintWorld);
-		UserInput::AddSpecialDownCallback(UserInput::UP, PrintUP);
+		UserInput::AddKeyboardDownCallback('h', PrintHello);
 
+		UserInput::RemoveKeyboardDownCallback('h', PrintHello);
+
+		UserInput::AddKeyboardDownCallback('h', PrintWorld);
+		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::UP, PrintUP);
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 
