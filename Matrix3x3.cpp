@@ -15,8 +15,8 @@ Matrix3x3::Matrix3x3() {
 }
 
 Matrix3x3::Matrix3x3(double elements[DIMENTIONS][DIMENTIONS]) {
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] = elements[row][col];
 		}
 }
@@ -65,41 +65,41 @@ Matrix3x3 Matrix3x3::CrossProductMatrix(Vector3 direction) {
 
 // Setters
 
-void Matrix3x3::setElementAt(int row_index, int column_index, double value) {
+void Matrix3x3::setElementAt(uint row_index, uint column_index, double value) {
 	self[row_index][column_index] = value;
 }
 
-void Matrix3x3::setRow(int row_index, Vector3 elements) {
-	for (int i = 0; i < DIMENTIONS; i++)
+void Matrix3x3::setRow(uint row_index, Vector3 elements) {
+	for (uint i = 0; i < DIMENTIONS; i++)
 		self[row_index][i] = elements[i];
 }
 
-void Matrix3x3::setColumn(int column_index, Vector3 elements) {
-	for (int i = 0; i < DIMENTIONS; i++)
+void Matrix3x3::setColumn(uint column_index, Vector3 elements) {
+	for (uint i = 0; i < DIMENTIONS; i++)
 		self[i][column_index] = elements[i];
 }
 
 // Getters
 
-double Matrix3x3::getElementAt(int row_index, int column_index) {
+double Matrix3x3::getElementAt(uint row_index, uint column_index) {
 	return mElements[row_index][column_index];
 }
 
-Vector3 Matrix3x3::getRow(int row_index) {
+Vector3 Matrix3x3::getRow(uint row_index) {
 	return Vector3(self[row_index][0], self[row_index][1], self[row_index][2]);
 }
 
-Vector3 Matrix3x3::getColumn(int column_index) {
+Vector3 Matrix3x3::getColumn(uint column_index) {
 	return Vector3(self[0][column_index], self[1][column_index], self[2][column_index]);
 }
 
-double* Matrix3x3::operator [] (std::size_t idx) {
+std::array<double, Matrix3x3::DIMENTIONS>& Matrix3x3::operator [] (uint idx) {
 	return mElements[idx];
 }
 
 Matrix3x3& Matrix3x3::operator = (Matrix3x3 other) {
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++)
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++)
 			self[row][col] = other[row][col];
 
 	return self;
@@ -111,24 +111,24 @@ Matrix3x3& Matrix3x3::operator *= (Matrix3x3 other) {
 }
 
 Matrix3x3& Matrix3x3::operator *= (double mult) {
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] *= mult;
 		}
 	return self;
 }
 
 Matrix3x3& Matrix3x3::operator += (Matrix3x3 other) {
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] += other[row][col];
 		}
 	return self;
 }
 
 Matrix3x3& Matrix3x3::operator -= (Matrix3x3 other) {
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			mElements[row][col] -= other[row][col];
 		}
 	return self;
@@ -137,9 +137,9 @@ Matrix3x3& Matrix3x3::operator -= (Matrix3x3 other) {
 Vector3 Matrix3x3::operator * (Vector3 mult) {
 	Vector3 result = Vector3();
 	
-	for (int i = 0; i < DIMENTIONS; i++) {
+	for (uint i = 0; i < DIMENTIONS; i++) {
 		double sum = 0;
-		for (int j = 0; j < DIMENTIONS; j++) {
+		for (uint j = 0; j < DIMENTIONS; j++) {
 			sum += (self[i][j] * mult[j]);
 		}
 		result[i] = sum;
@@ -149,8 +149,8 @@ Vector3 Matrix3x3::operator * (Vector3 mult) {
 
 Matrix3x3 Matrix3x3::operator * (Matrix3x3 other) {
 	Matrix3x3 result = Matrix3x3();
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			result[row][col] *= other[row][col];
 		}
 	return result;
@@ -158,8 +158,8 @@ Matrix3x3 Matrix3x3::operator * (Matrix3x3 other) {
 
 Matrix3x3 Matrix3x3::operator * (double mult) {
 	Matrix3x3 result = Matrix3x3();
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			result[row][col] *= mult;
 		}
 	return result;
@@ -167,8 +167,8 @@ Matrix3x3 Matrix3x3::operator * (double mult) {
 
 Matrix3x3 Matrix3x3::operator + (Matrix3x3 other) {
 	Matrix3x3 result = Matrix3x3();
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			result[row][col] += other[row][col];
 		}
 	return result;
@@ -176,8 +176,8 @@ Matrix3x3 Matrix3x3::operator + (Matrix3x3 other) {
 
 Matrix3x3 Matrix3x3::operator - (Matrix3x3 other) {
 	Matrix3x3 result = Matrix3x3();
-	for (int row = 0; row < DIMENTIONS; row++)
-		for (int col = 0; col < DIMENTIONS; col++) {
+	for (uint row = 0; row < DIMENTIONS; row++)
+		for (uint col = 0; col < DIMENTIONS; col++) {
 			result[row][col] -= other[row][col];
 		}
 	return result;

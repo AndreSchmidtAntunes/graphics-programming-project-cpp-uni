@@ -6,6 +6,8 @@
 #include <ostream>
 #include <stdexcept>
 
+#define uint unsigned int
+
 struct Vector3 {
 public:
 
@@ -42,7 +44,8 @@ public:
 	Vector3& operator *= (const double& value);
 	Vector3& operator /= (const double& value);
 
-	double& operator [] (const std::size_t idx);
+	double& operator [] (const uint idx);
+	const double& operator [] (const uint idx) const;
 
 	operator bool() const;
 

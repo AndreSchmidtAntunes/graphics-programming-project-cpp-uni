@@ -1,99 +1,75 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const Vector3* vertices, const uint vertices_length, const Poly* polygons, const uint polygons_count) {
+Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count) {
 	
-	this->vertices_count = vertices_length;
-	this->polygons_count = polygons_count;
+	this->vertices_count = vertices_count;
+	this->indices_count = indices_count;
 
-	this->vertices = new Vector3[vertices_count];
-	for (uint i = 0; i < vertices_length; i++) {
+	normals = uvs = colours = nullptr;
+	normal_indices = uv_indices = nullptr;
+	normals_count = uvs_count = colours_count = 0;
+
+	this->normals_count = normals_count;
+
+	this->vertices = new GLfloat[vertices_count];
+	for (uint i = 0; i < vertices_count; i++) {
 		this->vertices[i] = vertices[i];
 	}
 
-	this->polygons = new Poly[polygons_count];
-	for (uint i = 0; i < polygons_count; i++) {
-
-		/*this->polygons[i].owner = this;*/
-
-		this->polygons[i].vert_count = polygons[i].vert_count;
-		this->polygons[i].indices = new uint[polygons[i].vert_count];
-		for (uint indice = 0; indice < polygons[i].vert_count; indice++) {
-			this->polygons[i].indices[indice] = polygons[i].indices[indice];
-		}
-
-		if (polygons[i].colours) {
-
-			this->polygons[i].colours = new Colour[polygons[i].vert_count];
-			for (uint vert = 0; vert < polygons[i].vert_count; vert++) {
-				this->polygons[i].colours[vert] = polygons[i].colours[vert];
-			}
-		}
-		else
-			this->polygons[i].colours = NULL;
-
+	this->indices = new GLuint[indices_count];
+	for (uint i = 0; i < indices_count; i++) {
+		this->indices[i] = indices[i];
 	}
 }
 
-Mesh::Mesh(const Vector3* vertices, const uint vertices_length, const uint** indices, const uint* per_indice_length, const uint indices_length) {
+Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* colours, const uint colours_count) : Mesh(vertices, vertices_count, indices, indices_count) {
 
-	this->vertices_count = vertices_length;
-	this->polygons_count = indices_length;
-	
-	this->vertices = new Vector3[vertices_count];
-	for (uint i = 0; i < vertices_length; i++) {
-		this->vertices[i] = vertices[i];
+	this->colours_count = colours_count;
+
+	normals = uvs = nullptr;
+	normal_indices = uv_indices = nullptr;
+	normals_count = uvs_count = 0;
+
+	this->colours = new GLfloat[colours_count];
+	for (uint i = 0; i < colours_count; i++) {
+		this->colours[i] = colours[i];
 	}
+};
 
-	this->polygons = new Poly[indices_length];
-	for (uint i = 0; i < indices_length; i++) {
+Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count) : Mesh(vertices, vertices_count, indices, indices_count) {
 
-		/*this->polygons[i].owner = this;*/
+	this->normals_count = normals_count;
+	this->uvs_count = uvs_count;
 
-		this->polygons[i].vert_count = per_indice_length[i];
-		this->polygons[i].indices = new uint[per_indice_length[i]];
-		for (uint indice = 0; indice < per_indice_length[i]; indice++) {
-			this->polygons[i].indices[indice] = indices[i][indice];
-		}
-
-		this->polygons[i].colours = NULL;
+	colours = nullptr;
+	colours_count = 0;
+	
+	this->normals = new GLfloat[normals_count];
+	for (uint i = 0; i < normals_count; i++) {
+		this->normals[i] = normals[i];
+	}
+	
+	this->uvs = new GLfloat[uvs_count];
+	for (uint i = 0; i < uvs_count; i++) {
+		this->uvs[i] = uvs[i];
 	}
 }
 
-Mesh::Mesh(const Vector3* vertices, const uint vertices_length, const uint** indices, const Colour** indice_colours, const uint* per_indice_length, const uint indices_length) {
+Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count, const double* colours, const uint colours_count) : Mesh(vertices, vertices_count, indices, indices_count, normals, normals_count, uvs, uvs_count) {
+	this->colours_count = colours_count;
 
-	this->vertices_count = vertices_length;
-	this->polygons_count = indices_length;
-	
-	this->vertices = new Vector3[vertices_count];
-	for (uint i = 0; i < vertices_length; i++) {
-		this->vertices[i] = vertices[i];
-	}
-
-	this->polygons = new Poly[indices_length];
-	for (uint i = 0; i < indices_length; i++) {
-		this->polygons[i].indices = new uint[per_indice_length[i]];
-		/*this->polygons[i].owner = this;*/
-
-		this->polygons[i].vert_count = per_indice_length[i];
-		for (uint indice = 0; indice < per_indice_length[i]; indice++) {
-			this->polygons[i].indices[indice] = indices[i][indice];
-		}
-
-		if (polygons[i].colours) {
-
-			this->polygons[i].colours = new Colour[per_indice_length[i]];
-			for (uint indice = 0; indice < per_indice_length[i]; indice++) {
-				this->polygons[i].colours[i] = indice_colours[i][indice];
-			}
-		}
-		else
-			this->polygons[i].colours = NULL;
+	this->colours = new GLfloat[colours_count];
+	for (uint i = 0; i < colours_count; i++) {
+		this->colours[i] = colours[i];
 	}
 }
 
 Mesh::~Mesh() {
 	delete[this->vertices_count] vertices;
-	delete[this->polygons_count] polygons;
+	delete[this->indices_count] indices;
+	delete[this->normals_count] normals;
+	delete[this->uvs_count] uvs;
+	delete[this->colours_count] colours;
 }
 
 #include <fstream>
@@ -105,14 +81,19 @@ Mesh::~Mesh() {
 
 bool Mesh::LoadFromFile(const std::string& filename) {
 
-	std::vector<Vector3> vertices;
-	std::vector<Poly*> polygons;
+	std::vector<double> vertices, normals, uvs;
+	std::vector<uint> indices, uv_indices, normal_indices;
+
+	vertices = normals = uvs = { };
+	indices = uv_indices = normal_indices = { };
 
 	std::ifstream file(filename);
+
 	if (!file.is_open()) {
 		std::cerr << "Error opening file: " << filename << std::endl;
 		return false;
 	}
+
 	std::string line = "";
 
 	uint _current_line = 0;
@@ -137,9 +118,8 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 				case 'f': { // If we are reading a face definition
 
-					std::vector<uint> indices;
-					std::vector<uint> uv_indices;
-					std::vector<uint> normal_indices;
+					//std::vector<uint> indices;
+					
 
 					// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
 
@@ -151,10 +131,17 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 						std::string normal_indices_str = "";
 
 						uint datatype = 0; // 0 = vert indices, 1 = uv indices, 2 = normal indices
-						for (int i = 0; i < vert_data.length(); i++) {
+						for (uint i = 0; i < vert_data.length(); i++) {
 
-							if (vert_data[i] == '/')
+							while (vert_data[i] == '/') {
 								datatype++;
+								i++;
+							}
+
+							while (std::isspace(vert_data[i])) {
+								datatype = 0;
+								i++;
+							}
 
 							switch (datatype) {
 
@@ -165,8 +152,7 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 							default: return false;
 							}
 
-							if (std::isspace(vert_data[i]))
-								return false;
+							
 						}
 
 						char* strtol_output;
@@ -175,8 +161,6 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 						uv_indices.push_back(std::strtol(uv_indices_str.c_str(), &strtol_output, 10));
 						normal_indices.push_back(std::strtol(normal_indices_str.c_str(), &strtol_output, 10));
 					}
-					if (indices.size())
-						polygons.emplace_back(new Poly(indices.data(), indices.size()));
 
 					continue;
 				}
@@ -188,7 +172,6 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 					continue;
 				} 
 
-
 				default: { // erroneous first istring
 					std::cerr << "Erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
 					continue;
@@ -198,30 +181,105 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 	}
 	
 	this->vertices_count = vertices.size();
-	this->polygons_count = polygons.size();
+	this->indices_count  = indices.size();
+	this->normals_count  = normals.size();
+	this->uvs_count   =    uvs.size();
 
 	delete[this->vertices_count] this->vertices;
-	delete[this->polygons_count] this->polygons;
+	delete[this->indices_count]  this->indices;
+	delete[this->normals_count]  this->normals;
+	delete[this->uvs_count]		 this->uvs;
 
-	this->vertices = new Vector3[vertices_count] { };
-	this->polygons = new Poly[polygons_count] { };
+	this->vertices = new GLfloat[vertices_count] {};
+	this->normals  = new GLfloat[normals_count] {};
+	this->uvs   =	 new GLfloat[uvs_count] {};
 
-	for (int i = 0; i < vertices_count; i++)
+	this->indices = new GLuint[indices_count]{};
+	this->normal_indices = new GLuint[indices_count]{};
+	this->uv_indices = new GLuint[indices_count]{};
+
+	for (uint i = 0; i < vertices_count; i++)
 		this->vertices[i] = vertices[i];
 
-	for (int i = 0; i < polygons_count; i++)
-		this->polygons[i] = *polygons[i];
+	for (uint i = 0; i < normals_count; i++)
+		this->normals[i] = normals[i];
 
-	//std::copy(vertices.begin(), vertices.end(), this->vertices);
-	//std::copy(polygons.begin(), polygons.end(), this->polygons);
+	for (uint i = 0; i < uvs_count; i++)
+		this->uvs[i] = uvs[i];
+
+	for (uint i = 0; i < indices_count; i++)
+		this->indices[i] = indices[i];
+
+	for (uint i = 0; i < indices_count; i++)
+		this->normal_indices[i] = normal_indices[i];
+
+	for (uint i = 0; i < indices_count; i++)
+		this->uv_indices[i] = uv_indices[i];
 
 	return true;
+}
+
+#include "GLExtras.h"
+
+void Mesh::Render() const {
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+
+	glVertexPointer(3, GL_DOUBLE, 0, vertices);
+
+	if (normals != nullptr)
+		glNormalPointer(GL_DOUBLE, 0, normals);
+
+	if (normals != nullptr)
+		glTexCoordPointer(2, GL_DOUBLE, 0, uvs);
+
+	if (colours == nullptr)
+		GLExtras::SetColour(Colour::RED);
+	else
+		glColorPointer(4, GL_DOUBLE, 0, colours);
+	
+	glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void Mesh::Render(Vector3 position) const {
+	glPushMatrix(); 
+	{
+		glTranslatef(position.x, position.y, position.z);
+		Render();
+	}
+	glPopMatrix();
+}
+
+void Mesh::Render(Vector3 position, Vector3 rotation) const {
+	glPushMatrix(); 
+	{
+		glTranslatef(position.x, position.y, position.z);
+
+		glRotatef(1, rotation.x, rotation.y, rotation.z);
+
+		Render();
+	}
+	glPopMatrix();
+}
+
+void Mesh::Render(Vector3 position, Vector3 rotation, Vector3 scale) const {
+	glPushMatrix(); 
+	{
+		glScalef(scale.x, scale.y, scale.z);
+		glRotatef(1, rotation.x, rotation.y, rotation.z);
+		glTranslatef(position.x, position.y, position.z);
+
+		Render();
+	}
+	glPopMatrix();
 }
 
 /// Thank you to Zan Lynx for this int parser from a string, and thanks to LiveLaughLove for the original post on stack overflow.
 /// Answer Post: https://stackoverflow.com/a/48528969
 
-std::vector<int> parseInts(std::string str) {//23,4,56
+std::vector<int> parseInts(std::string str) {
 	std::vector<int>lifeishard;
 	std::stringstream output;
 	std::string lifeisgood = str;
@@ -234,31 +292,3 @@ std::vector<int> parseInts(std::string str) {//23,4,56
 	}
 	return lifeishard;
 }
-
-
-///// Thank you to Evan Teran on this stack overflow for their trim function! 
-///// Post: https://stackoverflow.com/a/217605
-//#include <algorithm> 
-//#include <cctype>
-//#include <locale>
-//
-//// Trim from the start (in place)
-//inline void ltrim(std::string& s) {
-//	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-//		return !std::isspace(ch);
-//		}));
-//}
-//
-//// Trim from the end (in place)
-//inline void rtrim(std::string& s) {
-//	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-//		return !std::isspace(ch);
-//		}).base(), s.end());
-//}
-//
-//// Trim from both ends (in place)
-//inline void trim(std::string& s) {
-//	rtrim(s);
-//	ltrim(s);
-//}
-//

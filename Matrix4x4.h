@@ -6,9 +6,11 @@
 #define self (*this)
 
 struct Matrix4x4 {
+private:
+	static const uint DIMENTIONS = 4;
 public:
 
-	static const int DIMENTIONS = 4;
+	std::array<std::array<double, DIMENTIONS>, DIMENTIONS> mElements{ };
 
 	Matrix4x4(
 		double m1_1, double m1_2, double m1_3, double m1_4,
@@ -35,46 +37,45 @@ public:
 
 	// Setters
 
-	void setElementAt(int row, int column, double value);
+	void setElementAt(uint row, uint column, double value);
 
-	void setRow(int row_index, Vector4 elements);
+	void setRow(uint row_index, Vector4 elements);
 
-	void setColumn(int column_index, Vector4 elements);
+	void setColumn(uint column_index, Vector4 elements);
 
 	// Getters
 
-	double getElementAt(int row, int column);
+	double getElementAt(uint row, uint column);
 
-	Vector4 getRow(int row_index);
+	Vector4 getRow(uint row_index);
 
-	Vector4 getColumn(int column_index);
+	Vector4 getColumn(uint column_index);
 
 	// Operators
 
-	Matrix4x4& operator = (Matrix4x4 other);
+	Matrix4x4& operator = (const Matrix4x4& other);
 
-	Matrix4x4& operator *= (Matrix4x4 other);
-	Matrix4x4& operator *= (double mult);
-	Matrix4x4& operator += (Matrix4x4 other);
-	Matrix4x4& operator -= (Matrix4x4 other);
+	Matrix4x4& operator *= (const Matrix4x4& other);
+	Matrix4x4& operator *= (const double mult);
+	Matrix4x4& operator += (const Matrix4x4& other);
+	Matrix4x4& operator -= (const Matrix4x4& other);
 
-	Vector4 operator * (Vector4 mult);
-	Vector3 operator * (Vector3 mult);
+	Vector4 operator * (const Vector4& mult) const;
+	Vector3 operator * (const Vector3& mult) const;
 
-	Matrix4x4 operator * (Matrix4x4 other);
-	Matrix4x4 operator * (double mult);
-	Matrix4x4 operator + (Matrix4x4 other);
-	Matrix4x4 operator - (Matrix4x4 other);
+	Matrix4x4 operator * (const Matrix4x4& other) const;
+	Matrix4x4 operator * (double mult) const;
+	Matrix4x4 operator + (const Matrix4x4& other) const;
+	Matrix4x4 operator - (const Matrix4x4& other) const;
 
-	double* operator [] (std::size_t idx);
+	std::array<double, DIMENTIONS>& operator [] (const uint idx);
+	const std::array<double, DIMENTIONS>& operator [] (const uint idx) const;
 
 	// Constants
 
 	static const Matrix4x4 identity;
 	static const Matrix4x4 zero;
 
-
-
-protected:
-	double mElements[DIMENTIONS][DIMENTIONS];
+//protected:
+//	double mElements[DIMENTIONS][DIMENTIONS];
 };

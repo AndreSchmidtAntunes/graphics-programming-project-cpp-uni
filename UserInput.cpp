@@ -64,12 +64,12 @@ namespace UserInput {
 
 	void SpecialDownCallback(int key, int mouse_x, int mouse_y) {
 
-		key--; // move the key to be in the range of index 0 onwards.
-
 		// For some reason all other special keys 
 		// after number 12 (being the F12 key) continue from 100 onwards, 
 		// so this offsets them back to 13 onwards.
 		if (key >= 100) key -= 87;
+
+		key--; // move the key to be in the range of index 0 onwards.
 
 		inputState.special.set(key);
 
@@ -78,9 +78,9 @@ namespace UserInput {
 
 	void SpecialUpCallback(int key, int mouse_x, int mouse_y) {
 
-		key--;
-
 		if (key >= 100) key -= 87;
+
+		key--;
 
 		inputState.special.reset(key);
 		RunCallbacksInPtrVector(special_up_callback_dict[key]);

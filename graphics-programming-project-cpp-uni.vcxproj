@@ -144,6 +144,7 @@
     <ClInclude Include="Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Colour.h" />
     <ClCompile Include="FastInvSqrt.cpp" />

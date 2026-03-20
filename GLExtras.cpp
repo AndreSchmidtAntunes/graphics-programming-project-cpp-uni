@@ -40,9 +40,9 @@ namespace GLExtras {
 			AddPolygon(polygons[p], vertices);
 	}
 
-	void AddMesh(const Mesh& mesh) {
-		AddPolygons(mesh.polygons, mesh.polygons_count, mesh.vertices);
-	}
+	//void AddMesh(const Mesh& mesh) {
+	//	AddPolygons(mesh.polygons, mesh.polygons_count, mesh.vertices);
+	//}
 
 	void SetColourHexRGBA(const uint& Hex) {
 		SetColour(Colour::HexRGBAToColour(Hex));
@@ -52,7 +52,7 @@ namespace GLExtras {
 		SetColour(Colour::HexRGBToColour(Hex));
 	}
 
-	void SetColour(const float& r, const float& g, const float& b, const float& a) {
+	void SetColour(const float r, const float g, const float b, const float a) {
 		SetColour(Colour(r, g, b, a));
 	}
 

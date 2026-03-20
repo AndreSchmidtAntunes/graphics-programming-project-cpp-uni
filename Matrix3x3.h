@@ -3,11 +3,14 @@
 #include "Vector3.h"
 
 #define self (*this)
+#define uint unsigned int
 
 struct Matrix3x3 {
+private:
+	static const uint DIMENTIONS = 3;
 public:
 
-	static const int DIMENTIONS = 3;
+	std::array<std::array<double, DIMENTIONS>, DIMENTIONS> mElements{ };
 
 	Matrix3x3(
 		double m1_1, double m1_2, double m1_3,
@@ -30,21 +33,22 @@ public:
 
 	// Setters
 
-	void setElementAt(int row, int column, double value);
+	void setElementAt(uint row, uint column, double value);
 
-	void setRow(int row_index, Vector3 elements);
+	void setRow(uint row_index, Vector3 elements);
 
-	void setColumn(int column_index, Vector3 elements);
+	void setColumn(uint column_index, Vector3 elements);
 
 	// Getters
 
-	double getElementAt(int row, int column);
+	double getElementAt(uint row, uint column);
 
-	Vector3 getRow(int row_index);
+	Vector3 getRow(uint row_index);
 
-	Vector3 getColumn(int column_index);
+	Vector3 getColumn(uint column_index);
 
 	// Operators
+	
 
 	Matrix3x3& operator = (Matrix3x3 other);
 
@@ -60,14 +64,15 @@ public:
 	Matrix3x3 operator + (Matrix3x3 other);
 	Matrix3x3 operator - (Matrix3x3 other);
 
-	double* operator [] (std::size_t idx);
+	std::array<double, DIMENTIONS>& operator [] (const std::size_t idx);
+	const std::array<double, DIMENTIONS>& operator [] (const std::size_t idx) const;
 
 	// Constants
 
 	static const Matrix3x3 identity;
 	static const Matrix3x3 zero;
 
-protected:
-	double mElements[DIMENTIONS][DIMENTIONS];
+//protected:
+//	double mElements[DIMENTIONS][DIMENTIONS];
 
 };

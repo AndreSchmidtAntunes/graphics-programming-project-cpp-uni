@@ -50,7 +50,7 @@ namespace GLExtras {
 	/// <param name="g">The amount of green. (0-1)</param>
 	/// <param name="b">The amount of blue. (0-1)</param>
 	/// <param name="a">The colour's opacity. (0-1)</param>
-	void SetColour(const short& r, const short& g, const short& b, const short& a);
+	void SetColour(const float r, const float g, const float b, const float a);
 
 	/// <summary>
 	/// Set The current vertex colour. 

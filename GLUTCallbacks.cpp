@@ -5,12 +5,17 @@
 
 namespace GLUTCallbacks {
 
-	namespace {
-		static GL_entry_point* entry_point = nullptr;
+
+	static GL_entry_point* entry_point = nullptr;
+
+	GL_entry_point* GetEntryPoint() {
+		return entry_point;
 	}
 
 	void Init(GL_entry_point* new_entry_point) {
-		entry_point = new_entry_point;
+		if (entry_point == nullptr) {
+			entry_point = new_entry_point;
+		}
 	}
 
 	void Display() {
@@ -21,7 +26,7 @@ namespace GLUTCallbacks {
 
 	void Timer(int refreshRate) {
 
-		glLoadIdentity();
+		//glLoadIdentity();
 
 		int updateDuration = glutGet(GLUT_ELAPSED_TIME);
 

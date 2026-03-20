@@ -1,35 +1,59 @@
 #pragma once
 
 #include "GLLibs.h"
-#include "Poly.h"
+#include "Vector3.h"
 
-struct Mesh {
+class Mesh {
 public:
 
-	Vector3* vertices;
-	uint vertices_count;
+	GLfloat *vertices, *colours, *normals,  *uvs;
 
-	Poly* polygons;
-	uint polygons_count;
+	GLuint *indices, *normal_indices, *uv_indices;
 
-	Mesh() : vertices(nullptr), polygons(nullptr), vertices_count(0), polygons_count(0) { };
+	GLuint vertices_count, colours_count, normals_count, uvs_count,
+		indices_count;
 
-	Mesh(const Vector3* vertices, const uint vertices_length, const Poly* triangles, const uint triangles_length);
+	//Poly* polygons;
+	//uint polygons_count;
 
-	Mesh(const Vector3* vertices, const uint vertices_length, const uint** indices, const uint* per_indice_length, const uint triangles_length);
+	//Mesh() : vertices(nullptr), polygons(nullptr), vertices_count(0), polygons_count(0) { };
 
-	Mesh(const Vector3* vertices, const uint vertices_length, const uint** indices, const Colour** indice_colours, const uint* per_indice_length, const uint indices_length);
+	Mesh() : 
+		vertices(nullptr), colours(nullptr), normals(nullptr), uvs(nullptr), 
+		vertices_count(0), colours_count(0), normals_count(0), uvs_count(0),
+		indices(nullptr), normal_indices(nullptr), uv_indices(nullptr), 
+		indices_count(0) {};
+
+	//Mesh(const double* vertices, const uint vertices_length, const Poly* triangles, const uint triangles_length);
+	
+	Mesh(const double* vertices, const uint vertices_length, const uint* indices, const uint triangles_length);
+
+	Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* colours, const uint colours_count);
+
+	Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count);
+
+	Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count, const double* colours, const uint colours_count);
+
+
+	//Mesh(const double* vertices, const uint vertices_length, const uint** indices, const uint* per_indice_length, const uint triangles_length);
+
+	//Mesh(const double* vertices, const uint vertices_length, const uint** indices, const Colour** indice_colours, const uint* per_indice_length, const uint indices_length);
 
 	~Mesh();
 
-	Vector3& getVertex(const Poly* polygon, uint edge_index) {
-		return vertices[polygon->indices[edge_index]];
-	}
+	//Vector3& getVertex(const Poly* polygon, uint edge_index) {
+	//	return vertices[polygon->indices[edge_index]];
+	//}
+
+	void Render() const;
+	void Render(Vector3 position) const;
+	void Render(Vector3 position, Vector3 rotation) const;
+	void Render(Vector3 position, Vector3 rotation, Vector3 scale) const;
 
 	bool LoadFromFile(const std::string& filename);
 
-	Mesh(const std::string& filename) {
-		self.LoadFromFile(filename);
-	}
+	Mesh(const std::string& filename) { LoadFromFile(filename); }
+
+
 };
 

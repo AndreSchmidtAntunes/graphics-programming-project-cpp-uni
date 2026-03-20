@@ -34,6 +34,13 @@ const char* vertexShaderSource = "#version 330 core\n"
 		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
 	}
 
+#define ROTATION_SPEED 5.0f
+
+void RotateRight()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Right); 	}
+void RotateLeft()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Left);	}
+void RotateUp()		{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Up);		}
+void RotateDown()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Down);	}
+
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0, 0)) {
 
 	rot = 0.0f;
@@ -59,16 +66,21 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0,
 		UserInput::AddKeyboardDownCallback('h', PrintWorld);
 		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::LEFT_SHIFT, PrintUP);
 
+		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::LEFT, RotateLeft);
+		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::RIGHT, RotateRight);
+		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::UP, RotateUp);
+		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::DOWN, RotateDown);
+
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 
 	glutInitDisplayMode(GLUT_DOUBLE);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
 
-	gluPerspective(45, 1, 0, 1000);
+	//gluPerspective(45, 1, 0, 1000);
 
-	glMatrixMode(GL_MODELVIEW);
+	//glMatrixMode(GL_MODELVIEW);
 
 	glutMainLoop();
 }
@@ -86,52 +98,12 @@ void GL_entry_point::Display() {
 	glutSwapBuffers();
 }
 
-static const Mesh teapot_mesh("teapot.obj");
-static const Mesh rat_mesh("rat.obj");
+static const Mesh* teapot_mesh = new Mesh("teapot.obj");
+static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
 
-	//// middle
-	//glPushMatrix();
-	//	#define RATSCALE 0.025f
-	//	glScalef(RATSCALE, RATSCALE, RATSCALE);
-	//	glRotatef(rot* 4, 1, 0, 0); glRotatef(rot * 2, 0, 1, 0); glRotatef(rot * 1, 0, 0, 1);
-
-	//	GLExtras::AddMesh(rat_mesh);
-	//glPopMatrix();
-
-	//// bott-right
-	//glPushMatrix();
-	//	#define POTSCALE 0.002f
-	//	glScalef(POTSCALE, POTSCALE, POTSCALE);
-	//	glTranslatef(200, -130, 0);
-	//	glRotatef(rot * -2, 1, 0, 0); glRotatef(rot * 4, 0, 1, 0); glRotatef(rot * -5, 0, 0, 1);
-
-	//	GLExtras::AddMesh(rat_mesh);
-	//glPopMatrix();
-
-	//// top-left
-	//glPushMatrix();
-	//	#define POTSCALE 0.002f
-	//	glScalef(POTSCALE, POTSCALE, POTSCALE);
-	//	glTranslatef(-200, 130, 0);
-	//	glRotatef(rot * 2, 1, 0, 0); glRotatef(rot * -4, 0, 1, 0); glRotatef(rot * 5, 0, 0, 1);
-
-	//	GLExtras::AddMesh(rat_mesh);
-	//glPopMatrix();
-
-	glPushMatrix();
-
-		#define POTSCALE 0.025f
-		glScalef(POTSCALE, POTSCALE, POTSCALE);
-
-		glRotatef(rot, 4, 2, 1);
-
-		glTranslatef(0.0f, 0.0f, -5.0f);
-
-		GLExtras::AddMesh(rat_mesh);
-	
-	glPopMatrix();
+	rat_mesh->Render(Vector3(0, 0, -0), rot * Vector3(4, 2, 1), Vector3(0.025));
 }
 
 void GL_entry_point::Update() {
@@ -139,9 +111,9 @@ void GL_entry_point::Update() {
 	if (rot >= 360.0f)
 		rot = 0.0f;
 
-	gluLookAt(
-		camera->eye.x, camera->eye.y, camera->eye.z,  // eye
-		camera->position.x, camera->position.y, camera->position.z, // position
-		camera->up.x, camera->up.y, camera->up.z // up
-	);
+	//gluLookAt(
+	//	camera->eye.x, camera->eye.y, camera->eye.z,  // eye
+	//	camera->position.x, camera->position.y, camera->position.z, // position
+	//	camera->up.x, camera->up.y, camera->up.z // up
+	//);
 }

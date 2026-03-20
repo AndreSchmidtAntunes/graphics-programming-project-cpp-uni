@@ -1,10 +1,13 @@
 #pragma once
 
 #include "FastInvSqrt.h"
+#include "Vector3.h"
 #include <array>
 #include <math.h>
 #include <ostream>
 #include <stdexcept>
+
+#define uint unsigned int
 
 struct Vector4 {
 public:
@@ -18,7 +21,10 @@ public:
 
 	Vector4(const Vector4& other) : x(other.x), y(other.y), z(other.z), w(other.w) {};
 
+	Vector4(Vector3 vec3, double w = 0) : x(vec3.x), y(vec3.y), z(vec3.z), w(w) {};
+
 	Vector4(double value = 0) : x(value), y(value), z(value), w(value) {};
+
 
 	~Vector4() { }
 
@@ -40,9 +46,12 @@ public:
 	Vector4& operator *= (const double& value);
 	Vector4& operator /= (const double& value);
 
-	double& operator [] (std::size_t idx);
+	double& operator [] (const uint idx);
+	const double& operator [] (const uint idx) const;
 
 	operator bool() const;
+
+	operator Vector3() const { return Vector3(x, y, z); }
 
 	bool operator == (Vector4 other) const;
 	bool operator != (Vector4 other) const;

@@ -90,7 +90,11 @@ Vector4& Vector4::operator -= (const Vector4& value) {
 	return *this;
 }
 
-double& Vector4::operator [] (std::size_t idx) {
+double& Vector4::operator [] (const std::size_t idx) {
+	return vElements[idx];
+}
+
+const double& Vector4::operator [] (const std::size_t idx) const {
 	return vElements[idx];
 }
 
