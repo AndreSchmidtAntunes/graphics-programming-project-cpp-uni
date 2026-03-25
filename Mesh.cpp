@@ -222,25 +222,41 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 #include "GLExtras.h"
 
 void Mesh::Render() const {
+
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
 
-	glVertexPointer(3, GL_DOUBLE, 0, vertices);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-	if (normals != nullptr)
-		glNormalPointer(GL_DOUBLE, 0, normals);
+	if (normals != nullptr) {
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glNormalPointer(GL_FLOAT, 0, normals);
+	}
 
-	if (normals != nullptr)
-		glTexCoordPointer(2, GL_DOUBLE, 0, uvs);
+	if (normals != nullptr) {
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, uvs);
+	}
 
-	if (colours == nullptr)
-		GLExtras::SetColour(Colour::RED);
+	if (colours != nullptr) {
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, 0, colours);
+	}
 	else
-		glColorPointer(4, GL_DOUBLE, 0, colours);
-	
+		GLExtras::SetColour(DefaultColour);
+
 	glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
 
+	
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	if (normals != nullptr)
+		glDisableClientState(GL_NORMAL_ARRAY);
+
+	if (normals != nullptr)
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (colours == nullptr)
+		glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void Mesh::Render(Vector3 position) const {

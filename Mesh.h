@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Colour.h"
 #include "GLLibs.h"
 #include "Vector3.h"
 
@@ -54,6 +55,7 @@ public:
 
 	Mesh(const std::string& filename) { LoadFromFile(filename); }
 
-
+protected:
+	const Colour DefaultColour = Colour::RED;
 };
 
