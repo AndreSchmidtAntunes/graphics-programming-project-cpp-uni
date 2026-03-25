@@ -108,10 +108,10 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 			{
 				case 'v': { // If we are reading a vertex
 
-					double x, y, z;
+					double coord;
 
-					if (iss >> x >> y >> z)
-						vertices.emplace_back(Vector3(x, y, z));
+					while (iss >> coord) 
+						vertices.push_back(coord);
 
 					continue;
 				}
@@ -227,17 +227,17 @@ void Mesh::Render() const {
 
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-	if (normals != nullptr) {
+	if (normals != nullptr && normals_count > 0) {
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glNormalPointer(GL_FLOAT, 0, normals);
 	}
 
-	if (normals != nullptr) {
+	if (uvs != nullptr && uvs_count > 0) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, uvs);
 	}
 
-	if (colours != nullptr) {
+	if (colours != nullptr && colours_count > 0) {
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_FLOAT, 0, colours);
 	}
@@ -284,7 +284,11 @@ void Mesh::Render(Vector3 position, Vector3 rotation, Vector3 scale) const {
 	glPushMatrix(); 
 	{
 		glScalef(scale.x, scale.y, scale.z);
-		glRotatef(1, rotation.x, rotation.y, rotation.z);
+
+		glRotatef(rotation.x, 0.0f, -1.0f, 0.0f);
+		glRotatef(rotation.y, 0.0f, 0.0f, -1.0f);
+		glRotatef(rotation.z, -1.0f, 0.0f, 0.0f);
+
 		glTranslatef(position.x, position.y, position.z);
 
 		Render();

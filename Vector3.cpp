@@ -8,11 +8,19 @@ Vector3 Vector3::operator * (const double &value) const {
 	return Vector3(x * value, y * value, z * value);
 }
 
+Vector3 Vector3::operator * (const float &value) const {
+	return Vector3(x * value, y * value, z * value);
+}
+
 Vector3 Vector3::operator / (const Vector3 &other) const {
 	return Vector3(x / other.x, y / other.y, z / other.z);
 }
 
 Vector3 Vector3::operator / (const double &value) const {
+	return Vector3(x / value, y / value, z / value);
+}
+
+Vector3 Vector3::operator / (const float &value) const {
 	return Vector3(x / value, y / value, z / value);
 }
 
@@ -61,6 +69,14 @@ Vector3& Vector3::operator *= (const double &value) {
 	return *this;
 }
 
+Vector3& Vector3::operator *= (const float &value) {
+	x *= value;
+	y *= value;
+	z *= value;
+
+	return *this;
+}
+
 Vector3& Vector3::operator /= (const Vector3 &value) {
 	x /= value.x;
 	y /= value.y;
@@ -70,6 +86,14 @@ Vector3& Vector3::operator /= (const Vector3 &value) {
 }
 
 Vector3& Vector3::operator /= (const double &value) {
+	x /= value;
+	y /= value;
+	z /= value;
+
+	return *this;
+}
+
+Vector3& Vector3::operator /= (const float &value) {
 	x /= value;
 	y /= value;
 	z /= value;

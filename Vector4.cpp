@@ -8,11 +8,19 @@ Vector4 Vector4::operator * (const double& value) const {
 	return Vector4(x * value, y * value, z * value, w * value);
 }
 
+Vector4 Vector4::operator * (const float& value) const {
+	return Vector4(x * value, y * value, z * value, w * value);
+}
+
 Vector4 Vector4::operator / (const Vector4& other) const {
 	return Vector4(x / other.x, y / other.y, z / other.z, w / other.w);
 }
 
 Vector4 Vector4::operator / (const double& value) const {
+	return Vector4(x / value, y / value, z / value, w / value);
+}
+
+Vector4 Vector4::operator / (const float& value) const {
 	return Vector4(x / value, y / value, z / value, w / value);
 }
 
@@ -54,6 +62,15 @@ Vector4& Vector4::operator *= (const double& value) {
 	return *this;
 }
 
+Vector4& Vector4::operator *= (const float& value) {
+	x *= value;
+	y *= value;
+	z *= value;
+	w *= value;
+
+	return *this;
+}
+
 Vector4& Vector4::operator /= (const Vector4& value) {
 	x /= value.x;
 	y /= value.y;
@@ -64,6 +81,15 @@ Vector4& Vector4::operator /= (const Vector4& value) {
 }
 
 Vector4& Vector4::operator /= (const double& value) {
+	x /= value;
+	y /= value;
+	z /= value;
+	w /= value;
+
+	return *this;
+}
+
+Vector4& Vector4::operator /= (const float& value) {
 	x /= value;
 	y /= value;
 	z /= value;

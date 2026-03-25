@@ -36,6 +36,9 @@ public:
 	Vector4 operator * (const double& value) const;
 	Vector4 operator / (const double& value) const;
 
+	Vector4 operator * (const float& value) const;
+	Vector4 operator / (const float& value) const;
+
 	Vector4 operator - () const { return Vector4(-x, -y, -z, -w); };
 
 	Vector4& operator *= (const Vector4& value);
@@ -45,6 +48,9 @@ public:
 
 	Vector4& operator *= (const double& value);
 	Vector4& operator /= (const double& value);
+
+	Vector4& operator *= (const float& value);
+	Vector4& operator /= (const float& value);
 
 	double& operator [] (const uint idx);
 	const double& operator [] (const uint idx) const;

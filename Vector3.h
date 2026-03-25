@@ -18,7 +18,7 @@ public:
 
 	Vector3(double x, double y, double z) : x(x), y(y), z(z) {};
 
-	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z){};
+	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z) {};
 
 	Vector3(double value = 0) : x(value), y(value), z(value) {};
 
@@ -32,6 +32,9 @@ public:
 	Vector3 operator * (const double& value) const;
 	Vector3 operator / (const double& value) const;
 
+	Vector3 operator * (const float& value) const;
+	Vector3 operator / (const float& value) const;
+
 	Vector3 operator - () const { return Vector3(-x, -y, -z); };
 
 	Vector3& operator = (const Vector3& value);
@@ -43,6 +46,9 @@ public:
 
 	Vector3& operator *= (const double& value);
 	Vector3& operator /= (const double& value);
+
+	Vector3& operator *= (const float& value);
+	Vector3& operator /= (const float& value);
 
 	double& operator [] (const uint idx);
 	const double& operator [] (const uint idx) const;

@@ -98,12 +98,11 @@ void GL_entry_point::Display() {
 	glutSwapBuffers();
 }
 
-static const Mesh* teapot_mesh = new Mesh("teapot.obj");
+//static const Mesh* teapot_mesh = new Mesh("teapot.obj");
 static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
-
-	rat_mesh->Render(Vector3(0, 0, -0), rot * Vector3(4, 2, 1), Vector3(0.025));
+	rat_mesh->Render(Vector3(0, 0, -0), Vector3(0, 0, rot), Vector3(0.025));
 }
 
 void GL_entry_point::Update() {
