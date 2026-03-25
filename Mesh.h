@@ -3,6 +3,7 @@
 #include "Colour.h"
 #include "GLLibs.h"
 #include "Vector3.h"
+#include "Camera.h"
 
 class Mesh {
 public:
@@ -46,10 +47,9 @@ public:
 	//	return vertices[polygon->indices[edge_index]];
 	//}
 
-	void Render() const;
-	void Render(Vector3 position) const;
-	void Render(Vector3 position, Vector3 rotation) const;
-	void Render(Vector3 position, Vector3 rotation, Vector3 scale) const;
+	void Render(const Vector3& position, const Camera*) const;
+	void Render(const Vector3& position, const Vector3& rotation, const Camera*) const;
+	void Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera*) const;
 
 	bool LoadFromFile(const std::string& filename);
 
@@ -57,5 +57,8 @@ public:
 
 protected:
 	const Colour DefaultColour = Colour::RED;
+
+private:
+	void DrawElements() const;
 };
 

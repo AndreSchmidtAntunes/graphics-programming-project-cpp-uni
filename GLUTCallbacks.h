@@ -8,7 +8,7 @@ namespace GLUTCallbacks {
 
 	void Init(GL_entry_point* new_entry_point);
 
-	GL_entry_point* GetEntryPoint();
+	GL_entry_point& GetEntryPoint();
 
 	void Display();
 

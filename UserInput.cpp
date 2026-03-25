@@ -32,10 +32,10 @@ namespace UserInput {
 	}
 
 	static intptr_vec_uint_umap
-		keyboard_down_callback_dict, keyboard_up_callback_dict;
+		keyboard_down_callback_dict, keyboard_active_callback_dict, keyboard_up_callback_dict;
 
 	static intptr_vec_uint_umap
-		special_down_callback_dict, special_up_callback_dict;
+		special_down_callback_dict, special_active_callback_dict, special_up_callback_dict;
 
 	inline void RunCallbackFromPointer(const intptr& ptr) {
 		funcT* callback = (funcT*)(ptr);
@@ -51,17 +51,20 @@ namespace UserInput {
 	// Keyboard callbacks
 
 	void KeyboardDownCallback(unsigned char key, int mouse_x, int mouse_y) {
-		inputState.keyboard.set(key);
-		RunCallbacksInPtrVector(keyboard_down_callback_dict[key]);
+		if (inputState.keyboard[key] == 0) {
+			RunCallbacksInPtrVector(keyboard_down_callback_dict[key]);
+			inputState.keyboard.set(key);
+		}
 	}
 
 	void KeyboardUpCallback(unsigned char key, int mouse_x, int mouse_y) {
-		inputState.keyboard.reset(key);
-		RunCallbacksInPtrVector(keyboard_up_callback_dict[key]);
+		if (inputState.keyboard[key] == 1) {
+			RunCallbacksInPtrVector(keyboard_up_callback_dict[key]);
+			inputState.keyboard.reset(key);
+		}	
 	}
 
 	// Special callbacks
-
 	void SpecialDownCallback(int key, int mouse_x, int mouse_y) {
 
 		// For some reason all other special keys 
@@ -71,9 +74,10 @@ namespace UserInput {
 
 		key--; // move the key to be in the range of index 0 onwards.
 
-		inputState.special.set(key);
-
-		RunCallbacksInPtrVector(special_down_callback_dict[key]);
+		if (inputState.special[key] == 0) {
+			RunCallbacksInPtrVector(special_down_callback_dict[key]);
+			inputState.special.set(key);
+		}
 	}
 
 	void SpecialUpCallback(int key, int mouse_x, int mouse_y) {
@@ -82,8 +86,10 @@ namespace UserInput {
 
 		key--;
 
-		inputState.special.reset(key);
-		RunCallbacksInPtrVector(special_up_callback_dict[key]);
+		if (inputState.special[key] == 1) {
+			RunCallbacksInPtrVector(special_up_callback_dict[key]);
+			inputState.special.reset(key);
+		}
 	}
 
 	const int Init() {
@@ -219,5 +225,36 @@ namespace UserInput {
 	/// <param name="">The void callback to be removed from the fire order.</param>
 	const bool RemoveSpecialUpCallback(const SpecialKey key, voidcallback) {
 		return RemoveCallback(special_up_callback_dict, key, callback);
+	}
+
+	void AddKeyboardActiveCallback(const uchar key, voidcallback) {
+		AddCallback(keyboard_active_callback_dict, key, callback);
+	}
+
+	const bool RemoveKeyboardActiveCallback(const uchar key, voidcallback) {
+		return RemoveCallback(keyboard_active_callback_dict, key, callback);
+	}
+
+	void AddSpecialActiveCallback(const SpecialKey key, voidcallback) {
+		AddCallback(special_active_callback_dict, key, callback);
+	}
+
+	const bool RemoveSpecialActiveCallback(const SpecialKey key, voidcallback) {
+		return RemoveCallback(special_active_callback_dict, key, callback);
+	}
+
+	template<uint bitset_size>
+	void RunActiveInputCallbacks(intptr_vec_uint_umap dictionary, std::bitset<bitset_size> state) {
+		for (auto kv : dictionary) {
+
+			if (state[kv.first])
+				RunCallbacksInPtrVector(kv.second);
+		}
+	}
+
+	void UserInputActiveCallbacks() {
+		if (has_namespace_been_initialised)
+			RunActiveInputCallbacks(keyboard_active_callback_dict, inputState.keyboard);
+			RunActiveInputCallbacks(special_active_callback_dict, inputState.special);
 	}
 }

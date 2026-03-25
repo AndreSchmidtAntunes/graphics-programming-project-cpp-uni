@@ -6,13 +6,22 @@
 class Camera {
 public:
 
-	Vector3 eye, position, up;
-	Camera(Vector3 eye, Vector3 position, Vector3 up) : eye(eye), position(position), up(up) {}
+	Vector3 position, rotation;
+	Camera(Vector3 eye, Vector3 position, Vector3 up, Vector3 right) : eye(eye), position(position), up(up), right(right) {}
+	~Camera() {}
 
-	void Rotate(Vector3 rotation);
+	void Rotate(const Vector3& rotation);
 
-	void RotateRight();
-	void RotateLeft();
-	void RotateUp();
-	void RotateDown();
-};
+	void RotateFirstPerson(const Vector3& rotation);
+
+	//void setRotationFirstPerson(const float pitch, const float yaw, const float roll);
+
+//private:
+	union {
+		Vector3 eye;
+		Vector3 forward;
+	};
+
+	Vector3 up;
+	Vector3 right;
+};	

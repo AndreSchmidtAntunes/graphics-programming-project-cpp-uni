@@ -5,6 +5,7 @@ class Camera;
 class GL_entry_point {
 public:
 
+	float deltaTime;
 	float rot;
 
 	GL_entry_point(int argc, char* argv[]);

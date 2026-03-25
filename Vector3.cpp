@@ -171,8 +171,8 @@ double Vector3::Dot(Vector3 lhs, Vector3 rhs) {
 
 Vector3 Vector3::Cross(Vector3 lhs, Vector3 rhs) {
 	return Vector3(
-		lhs.y * rhs.z - lhs.z * rhs.y,
-		lhs.z * rhs.x - lhs.x * rhs.z,
-		lhs.x * rhs.y - lhs.y * rhs.x
+		(lhs.y * rhs.z) - (lhs.z * rhs.y),
+		(lhs.z * rhs.x) - (lhs.x * rhs.z),
+		(lhs.x * rhs.y) - (lhs.y * rhs.x)
 	);
 }

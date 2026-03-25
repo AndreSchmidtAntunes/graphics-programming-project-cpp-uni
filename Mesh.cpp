@@ -221,79 +221,82 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 #include "GLExtras.h"
 
-void Mesh::Render() const {
+void Mesh::DrawElements() const {
+		glEnableClientState(GL_VERTEX_ARRAY);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
+		if (normals != nullptr && normals_count > 0) {
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glNormalPointer(GL_FLOAT, 0, normals);
+		}
 
-	if (normals != nullptr && normals_count > 0) {
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glNormalPointer(GL_FLOAT, 0, normals);
-	}
+		if (uvs != nullptr && uvs_count > 0) {
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glTexCoordPointer(2, GL_FLOAT, 0, uvs);
+		}
 
-	if (uvs != nullptr && uvs_count > 0) {
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, 0, uvs);
-	}
+		if (colours != nullptr && colours_count > 0) {
+			glEnableClientState(GL_COLOR_ARRAY);
+			glColorPointer(4, GL_FLOAT, 0, colours);
+		}
+		else
+			GLExtras::SetColour(DefaultColour);
 
-	if (colours != nullptr && colours_count > 0) {
-		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(4, GL_FLOAT, 0, colours);
-	}
-	else
-		GLExtras::SetColour(DefaultColour);
-
-	glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
+		glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
 
 	
-	glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
 
-	if (normals != nullptr)
-		glDisableClientState(GL_NORMAL_ARRAY);
+		if (normals != nullptr)
+			glDisableClientState(GL_NORMAL_ARRAY);
 
-	if (normals != nullptr)
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		if (normals != nullptr)
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	if (colours == nullptr)
-		glDisableClientState(GL_COLOR_ARRAY);
+		if (colours == nullptr)
+			glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Mesh::Render(Vector3 position) const {
-	glPushMatrix(); 
+void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera* camera) const {
+	glLoadIdentity();
+
+	glPushMatrix();
 	{
-		glTranslatef(position.x, position.y, position.z);
-		Render();
-	}
-	glPopMatrix();
-}
+		Vector3 rotation_from_camera = -(camera->rotation);
 
-void Mesh::Render(Vector3 position, Vector3 rotation) const {
-	glPushMatrix(); 
-	{
-		glTranslatef(position.x, position.y, position.z);
+		Vector3 position_from_camera = position - (camera->position * Vector3(1, 1, -1));
 
-		glRotatef(1, rotation.x, rotation.y, rotation.z);
+		//glRotatef(rotation_from_camera.x, 0.0f, -1.0f, 0.0f);
+		//glRotatef(rotation_from_camera.y, 0.0f, 0.0f, -1.0f);
+		//glRotatef(rotation_from_camera.z, -1.0f, 0.0f, 0.0f);
 
-		Render();
-	}
-	glPopMatrix();
-}
+		gluLookAt(
+			camera->eye.x, camera->eye.y, camera->eye.z,  // eye
+			0,0,0, // camera->position.x, camera->position.y, camera->position.z, // position
+			camera->up.x, camera->up.y, camera->up.z // up
+		);
 
-void Mesh::Render(Vector3 position, Vector3 rotation, Vector3 scale) const {
-	glPushMatrix(); 
-	{
+		glTranslatef(position_from_camera.x, position_from_camera.y, position_from_camera.z);
+
 		glScalef(scale.x, scale.y, scale.z);
 
 		glRotatef(rotation.x, 0.0f, -1.0f, 0.0f);
 		glRotatef(rotation.y, 0.0f, 0.0f, -1.0f);
 		glRotatef(rotation.z, -1.0f, 0.0f, 0.0f);
 
-		glTranslatef(position.x, position.y, position.z);
-
-		Render();
+		DrawElements();
 	}
 	glPopMatrix();
+}
+
+void Mesh::Render(const Vector3& position, const Vector3& rotation, const Camera* camera) const {
+	Render(position, rotation, Vector3::One, camera);
+
+}
+
+void Mesh::Render(const Vector3& position, const Camera* camera) const {
+	Render(position, Vector3::Zero, Vector3::One, camera);
 }
 
 /// Thank you to Zan Lynx for this int parser from a string, and thanks to LiveLaughLove for the original post on stack overflow.

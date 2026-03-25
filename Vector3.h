@@ -20,7 +20,9 @@ public:
 
 	Vector3(const Vector3& other) : x(other.x), y(other.y), z(other.z) {};
 
-	Vector3(double value = 0) : x(value), y(value), z(value) {};
+	explicit Vector3(double value) : x(value), y(value), z(value) {};
+
+	Vector3() : Vector3(0) {};
 
 	~Vector3() { };
 	

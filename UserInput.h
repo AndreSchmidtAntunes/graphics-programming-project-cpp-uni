@@ -38,4 +38,12 @@ namespace UserInput {
 
 	const bool RemoveSpecialDownCallback(const SpecialKey key, voidcallback);
 	const bool RemoveSpecialUpCallback(const SpecialKey key, voidcallback);
+
+	void AddKeyboardActiveCallback(const uchar key, voidcallback);
+	const bool RemoveKeyboardActiveCallback(const uchar key, voidcallback);
+
+	void AddSpecialActiveCallback(const SpecialKey key, voidcallback);
+	const bool RemoveSpecialActiveCallback(const SpecialKey key, voidcallback);
+
+	void UserInputActiveCallbacks();
 }

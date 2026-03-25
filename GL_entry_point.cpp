@@ -34,14 +34,25 @@ const char* vertexShaderSource = "#version 330 core\n"
 		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
 	}
 
-#define ROTATION_SPEED 5.0f
+#define ROTATION_SPEED 80.0f
+#define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
+#define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
-void RotateRight()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Right); 	}
-void RotateLeft()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Left);	}
-void RotateUp()		{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Up);		}
-void RotateDown()	{ GLUTCallbacks::GetEntryPoint()->camera->Rotate(ROTATION_SPEED * Vector3::Down);	}
+void RotateRight() { CAMERA.RotateFirstPerson(Vector3::Right * ROTATION_SPEED * DELTATIME); 	}
+void RotateLeft()  { CAMERA.RotateFirstPerson(Vector3::Left * ROTATION_SPEED * DELTATIME);		}
+void RotateUp()	   { CAMERA.RotateFirstPerson(Vector3::Up * ROTATION_SPEED * DELTATIME);		}
+void RotateDown()  { CAMERA.RotateFirstPerson(Vector3::Down * ROTATION_SPEED * DELTATIME);	}
 
-GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0, 0)) {
+#define MOVESPEED 4.0f
+
+void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;		}
+void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;		}
+void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
+void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
+void MoveForward() { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME;	}
+void MoveBack()	   { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME;		}
+
+GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
 
 	rot = 0.0f;
 
@@ -64,23 +75,31 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(1, 0,
 		UserInput::RemoveKeyboardDownCallback('h', PrintHello);
 
 		UserInput::AddKeyboardDownCallback('h', PrintWorld);
+
 		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::LEFT_SHIFT, PrintUP);
 
-		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::LEFT, RotateLeft);
-		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::RIGHT, RotateRight);
-		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::UP, RotateUp);
-		UserInput::AddKeyboardDownCallback(UserInput::SpecialKey::DOWN, RotateDown);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::LEFT, RotateLeft);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::UP, RotateUp);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::RIGHT, RotateRight);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::DOWN, RotateDown);
+
+		UserInput::AddKeyboardActiveCallback('d', MoveRight);
+		UserInput::AddKeyboardActiveCallback('a', MoveLeft);
+		UserInput::AddKeyboardActiveCallback('w', MoveForward);
+		UserInput::AddKeyboardActiveCallback('s', MoveBack);
+
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 
-	glutInitDisplayMode(GLUT_DOUBLE);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
+	glEnable(GL_DEPTH_TEST);
 
-	//gluPerspective(45, 1, 0, 1000);
-
-	//glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glViewport(0, 0, 800, 800);
+		gluPerspective(80, 1, 0.1, 1000.0);
+	glMatrixMode(GL_MODELVIEW);
 
 	glutMainLoop();
 }
@@ -90,9 +109,9 @@ GL_entry_point::~GL_entry_point(void) {
 }
 
 void GL_entry_point::Display() {
-	glClear(GL_COLOR_BUFFER_BIT); // Clears out the last frame
-	// Draw vertices: 
-	DrawPolygons();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clears out the last frame
+
+	DrawPolygons();	// Draw vertices: 
 
 	glFlush(); // Passes the scene draw to the graphics card
 	glutSwapBuffers();
@@ -102,13 +121,17 @@ void GL_entry_point::Display() {
 static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
-	rat_mesh->Render(Vector3(0, 0, -0), Vector3(0, 0, rot), Vector3(0.025));
+
+	rat_mesh->Render(Vector3(0, 0, -5), Vector3(0, 0, 90), Vector3(0.025), camera);
 }
 
 void GL_entry_point::Update() {
+
 	rot += 1.0f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
+
+	//glLoadIdentity();
 
 	//gluLookAt(
 	//	camera->eye.x, camera->eye.y, camera->eye.z,  // eye

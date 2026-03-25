@@ -27,8 +27,6 @@ namespace GLExtras {
 
 	void AddPolygons(const Poly* polygons, const uint length, const Vector3* vertices);
 
-	void AddMesh(const Mesh& mesh);
-
 	/// <summary>
 	/// Set The current vertex colour using a 8 digit hexadecimal code. <br/>
 	/// 2 digits for red, green, blue, and alpha.

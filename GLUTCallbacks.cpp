@@ -2,14 +2,15 @@
 
 #include <iostream>
 #include "GLExtras.h"
+#include "UserInput.h"
 
 namespace GLUTCallbacks {
 
 
 	static GL_entry_point* entry_point = nullptr;
 
-	GL_entry_point* GetEntryPoint() {
-		return entry_point;
+	GL_entry_point& GetEntryPoint() {
+		return *entry_point;
 	}
 
 	void Init(GL_entry_point* new_entry_point) {
@@ -24,17 +25,23 @@ namespace GLUTCallbacks {
 		}
 	}
 
-	void Timer(int refreshRate) {
+	float old_elapsed_time = 0;
 
-		//glLoadIdentity();
+	void Timer(int refreshRate) {
 
 		int updateDuration = glutGet(GLUT_ELAPSED_TIME);
 
 		entry_point->Update();
 
+		UserInput::UserInputActiveCallbacks();
+
 		updateDuration = glutGet(GLUT_ELAPSED_TIME) - updateDuration;
 		
 		glutTimerFunc(GLExtras::REFRESHRATE - updateDuration, Timer, GLExtras::REFRESHRATE);
+
+		entry_point->deltaTime = (glutGet(GLUT_ELAPSED_TIME) - old_elapsed_time) * 0.001f;
+		old_elapsed_time = glutGet(GLUT_ELAPSED_TIME);
+
 		glutPostRedisplay();
 	}
 }	
