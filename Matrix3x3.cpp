@@ -1,6 +1,6 @@
 #include "Matrix3x3.h"
 
-template <class T>
+template <typename T>
 Matrix3x3<T>::Matrix3x3(
 	T m1_1, T m1_2, T m1_3,
 	T m2_1, T m2_2, T m2_3,
@@ -10,29 +10,29 @@ Matrix3x3<T>::Matrix3x3(
 	self[1][0] = m2_1; self[1][1] = m2_2; self[1][2] = m2_3;
 	self[2][0] = m3_1; self[2][1] = m3_2; self[2][2] = m3_3;
 }
-template <class T>
+template <typename T>
 Matrix3x3<T>::Matrix3x3() {
 	self = identity;
 }
-template <class T>
+template <typename T>
 Matrix3x3<T>::Matrix3x3(const T elements[DIMENTIONS][DIMENTIONS]) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
 			data[row][col] = elements[row][col];
 		}
 }
-template <class T>
+template <typename T>
 Matrix3x3<T>::Matrix3x3(const Vector3<T>& row_1, const Vector3<T>& row_2, const Vector3<T>& row_3) {
 	setRow(0, row_1);
 	setRow(1, row_2);
 	setRow(2, row_3);
 }
-template <class T>
+template <typename T>
 Matrix3x3<T>::~Matrix3x3() {
-
+	delete data;
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T> Matrix3x3<T>::ScaleMatrix(const Vector3<T>& scale) {
 	
 	return Matrix3x3(
@@ -43,7 +43,7 @@ Matrix3x3<T> Matrix3x3<T>::ScaleMatrix(const Vector3<T>& scale) {
 }
 
 // Used the formula half way through this page: http://www.fastgraph.com/makegames/3drotation/
-template <class T>
+template <typename T>
 Matrix3x3<T> Matrix3x3<T>::RotationMatrix(const Vector3<T>& axis, T radians) {
 
 	T c = cos(radians);
@@ -57,7 +57,7 @@ Matrix3x3<T> Matrix3x3<T>::RotationMatrix(const Vector3<T>& axis, T radians) {
 	);
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T> Matrix3x3<T>::CrossProductMatrix(const Vector3<T>& direction) {
 	
 	return Matrix3x3(
@@ -68,18 +68,18 @@ Matrix3x3<T> Matrix3x3<T>::CrossProductMatrix(const Vector3<T>& direction) {
 }
 
 // Setters
-template <class T>
+template <typename T>
 void Matrix3x3<T>::setElementAt(uint row_index, uint column_index, T value) {
 	self[row_index][column_index] = value;
 }
 
-template <class T>
+template <typename T>
 void Matrix3x3<T>::setRow(uint row_index, const Vector3<T>& elements) {
 	for (uint i = 0; i < DIMENTIONS; i++)
 		self[row_index][i] = elements[i];
 }
 
-template <class T>
+template <typename T>
 void Matrix3x3<T>::setColumn(uint column_index, const Vector3<T>& elements) {
 	for (uint i = 0; i < DIMENTIONS; i++)
 		self[i][column_index] = elements[i];
@@ -87,32 +87,32 @@ void Matrix3x3<T>::setColumn(uint column_index, const Vector3<T>& elements) {
 
 // Getters
 
-template <class T>
+template <typename T>
 T Matrix3x3<T>::getElementAt(uint row_index, uint column_index) const {
 	return data[row_index][column_index];
 }
 
-template <class T>
+template <typename T>
 Vector3<T> Matrix3x3<T>::getRow(uint row_index) const {
 	return Vector3<T>(self[row_index][0], self[row_index][1], self[row_index][2]);
 }
 
-template <class T>
+template <typename T>
 Vector3<T> Matrix3x3<T>::getColumn(uint column_index) const {
 	return Vector3<T>(self[0][column_index], self[1][column_index], self[2][column_index]);
 }
 
-template <class T>
+template <typename T>
 std::array<T, Matrix3x3<T>::DIMENTIONS>& Matrix3x3<T>::operator [] (const uint idx) {
 	return data[idx];
 }
 
-template <class T>
+template <typename T>
 const std::array<T, Matrix3x3<T>::DIMENTIONS>& Matrix3x3<T>::operator [] (const uint idx) const {
 	return data[idx];
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T>& Matrix3x3<T>::operator = (const Matrix3x3<T>& other) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++)
@@ -121,20 +121,20 @@ Matrix3x3<T>& Matrix3x3<T>::operator = (const Matrix3x3<T>& other) {
 	return self;
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T>& Matrix3x3<T>::operator *= (const Matrix3x3<T>& other) {
 	self = self * other;
 	return self;
 }
 
-template <class T>
+template <typename T>
 Vector3<T>& operator *= (Vector3<T>& lhs, const Matrix3x3<T>& rhs)
 {
 	lhs = rhs * lhs;
 	return lhs;
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T>& Matrix3x3<T>::operator *= (const T mult) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
@@ -143,7 +143,7 @@ Matrix3x3<T>& Matrix3x3<T>::operator *= (const T mult) {
 	return self;
 }
 
-template <class T>
+template <typename T>
 Vector3<T> Matrix3x3<T>::operator * (const Vector3<T>& mult) const {
 	Vector3<T> result = Vector3<T>();
 	
@@ -157,7 +157,7 @@ Vector3<T> Matrix3x3<T>::operator * (const Vector3<T>& mult) const {
 	return result;
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T> Matrix3x3<T>::operator * (const Matrix3x3<T>& other) const {
 	Matrix3x3<T> result = Matrix3x3<T>::zero;
 
@@ -170,7 +170,7 @@ Matrix3x3<T> Matrix3x3<T>::operator * (const Matrix3x3<T>& other) const {
 	return result;
 }
 
-template <class T>
+template <typename T>
 Matrix3x3<T> Matrix3x3<T>::operator * (const T mult) const {
 	Matrix3x3<T> result = Matrix3x3<T>();
 	for (uint row = 0; row < DIMENTIONS; row++)
@@ -180,14 +180,14 @@ Matrix3x3<T> Matrix3x3<T>::operator * (const T mult) const {
 	return result;
 }
 
-template <class T>
+template <typename T>
 const Matrix3x3<T> Matrix3x3<T>::identity = Matrix3x3<T> (
 	1, 0, 0,
 	0, 1, 0,
 	0, 0, 1
 );
 
-template <class T>
+template <typename T>
 const Matrix3x3<T> Matrix3x3<T>::zero = Matrix3x3<T>(
 	0, 0, 0,
 	0, 0, 0,

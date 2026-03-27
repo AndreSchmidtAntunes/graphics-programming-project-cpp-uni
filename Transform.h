@@ -2,9 +2,11 @@
 
 #include <vector>
 #include "Vector3.h"
+
 template <class T = double>
 class Transform
 {
+
 public:
 
 	static_assert(std::is_floating_point<T>::value,
@@ -14,7 +16,7 @@ public:
 	inline void setRotation(Vector3<T> position);
 	inline void setScale(Vector3<T> position);
 
-	void setParent(Transform*, int index, bool keep_transform);
+	void setParent(Transform* parent, int index, bool keep_transform = false);
 
 	inline Vector3<T>& getPosition();
 	inline Vector3<T>& getRotation();

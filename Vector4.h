@@ -9,7 +9,7 @@
 
 #define uint unsigned int
 
-template <class T = double>
+template <typename T = double>
 struct Vector4 {
 public:
 

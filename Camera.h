@@ -3,7 +3,7 @@
 #include "Matrix3x3.h"
 #include "UserInput.h"
 
-template <class T = double>
+template <typename T = double>
 class Camera {
 public:
 
@@ -12,7 +12,9 @@ public:
 
 	Vector3<T> position, rotation;
 	Camera(Vector3<T> eye, Vector3<T> position, Vector3<T> up, Vector3<T> right) : eye(eye), position(position), up(up), right(right) {}
-	~Camera() {}
+	
+	Camera(void) : Camera(Vector3<T>::Forward, Vector3<T>::Zero, Vector3<T>::Up, Vector3<T>::Right) {}
+	~Camera(void) {}
 
 	void Rotate(const Vector3<T>& rotation);
 

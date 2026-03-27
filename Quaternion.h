@@ -2,12 +2,12 @@
 
 #include "Matrix3x3.h"
 
-template<class T = double>
+template<typename T = double>
 struct Quaternion {
 public:
 
 	static_assert(std::is_floating_point<T>::value,
-		"class T can only be instantiated with floating point types. (E.g: float, double, half)");
+		"typename T can only be instantiated with floating point types. (E.g: float, double, half)");
 
 	union {
 

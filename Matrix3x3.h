@@ -5,7 +5,7 @@
 #define self (*this)
 #define uint unsigned int
 
-template <class T = double>
+template <typename T = double>
 struct Matrix3x3 {
 
 private:
@@ -15,7 +15,7 @@ private:
 public:
 
 	static_assert(std::is_arithmetic<T>::value,
-		"class T can only be instantiated with floating point types. (E.g: float, double, half)");
+		"typename T can only be instantiated with floating point types. (E.g: float, double, half)");
 
 	std::array<std::array<T, DIMENTIONS>, DIMENTIONS> data{ };
 
