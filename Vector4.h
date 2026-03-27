@@ -9,21 +9,22 @@
 
 #define uint unsigned int
 
+template <class T = double>
 struct Vector4 {
 public:
 
 	union {
-		struct { double x, y, z, w; };
-		std::array<double, 4> data { };
+		struct { T x, y, z, w; };
+		std::array<T, 4> data { };
 	};
 
-	Vector4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {};
+	Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {};
 
 	Vector4(const Vector4& other) : x(other.x), y(other.y), z(other.z), w(other.w) {};
 
-	Vector4(Vector3 vec3, double w = 0) : x(vec3.x), y(vec3.y), z(vec3.z), w(w) {};
+	Vector4(Vector3<T> vec3, T w = 0) : x(vec3.x), y(vec3.y), z(vec3.z), w(w) {};
 
-	Vector4(double value = 0) : x(value), y(value), z(value), w(value) {};
+	Vector4(T value = 0) : x(value), y(value), z(value), w(value) {};
 
 
 	~Vector4() { }
@@ -33,8 +34,8 @@ public:
 	Vector4 operator + (const Vector4 &other) const;
 	Vector4 operator - (const Vector4 &other) const;
 
-	Vector4 operator * (const double& value) const;
-	Vector4 operator / (const double& value) const;
+	Vector4 operator * (const T& value) const;
+	Vector4 operator / (const T& value) const;
 
 	Vector4 operator * (const float& value) const;
 	Vector4 operator / (const float& value) const;
@@ -46,18 +47,18 @@ public:
 	Vector4& operator += (const Vector4& value);
 	Vector4& operator -= (const Vector4& value);
 
-	Vector4& operator *= (const double& value);
-	Vector4& operator /= (const double& value);
+	Vector4& operator *= (const T& value);
+	Vector4& operator /= (const T& value);
 
 	Vector4& operator *= (const float& value);
 	Vector4& operator /= (const float& value);
 
-	double& operator [] (const uint idx);
-	const double& operator [] (const uint idx) const;
+	T& operator [] (const uint idx);
+	const T& operator [] (const uint idx) const;
 
 	operator bool() const;
 
-	operator Vector3() const { return Vector3(x, y, z); }
+	operator Vector3<T>() const { return Vector3(x, y, z); }
 
 	bool operator == (Vector4 other) const;
 	bool operator != (Vector4 other) const;
@@ -83,10 +84,10 @@ public:
 	/// Used to avoid Square rooting when possible.
 	/// </summary>
 	/// <returns>The magnitude(distance) of the given vector squared. <br/> <c>x^2 + y^2 + z^2 + w^2</c></returns>
-	double SquaredMagnitude() const;
+	T SquaredMagnitude() const;
 
-	/// <returns>The magnitude(distance) of the given vector at double floating point precision.<br/> <c>sqrt(x^2 + y^2 + z^2 + w^2)</c></returns>
-	double Magnitude() const;
+	/// <returns>The magnitude(distance) of the given vector at T floating point precision.<br/> <c>sqrt(x^2 + y^2 + z^2 + w^2)</c></returns>
+	T Magnitude() const;
 
 	/// <returns>The magnitude(distance) of the given vector at floating point precision. <br/> <c>sqrt(x^2 + y^2 + z^2 + w^2)</c></returns>
 	float MagnitudeF() const;
@@ -102,5 +103,5 @@ public:
 	/// <returns>w copy of the vector where x, y, z, and w are absolute values.</returns>
 	Vector4 Abs() const;
 
-	static double Dot(Vector4 lhs, Vector4 rhs);
+	static T Dot(Vector4 lhs, Vector4 rhs);
 };

@@ -43,13 +43,13 @@ public:
 
 	~Mesh();
 
-	//Vector3& getVertex(const Poly* polygon, uint edge_index) {
+	//Vector3<>& getVertex(const Poly* polygon, uint edge_index) {
 	//	return vertices[polygon->indices[edge_index]];
 	//}
 
-	void Render(const Vector3& position, const Camera*) const;
-	void Render(const Vector3& position, const Vector3& rotation, const Camera*) const;
-	void Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera*) const;
+	void Render(const Vector3<>& position, const Camera<>*) const;
+	void Render(const Vector3<>& position, const Vector3<>& rotation, const Camera<>*) const;
+	void Render(const Vector3<>& position, const Vector3<>& rotation, const Vector3<>& scale, const Camera<>*) const;
 
 	bool LoadFromFile(const std::string& filename);
 

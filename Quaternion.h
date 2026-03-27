@@ -10,16 +10,19 @@ public:
 		"class T can only be instantiated with floating point types. (E.g: float, double, half)");
 
 	union {
-		struct { T i, j, k, scaler; };
-		struct { T x, y, z, w;		 };
 
-		std::array<double, 4> data { };
+		struct { T i, j, k, scaler; };
+		struct { T x, y, z, w;		};
+
+		std::array<T, 4> data { };
 	};
 
 	T& operator [] (const uint idx) { return data[idx]; }
 	const T& operator [] (const uint idx) const { return data[idx]; }
 
+	const static Quaternion 
+		Identity,
+		Zero;
 
-
-
+	Quaternion() : i(0), j(0), k(0), scaler(1) {};
 };

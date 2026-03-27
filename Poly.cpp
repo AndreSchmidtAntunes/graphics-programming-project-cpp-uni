@@ -26,9 +26,9 @@ Colour*& Poly::Init(const Colour* colours) {
 	return this->colours;
 }
 
-Vector2*& Poly::Init(const Vector2* uvs) {
+Vector2<>*& Poly::Init(const Vector2<>* uvs) {
 	if (uvs) {
-		this->texture_coordinates = new Vector2[vert_count];
+		this->texture_coordinates = new Vector2<>[vert_count];
 		for (uint i = 0; i < vert_count; i++) {
 			this->texture_coordinates[i] = uvs[i];
 		}
@@ -36,9 +36,9 @@ Vector2*& Poly::Init(const Vector2* uvs) {
 	return this->texture_coordinates;
 }
 
-Vector3*& Poly::Init(const Vector3* normals) {
+Vector3<>*& Poly::Init(const Vector3<>* normals) {
 	if (normals) {
-		this->normals = new Vector3[vert_count];
+		this->normals = new Vector3<>[vert_count];
 		for (uint i = 0; i < vert_count; i++) {
 			this->normals[i] = normals[i];
 		}

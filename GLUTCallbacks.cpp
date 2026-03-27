@@ -25,7 +25,7 @@ namespace GLUTCallbacks {
 		}
 	}
 
-	float old_elapsed_time = 0;
+	int old_elapsed_time = 0;
 
 	void Timer(int refreshRate) {
 

@@ -81,7 +81,7 @@ Mesh::~Mesh() {
 
 bool Mesh::LoadFromFile(const std::string& filename) {
 
-	std::vector<double> vertices, normals, uvs;
+	std::vector<float> vertices, normals, uvs;
 	std::vector<uint> indices, uv_indices, normal_indices;
 
 	vertices = normals = uvs = { };
@@ -258,14 +258,14 @@ void Mesh::DrawElements() const {
 			glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera* camera) const {
+void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Vector3<>& scale, const Camera<>* camera) const {
 	glLoadIdentity();
 
 	glPushMatrix();
 	{
-		Vector3 rotation_from_camera = -(camera->rotation);
+		Vector3<> rotation_from_camera = -(camera->rotation);
 
-		Vector3 position_from_camera = position - (camera->position);
+		Vector3<> position_from_camera = position - (camera->position);
 
 		//glRotatef(rotation_from_camera.x, 0.0f, -1.0f, 0.0f);
 		//glRotatef(rotation_from_camera.y, 0.0f, 0.0f, -1.0f);
@@ -290,13 +290,13 @@ void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector
 	glPopMatrix();
 }
 
-void Mesh::Render(const Vector3& position, const Vector3& rotation, const Camera* camera) const {
-	Render(position, rotation, Vector3::One, camera);
+void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Camera<>* camera) const {
+	Render(position, rotation, Vector3<>::One, camera);
 
 }
 
-void Mesh::Render(const Vector3& position, const Camera* camera) const {
-	Render(position, Vector3::Zero, Vector3::One, camera);
+void Mesh::Render(const Vector3<>& position, const Camera<>* camera) const {
+	Render(position, Vector3<>::Zero, Vector3<>::One, camera);
 }
 
 /// Thank you to Zan Lynx for this int parser from a string, and thanks to LiveLaughLove for the original post on stack overflow.
