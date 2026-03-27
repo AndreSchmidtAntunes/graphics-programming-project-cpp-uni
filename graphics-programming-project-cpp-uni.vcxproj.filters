@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Helpers\Structs">
       <UniqueIdentifier>{05753ac3-c9fe-4586-8e69-b6fe3e7fa324}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Helpers\Structs\Math">
+      <UniqueIdentifier>{1e9bce3f-282d-42ee-8144-3472ffa1a720}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helpers\Structs\Math">
+      <UniqueIdentifier>{13f9d984-390d-47e4-a330-6d49d62f544e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GL_entry_point.h">
@@ -54,18 +60,6 @@
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Header Files\Helpers\Structs</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix3x3.h">
-      <Filter>Header Files\Helpers\Structs</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4x4.h">
-      <Filter>Header Files\Helpers\Structs</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector4.h">
-      <Filter>Header Files\Helpers\Structs</Filter>
-    </ClInclude>
     <ClInclude Include="Poly.h">
       <Filter>Header Files\Helpers\Structs</Filter>
     </ClInclude>
@@ -77,6 +71,21 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Helpers\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Header Files\Helpers\Structs\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Header Files\Helpers\Structs\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x3.h">
+      <Filter>Header Files\Helpers\Structs\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Header Files\Helpers\Structs\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Header Files\Helpers\Structs\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,18 +116,6 @@
     <ClCompile Include="Colour.cpp">
       <Filter>Source Files\Helpers\Structs</Filter>
     </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Source Files\Helpers\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix3x3.cpp">
-      <Filter>Source Files\Helpers\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector4.cpp">
-      <Filter>Source Files\Helpers\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix4x4.cpp">
-      <Filter>Source Files\Helpers\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="Poly.cpp">
       <Filter>Source Files\Helpers\Structs</Filter>
     </ClCompile>
@@ -130,6 +127,21 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.cpp">
+      <Filter>Source Files\Helpers\Structs\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp">
+      <Filter>Source Files\Helpers\Structs\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Source Files\Helpers\Structs\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Source Files\Helpers\Structs\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Source Files\Helpers\Structs\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
