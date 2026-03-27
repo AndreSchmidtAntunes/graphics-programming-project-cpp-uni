@@ -49,8 +49,9 @@ void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;		}
 void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;		}
 void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
 void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
-void MoveForward() { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME;	}
-void MoveBack()	   { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME;		}
+
+void MoveForward() { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME;	}
+void MoveBack()	   { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME;		}
 
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
 
@@ -87,7 +88,6 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 		UserInput::AddKeyboardActiveCallback('a', MoveLeft);
 		UserInput::AddKeyboardActiveCallback('w', MoveForward);
 		UserInput::AddKeyboardActiveCallback('s', MoveBack);
-
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 

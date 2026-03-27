@@ -118,11 +118,11 @@ Vector3& Vector3::operator -= (const Vector3 &value) {
 }
 
 double& Vector3::operator [] (std::size_t idx) {
-	return vElements[idx];
+	return data[idx];
 }
 
 const double& Vector3::operator [] (const std::size_t idx) const {
-	return vElements[idx];
+	return data[idx];
 }
 
 const Vector3 Vector3::Up = Vector3(0, 1, 0);

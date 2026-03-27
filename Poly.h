@@ -11,7 +11,7 @@ struct Vector2 {
 public:
 	union {
 		struct { double x, y; };
-		std::array<double, 2> vElements;
+		std::array<double, 2> data;
 	};
 
 	Vector2(double x, double y) : x(x), y(y) { };
@@ -23,7 +23,7 @@ public:
 	~Vector2() { };
 
 	double& operator[](const uint idx) {
-		return vElements[idx];
+		return data[idx];
 	}
 
 	Vector2 operator + (const Vector2& other) const { return Vector2(x + other.x, y + other.y); }

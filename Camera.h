@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include "Matrix3x3.h"
 #include "UserInput.h"
 
 class Camera {
@@ -24,4 +25,7 @@ public:
 
 	Vector3 up;
 	Vector3 right;
+
+private:
+	Matrix3x3 rotation_matrix = Matrix3x3::identity;
 };	

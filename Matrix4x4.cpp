@@ -19,7 +19,7 @@ Matrix4x4::Matrix4x4() {
 Matrix4x4::Matrix4x4(double elements[DIMENTIONS][DIMENTIONS]) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] = elements[row][col];
+			data[row][col] = elements[row][col];
 		}
 }
 
@@ -96,7 +96,7 @@ void Matrix4x4::setColumn(uint column_index, Vector4 elements) {
 // Getters
 
 double Matrix4x4::getElementAt(uint row_index, uint column_index) {
-	return mElements[row_index][column_index];
+	return data[row_index][column_index];
 }
 
 Vector4 Matrix4x4::getRow(uint row_index) {
@@ -108,11 +108,11 @@ Vector4 Matrix4x4::getColumn(uint column_index) {
 }
 
 std::array<double, Matrix4x4::DIMENTIONS>& Matrix4x4::operator [] (const uint idx) {
-	return mElements[idx];
+	return data[idx];
 }
 
 const std::array<double, Matrix4x4::DIMENTIONS>& Matrix4x4::operator[](const uint idx) const {
-	return mElements[idx];
+	return data[idx];
 }
 
 Matrix4x4& Matrix4x4::operator = (const Matrix4x4& other) {
@@ -131,7 +131,7 @@ Matrix4x4& Matrix4x4::operator *= (const Matrix4x4& other) {
 Matrix4x4& Matrix4x4::operator *= (const double mult) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] *= mult;
+			data[row][col] *= mult;
 		}
 	return self;
 }
@@ -139,7 +139,7 @@ Matrix4x4& Matrix4x4::operator *= (const double mult) {
 Matrix4x4& Matrix4x4::operator += (const Matrix4x4& other) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] += other[row][col];
+			data[row][col] += other[row][col];
 		}
 	return self;
 }
@@ -147,7 +147,7 @@ Matrix4x4& Matrix4x4::operator += (const Matrix4x4& other) {
 Matrix4x4& Matrix4x4::operator -= (const Matrix4x4& other) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] -= other[row][col];
+			data[row][col] -= other[row][col];
 		}
 	return self;
 }

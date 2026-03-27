@@ -10,7 +10,7 @@ private:
 	static const uint DIMENTIONS = 4;
 public:
 
-	std::array<std::array<double, DIMENTIONS>, DIMENTIONS> mElements{ };
+	std::array<std::array<double, DIMENTIONS>, DIMENTIONS> data{ };
 
 	Matrix4x4(
 		double m1_1, double m1_2, double m1_3, double m1_4,

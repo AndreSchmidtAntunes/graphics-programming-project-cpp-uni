@@ -265,7 +265,7 @@ void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector
 	{
 		Vector3 rotation_from_camera = -(camera->rotation);
 
-		Vector3 position_from_camera = position - (camera->position * Vector3(1, 1, -1));
+		Vector3 position_from_camera = position - (camera->position);
 
 		//glRotatef(rotation_from_camera.x, 0.0f, -1.0f, 0.0f);
 		//glRotatef(rotation_from_camera.y, 0.0f, 0.0f, -1.0f);

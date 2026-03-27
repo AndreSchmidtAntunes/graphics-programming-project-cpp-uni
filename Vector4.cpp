@@ -117,11 +117,11 @@ Vector4& Vector4::operator -= (const Vector4& value) {
 }
 
 double& Vector4::operator [] (const std::size_t idx) {
-	return vElements[idx];
+	return data[idx];
 }
 
 const double& Vector4::operator [] (const std::size_t idx) const {
-	return vElements[idx];
+	return data[idx];
 }
 
 const Vector4 Vector4::Up = Vector4(0, 1, 0, 0);

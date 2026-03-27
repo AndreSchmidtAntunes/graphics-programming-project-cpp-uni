@@ -12,7 +12,7 @@ public:
 	
 	union {
 		struct { float r, g, b, a; };
-		std::array<float, 4> cElements = { };
+		std::array<float, 4> data = { };
 	};
 
 	Colour(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {};

@@ -99,7 +99,7 @@ Colour::operator bool() const {
 }
 
 float& Colour::operator [] (std::size_t idx) {
-	return cElements[idx];
+	return data[idx];
 }
 
 bool Colour::operator == (Colour other) const {

@@ -17,7 +17,7 @@ Matrix3x3::Matrix3x3() {
 Matrix3x3::Matrix3x3(const double elements[DIMENTIONS][DIMENTIONS]) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] = elements[row][col];
+			data[row][col] = elements[row][col];
 		}
 }
 
@@ -82,7 +82,7 @@ void Matrix3x3::setColumn(uint column_index, const Vector3& elements) {
 // Getters
 
 double Matrix3x3::getElementAt(uint row_index, uint column_index) const {
-	return mElements[row_index][column_index];
+	return data[row_index][column_index];
 }
 
 Vector3 Matrix3x3::getRow(uint row_index) const {
@@ -94,11 +94,11 @@ Vector3 Matrix3x3::getColumn(uint column_index) const {
 }
 
 std::array<double, Matrix3x3::DIMENTIONS>& Matrix3x3::operator [] (const uint idx) {
-	return mElements[idx];
+	return data[idx];
 }
 
 const std::array<double, Matrix3x3::DIMENTIONS>& Matrix3x3::operator [] (const uint idx) const {
-	return mElements[idx];
+	return data[idx];
 }
 
 Matrix3x3& Matrix3x3::operator = (const Matrix3x3& other) {
@@ -123,7 +123,7 @@ Vector3& operator *= (Vector3& lhs, const Matrix3x3& rhs)
 Matrix3x3& Matrix3x3::operator *= (const double mult) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++) {
-			mElements[row][col] *= mult;
+			data[row][col] *= mult;
 		}
 	return self;
 }

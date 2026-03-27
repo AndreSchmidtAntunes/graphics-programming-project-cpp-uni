@@ -14,7 +14,7 @@ public:
 
 	union {
 		struct { double x, y, z, w; };
-		std::array<double, 4> vElements { };
+		std::array<double, 4> data { };
 	};
 
 	Vector4(double x, double y, double z, double w) : x(x), y(y), z(z), w(w) {};
