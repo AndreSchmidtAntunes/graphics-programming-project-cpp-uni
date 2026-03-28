@@ -20,30 +20,18 @@ public:
 		std::array<T, 3> data { };
 	};
 
-	Vector3<T>(T x, T y, T z) : x(x), y(y), z(z) {};
+	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {};
 
 	template <typename Ty>
-	Vector3<T>(const Vector3<Ty>& other) : x(other.x), y(other.y), z(other.z) {};
+	Vector3(const Vector3<Ty>& other) : x(other.x), y(other.y), z(other.z) {};
 
-	explicit Vector3<T>(T value) : x(value), y(value), z(value) {};
+	explicit Vector3(const T& value) : x(value), y(value), z(value) {};
 
-	Vector3<T>(void) : Vector3<T>(0) {};
+	Vector3(void) : Vector3<T>(0) {};
 
-	~Vector3<T>(void) { };
-	
-	//Vector3<T>operator * (const Vector3<T>& other) const;
-	//Vector3<T>operator / (const Vector3<T>& other) const;
-	//Vector3<T>operator + (const Vector3<T>& other) const;
-	//Vector3<T>operator - (const Vector3<T>& other) const;
+	~Vector3(void) { };
 
 	Vector3<T>operator - () const { return Vector3<T>(-x, -y, -z); };
-
-	//Vector3<T>& operator = (const Vector3<T>& other);
-
-	//Vector3<T>& operator *= (const Vector3<T>& other);
-	//Vector3<T>& operator /= (const Vector3<T>& other);
-	//Vector3<T>& operator += (const Vector3<T>& other);
-	//Vector3<T>& operator -= (const Vector3<T>& other);
 
 	template <typename Ty>
 	Vector3<T>& operator *= (const Vector3<Ty>& rhs) {
@@ -125,16 +113,6 @@ public:
 		return ostream;
 	}
 
-	static Vector3<T> Up;
-	static Vector3<T> Down;
-	static Vector3<T> Left;
-	static Vector3<T> Right;
-	static Vector3<T> Forward;
-	static Vector3<T> Back;
-
-	static Vector3<T> Zero;
-	static Vector3<T> One;
-
 	/// <summary>
 	/// Used to avoid Square rooting when possible.
 	/// </summary>
@@ -168,7 +146,26 @@ public:
 	static T Dot(const Vector3<T>& lhs, const Vector3<T>& rhs);
 	static Vector3<T>Cross(const Vector3<T>& lhs, const Vector3<T>& rhs);
 
+	const static Vector3 Up;
+	const static Vector3 Down;
+	const static Vector3 Left;
+	const static Vector3 Right;
+	const static Vector3 Forward;
+	const static Vector3 Back;
+
+	const static Vector3 Zero;
+	const static Vector3 One;
 };
+
+template <typename T> const Vector3<T> Vector3<T>::Up	   ( 0,  1,  0);
+template <typename T> const Vector3<T> Vector3<T>::Down    ( 0, -1,  0);
+template <typename T> const Vector3<T> Vector3<T>::Right   ( 1,  0,  0);
+template <typename T> const Vector3<T> Vector3<T>::Left    (-1,  0,  0);
+template <typename T> const Vector3<T> Vector3<T>::Forward ( 0,  0,  1);
+template <typename T> const Vector3<T> Vector3<T>::Back	   ( 0,  0, -1);
+
+template <typename T> const Vector3<T> Vector3<T>::Zero	(0);
+template <typename T> const Vector3<T> Vector3<T>::One	(1);
 
 template<typename T, typename Ty>
 Vector3<T> operator * (const Vector3<T>& lhs, const Vector3<Ty>& rhs) {

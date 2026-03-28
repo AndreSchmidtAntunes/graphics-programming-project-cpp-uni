@@ -1,7 +1,7 @@
 #include "GL_entry_point.h"
 
-#include "common.h" 
 #include "Camera.h"
+#include "common.h" 
 #include "GLExtras.h"
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
 #include "UserInput.h"

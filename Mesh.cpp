@@ -298,20 +298,3 @@ void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Ca
 void Mesh::Render(const Vector3<>& position, const Camera<>* camera) const {
 	Render(position, Vector3<>::Zero, Vector3<>::One, camera);
 }
-
-/// Thank you to Zan Lynx for this int parser from a string, and thanks to LiveLaughLove for the original post on stack overflow.
-/// Answer Post: https://stackoverflow.com/a/48528969
-
-std::vector<int> parseInts(std::string str) {
-	std::vector<int>lifeishard;
-	std::stringstream output;
-	std::string lifeisgood = str;
-	output.str(lifeisgood);
-	int life;
-	char ch;
-	while (output >> life) {
-		lifeishard.push_back(life);
-		output >> ch;
-	}
-	return lifeishard;
-}

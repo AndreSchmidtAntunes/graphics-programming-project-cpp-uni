@@ -25,11 +25,13 @@ public:
 		T m3_1, T m3_2, T m3_3
 	);
 
-	Matrix3x3();
+
 	Matrix3x3(const T[DIMENTIONS][DIMENTIONS]);
 	Matrix3x3(const Vector3<T>& row_1, const Vector3<T>& row_2, const Vector3<T>& row_3);
 
-	~Matrix3x3();
+	Matrix3x3() : Matrix3x3(identity) {};
+
+	~Matrix3x3(void) {};
 
 	// Static operations
 
@@ -74,8 +76,21 @@ public:
 
 	// Constants
 
-	static const Matrix3x3<T> identity;
-	static const Matrix3x3<T> zero;
-
+	const static Matrix3x3 identity;
+	const static Matrix3x3 zero;
 };
+
+template <typename T>
+const Matrix3x3<T> Matrix3x3<T>::identity (
+	1, 0, 0,
+	0, 1, 0,
+	0, 0, 1
+);
+
+template <typename T>
+const Matrix3x3<T> Matrix3x3<T>::zero (
+	0, 0, 0,
+	0, 0, 0,
+	0, 0, 0
+);
 

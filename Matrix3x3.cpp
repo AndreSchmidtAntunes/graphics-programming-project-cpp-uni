@@ -10,10 +10,7 @@ Matrix3x3<T>::Matrix3x3(
 	self[1][0] = m2_1; self[1][1] = m2_2; self[1][2] = m2_3;
 	self[2][0] = m3_1; self[2][1] = m3_2; self[2][2] = m3_3;
 }
-template <typename T>
-Matrix3x3<T>::Matrix3x3() {
-	self = identity;
-}
+
 template <typename T>
 Matrix3x3<T>::Matrix3x3(const T elements[DIMENTIONS][DIMENTIONS]) {
 	for (uint row = 0; row < DIMENTIONS; row++)
@@ -26,10 +23,6 @@ Matrix3x3<T>::Matrix3x3(const Vector3<T>& row_1, const Vector3<T>& row_2, const 
 	setRow(0, row_1);
 	setRow(1, row_2);
 	setRow(2, row_3);
-}
-template <typename T>
-Matrix3x3<T>::~Matrix3x3() {
-	delete data;
 }
 
 template <typename T>
@@ -179,18 +172,3 @@ Matrix3x3<T> Matrix3x3<T>::operator * (const T mult) const {
 		}
 	return result;
 }
-
-template <typename T>
-const Matrix3x3<T> Matrix3x3<T>::identity = Matrix3x3<T> (
-	1, 0, 0,
-	0, 1, 0,
-	0, 0, 1
-);
-
-template <typename T>
-const Matrix3x3<T> Matrix3x3<T>::zero = Matrix3x3<T>(
-	0, 0, 0,
-	0, 0, 0,
-	0, 0, 0
-);
-

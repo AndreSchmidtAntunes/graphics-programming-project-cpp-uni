@@ -1,10 +1,9 @@
 #include "Camera.h"
+
 #include "Matrix3x3.h"
 
 #define DEG2RAD 0.017453292f
 #define HALF_PI 1.570796327f
-
-#include <iostream>
 
 template <typename T>
 void Camera<T>::Rotate(const Vector3<T>& rotation)

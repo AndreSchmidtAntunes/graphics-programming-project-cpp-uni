@@ -1,7 +1,6 @@
 #pragma once
 
-template <class T = double>
-class Camera;
+template <class T = double> class Camera;
 
 class GL_entry_point {
 public:

@@ -20,11 +20,6 @@ public:
 
 	//Mesh() : vertices(nullptr), polygons(nullptr), vertices_count(0), polygons_count(0) { };
 
-	Mesh() : 
-		vertices(nullptr), colours(nullptr), normals(nullptr), uvs(nullptr), 
-		vertices_count(0), colours_count(0), normals_count(0), uvs_count(0),
-		indices(nullptr), normal_indices(nullptr), uv_indices(nullptr), 
-		indices_count(0) {};
 
 	//Mesh(const double* vertices, const uint vertices_length, const Poly* triangles, const uint triangles_length);
 	
@@ -41,7 +36,9 @@ public:
 
 	//Mesh(const double* vertices, const uint vertices_length, const uint** indices, const Colour** indice_colours, const uint* per_indice_length, const uint indices_length);
 
-	~Mesh();
+	Mesh(void) : Mesh(nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0) {};
+
+	~Mesh(void);
 
 	//Vector3<>& getVertex(const Poly* polygon, uint edge_index) {
 	//	return vertices[polygon->indices[edge_index]];
