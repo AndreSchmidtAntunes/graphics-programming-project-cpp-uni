@@ -1,43 +1,15 @@
 #include "Vector4.h"
 
-template <typename T>
-Vector4<T> Vector4<T>::operator * (const Vector4<T>& other) const {
-	return Vector4(x * other.x, y * other.y, z * other.z, w * other.w);
+template <typename T> 
+template <typename Ty>
+Vector4<T> Vector4<T>::operator * (const Vector4<Ty>& other) const {
+	return Vector4<T>(*this) *= other;
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::operator * (const T& value) const {
-	return Vector4(x * value, y * value, z * value, w * value);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator * (const float& value) const {
-	return Vector4(x * value, y * value, z * value, w * value);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator / (const Vector4<T>& other) const {
-	return Vector4(x / other.x, y / other.y, z / other.z, w / other.w);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator / (const T& value) const {
-	return Vector4(x / value, y / value, z / value, w / value);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator / (const float& value) const {
-	return Vector4(x / value, y / value, z / value, w / value);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator + (const Vector4<T>& other) const {
-	return Vector4(x + other.x, y + other.y, z + other.z, w + other.w);
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator - (const Vector4<T>& other) const {
-	return Vector4(x - other.x, y - other.y, z - other.z, w - other.w);
+template <typename Ty>
+Vector4<T> Vector4<T>::operator * (const Ty& other) const {
+	return Vector4<T>(*this) *= value;
 }
 
 template <typename T>
@@ -45,93 +17,14 @@ Vector4<T>::operator bool() const {
 	return x || y || z || w;
 }
 
-template <typename T>
-bool Vector4<T>::operator == (Vector4<T> other) const {
+template<typename T>
+bool Vector4<T>::operator == (const Vector4<T>& other) const {
 	return x == other.x && y == other.y && z == other.z && w == other.w;
 }
 
-template <typename T>
-bool Vector4<T>::operator != (Vector4<T> other) const {
+template<typename T>
+bool Vector4<T>::operator != (const Vector4<T>& other) const {
 	return x != other.x || y != other.y || z != other.z || w != other.w;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator *= (const Vector4<T>& value) {
-	x *= value.x;
-	y *= value.y;
-	z *= value.z;
-	w *= value.w;
-
-	return *this;
-}
-template <typename T>
-Vector4<T>& Vector4<T>::operator *= (const T& value) {
-	x *= value;
-	y *= value;
-	z *= value;
-	w *= value;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator *= (const float& value) {
-	x *= value;
-	y *= value;
-	z *= value;
-	w *= value;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator /= (const Vector4<T>& value) {
-	x /= value.x;
-	y /= value.y;
-	z /= value.z;
-	w /= value.w;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator /= (const T& value) {
-	x /= value;
-	y /= value;
-	z /= value;
-	w /= value;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator /= (const float& value) {
-	x /= value;
-	y /= value;
-	z /= value;
-	w /= value;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator += (const Vector4& value) {
-	x += value.x;
-	y += value.y;
-	z += value.z;
-	w += value.w;
-
-	return *this;
-}
-
-template <typename T>
-Vector4<T>& Vector4<T>::operator -= (const Vector4& value) {
-	x -= value.x;
-	y -= value.y;
-	z -= value.z;
-	w -= value.w;
-
-	return *this;
 }
 
 template <typename T>
@@ -143,18 +36,6 @@ template <typename T>
 const T& Vector4<T>::operator [] (const std::size_t idx) const {
 	return data[idx];
 }
-
-template <typename T> const Vector4<T> Vector4<T>::Up = Vector4<T>(0, 1, 0, 0);
-template <typename T> const Vector4<T> Vector4<T>::Down = Vector4<T>(0, -1, 0, 0);
-template <typename T> const Vector4<T> Vector4<T>::Right = Vector4<T>(1, 0, 0, 0);
-template <typename T> const Vector4<T> Vector4<T>::Left = Vector4<T>(-1, 0, 0, 0);
-template <typename T> const Vector4<T> Vector4<T>::Forward = Vector4<T>(0, 0, 1, 0);
-template <typename T> const Vector4<T> Vector4<T>::Back = Vector4<T>(0, 0, -1, 0);
-template <typename T> const Vector4<T> Vector4<T>::Ana = Vector4<T>(0, 0, 0, 1);
-template <typename T> const Vector4<T> Vector4<T>::Kata = Vector4<T>(0, 0, 0, -1);
-
-template <typename T> const Vector4<T> Vector4<T>::Zero = Vector4<T>(0, 0, 0, 0);
-template <typename T> const Vector4<T> Vector4<T>::One = Vector4<T>(1, 1, 1, 1);
 
 template <typename T>
 T Vector4<T>::SquaredMagnitude() const {

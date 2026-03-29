@@ -39,19 +39,18 @@ const char* vertexShaderSource = "#version 330 core\n"
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
 void RotateRight() { CAMERA.RotateFirstPerson(Vector3<>::Right * ROTATION_SPEED * DELTATIME); 	}
+void RotateDown()  { CAMERA.RotateFirstPerson(Vector3<>::Down * ROTATION_SPEED * DELTATIME);	}
 void RotateLeft()  { CAMERA.RotateFirstPerson(Vector3<>::Left * ROTATION_SPEED * DELTATIME);	}
 void RotateUp()	   { CAMERA.RotateFirstPerson(Vector3<>::Up * ROTATION_SPEED * DELTATIME);		}
-void RotateDown()  { CAMERA.RotateFirstPerson(Vector3<>::Down * ROTATION_SPEED * DELTATIME);	}
 
 #define MOVESPEED 4.0f
 
-void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;		}
-void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;		}
+void MoveForward() { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME; }
+void MoveBack()    { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME; }
+void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;	}
+void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
 void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
-
-void MoveForward() { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME;	}
-void MoveBack()	   { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME;		}
 
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera<>(Vector3<>::Forward, Vector3<>::Zero, Vector3<>::Up, Vector3<>::Right)), deltaTime(0) {
 
