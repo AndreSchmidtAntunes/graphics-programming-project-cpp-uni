@@ -13,4 +13,4 @@ enum InvSqrtPrecision : const unsigned int {
 /// <param name="x">The input number</param>
 /// <param name="iteration_count">The number of iterations to perform. A higher number such as 8 gives a very accurate result. However a value of 1 is perfectly reasonable for things like graphics calculations. </param>
 /// <returns>An approximation of 1/sqrt(x)</returns>
-extern inline float FastInvSqrt(float value, unsigned int iteration_count = 1);
+extern inline constexpr float FastInvSqrt(float value, unsigned int iteration_count = 1);

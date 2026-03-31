@@ -6,9 +6,9 @@ Matrix3x3<T>::Matrix3x3(
 	T m2_1, T m2_2, T m2_3,
 	T m3_1, T m3_2, T m3_3) {
 
-	self[0][0] = m1_1; self[0][1] = m1_2; self[0][2] = m1_3;
-	self[1][0] = m2_1; self[1][1] = m2_2; self[1][2] = m2_3;
-	self[2][0] = m3_1; self[2][1] = m3_2; self[2][2] = m3_3;
+	SELF[0][0] = m1_1; SELF[0][1] = m1_2; SELF[0][2] = m1_3;
+	SELF[1][0] = m2_1; SELF[1][1] = m2_2; SELF[1][2] = m2_3;
+	SELF[2][0] = m3_1; SELF[2][1] = m3_2; SELF[2][2] = m3_3;
 }
 
 template <typename T>
@@ -63,19 +63,19 @@ Matrix3x3<T> Matrix3x3<T>::CrossProductMatrix(const Vector3<T>& direction) {
 // Setters
 template <typename T>
 void Matrix3x3<T>::setElementAt(uint row_index, uint column_index, T value) {
-	self[row_index][column_index] = value;
+	SELF[row_index][column_index] = value;
 }
 
 template <typename T>
 void Matrix3x3<T>::setRow(uint row_index, const Vector3<T>& elements) {
 	for (uint i = 0; i < DIMENTIONS; i++)
-		self[row_index][i] = elements[i];
+		SELF[row_index][i] = elements[i];
 }
 
 template <typename T>
 void Matrix3x3<T>::setColumn(uint column_index, const Vector3<T>& elements) {
 	for (uint i = 0; i < DIMENTIONS; i++)
-		self[i][column_index] = elements[i];
+		SELF[i][column_index] = elements[i];
 }
 
 // Getters
@@ -87,12 +87,12 @@ T Matrix3x3<T>::getElementAt(uint row_index, uint column_index) const {
 
 template <typename T>
 Vector3<T> Matrix3x3<T>::getRow(uint row_index) const {
-	return Vector3<T>(self[row_index][0], self[row_index][1], self[row_index][2]);
+	return Vector3<T>(SELF[row_index][0], SELF[row_index][1], SELF[row_index][2]);
 }
 
 template <typename T>
 Vector3<T> Matrix3x3<T>::getColumn(uint column_index) const {
-	return Vector3<T>(self[0][column_index], self[1][column_index], self[2][column_index]);
+	return Vector3<T>(SELF[0][column_index], SELF[1][column_index], SELF[2][column_index]);
 }
 
 template <typename T>
@@ -109,15 +109,15 @@ template <typename T>
 Matrix3x3<T>& Matrix3x3<T>::operator = (const Matrix3x3<T>& other) {
 	for (uint row = 0; row < DIMENTIONS; row++)
 		for (uint col = 0; col < DIMENTIONS; col++)
-			self[row][col] = other[row][col];
+			SELF[row][col] = other[row][col];
 
-	return self;
+	return SELF;
 }
 
 template <typename T>
 Matrix3x3<T>& Matrix3x3<T>::operator *= (const Matrix3x3<T>& other) {
-	self = self * other;
-	return self;
+	SELF = SELF * other;
+	return SELF;
 }
 
 template <typename T>
@@ -133,7 +133,7 @@ Matrix3x3<T>& Matrix3x3<T>::operator *= (const T mult) {
 		for (uint col = 0; col < DIMENTIONS; col++) {
 			data[row][col] *= mult;
 		}
-	return self;
+	return SELF;
 }
 
 template <typename T>
@@ -143,7 +143,7 @@ Vector3<T> Matrix3x3<T>::operator * (const Vector3<T>& mult) const {
 	for (uint i = 0; i < DIMENTIONS; i++) {
 		T sum = 0;
 		for (uint j = 0; j < DIMENTIONS; j++) {
-			sum += (self[i][j] * mult[j]);
+			sum += (SELF[i][j] * mult[j]);
 		}
 		result[i] = sum;
 	}
@@ -158,7 +158,7 @@ Matrix3x3<T> Matrix3x3<T>::operator * (const Matrix3x3<T>& other) const {
 	for (i = 0; i < DIMENTIONS; i++)
 		for (j = 0; j < DIMENTIONS; j++)
 			for (m = 0; m < DIMENTIONS; m++)
-				result[i][j] += self[i][m] * other[m][j];
+				result[i][j] += SELF[i][m] * other[m][j];
 
 	return result;
 }

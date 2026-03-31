@@ -3,7 +3,7 @@
 #include "Matrix3x3.h"
 #include "Vector4.h"
 
-#define self (*this)
+#define SELF (*this)
 
 template <typename T = double>
 struct Matrix4x4 {

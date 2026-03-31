@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Structs">
+      <UniqueIdentifier>{a592c172-bed1-4cbb-ae99-e001caafa010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Classes">
+      <UniqueIdentifier>{ec604526-db9f-4a0e-a31f-81bf88d61990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Namespaces">
+      <UniqueIdentifier>{1d1a3a4a-0ba5-4660-8ba6-56f4eb73b4e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{70ffa5fb-3a8f-456d-88f1-5130b6202145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Namespaces">
+      <UniqueIdentifier>{38f65b27-b2bc-4714-a523-2571ac735337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Classes">
+      <UniqueIdentifier>{16a24f0d-ac3d-44c8-ad52-83b860e5f1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Structs">
+      <UniqueIdentifier>{b7c83f70-2cc3-4d9b-978b-40ca2f6ddba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Includes">
+      <UniqueIdentifier>{cce8e9f8-84dd-46da-911b-5ccc585ffa21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Defines">
+      <UniqueIdentifier>{8c58d274-9816-4f6f-b830-ca90db400ef0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\classes\Camera.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\classes\GL_entry_point.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\classes\Mesh.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\classes\Transform.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\namespaces\GLExtras.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\namespaces\UserInput.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Colour.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Matrix3x3.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Matrix4x4.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Vector2.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Quaternion.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Vector3.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Vector4.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\namespaces\GLUTCallbacks.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\namespaces\Vector.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FastInvSqrt.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="models\rat.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Object>
+    <Object Include="models\teapot.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="includes\classes\Camera.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\classes\GL_entry_point.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\classes\Mesh.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\classes\Transform.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\namespaces\GLExtras.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\namespaces\UserInput.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Colour.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Matrix3x3.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Matrix4x4.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Vector2.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Quaternion.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Vector3.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Vector4.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\common.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\GLLibs.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\namespaces\GLUTCallbacks.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\defines.h">
+      <Filter>Resource Files\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\namespaces\Vector.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\FastInvSqrt.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+    <None Include="fixer.py" />
+  </ItemGroup>
+</Project>

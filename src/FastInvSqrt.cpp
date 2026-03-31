@@ -1,6 +1,6 @@
 #include "FastInvSqrt.h"
 
-inline float FastInvSqrt(float x, unsigned int iteration_count) {
+inline constexpr float FastInvSqrt(float x, unsigned int iteration_count) {
 
 	float xhalf = 0.5f * x;
 	int i = *(int*)&x;              // get bits for floating value

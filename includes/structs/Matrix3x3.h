@@ -2,7 +2,7 @@
 
 #include "Vector3.h"
 
-#define self (*this)
+#define SELF (*this)
 #define uint unsigned int
 
 template <typename T = double>
@@ -27,7 +27,7 @@ public:
 
 
 	Matrix3x3(const T[DIMENTIONS][DIMENTIONS]);
-	Matrix3x3(const Vector3<T>& row_1, const Vector3<T>& row_2, const Vector3<T>& row_3);
+	Matrix3x3(const Vectors::Vector3<T>& row_1, const Vectors::Vector3<T>& row_2, const Vectors::Vector3<T>& row_3);
 
 	Matrix3x3() : Matrix3x3(identity) {};
 
@@ -35,26 +35,26 @@ public:
 
 	// Static operations
 
-	static Matrix3x3<T> ScaleMatrix(const Vector3<T>& scale);
-	static Matrix3x3<T> RotationMatrix(const Vector3<T>& axis, T radians);
+	static Matrix3x3<T> ScaleMatrix(const Vectors::Vector3<T>& scale);
+	static Matrix3x3<T> RotationMatrix(const Vectors::Vector3<T>& axis, T radians);
 
-	static Matrix3x3<T> CrossProductMatrix(const Vector3<T>& direction);
+	static Matrix3x3<T> CrossProductMatrix(const Vectors::Vector3<T>& direction);
 
 	// Setters
 
 	void setElementAt(uint row, uint column, T value);
 
-	void setRow(uint row_index, const Vector3<T>& elements);
+	void setRow(uint row_index, const Vectors::Vector3<T>& elements);
 
-	void setColumn(uint column_index, const Vector3<T>& elements);
+	void setColumn(uint column_index, const Vectors::Vector3<T>& elements);
 
 	// Getters
 
 	T getElementAt(uint row, uint column) const;
 
-	Vector3<T> getRow(uint row_index) const;
+	Vectors::Vector3<T> getRow(uint row_index) const;
 
-	Vector3<T> getColumn(uint column_index) const;
+	Vectors::Vector3<T> getColumn(uint column_index) const;
 
 	// Operators
 	
@@ -64,9 +64,9 @@ public:
 	Matrix3x3<T>& operator *= (T mult);
 
 
-	friend Vector3<T>& operator *= (Vector3<T>& lhs, const Matrix3x3<T>& rhs);
+	friend Vectors::Vector3<T>& operator *= (Vectors::Vector3<T>& lhs, const Matrix3x3<T>& rhs);
 
-	Vector3<T> operator * (const Vector3<T>& mult) const;
+	Vectors::Vector3<T> operator * (const Vectors::Vector3<T>& mult) const;
 
 	Matrix3x3<T> operator * (const Matrix3x3<T>& other) const;
 	Matrix3x3<T> operator * (const T mult) const;

@@ -1,10 +1,11 @@
 #include "GL_entry_point.h"
 
 #include "Camera.h"
-#include "common.h" 
+#include "common.h"
 #include "GLExtras.h"
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
 #include "UserInput.h"
+#include "Vector.h"
 #include <Windows.h>
 
 const char* vertexShaderSource = "#version 330 core\n"
@@ -38,10 +39,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
-void RotateRight() { CAMERA.RotateFirstPerson(Vector3<>::Right * ROTATION_SPEED * DELTATIME); 	}
-void RotateDown()  { CAMERA.RotateFirstPerson(Vector3<>::Down * ROTATION_SPEED * DELTATIME);	}
-void RotateLeft()  { CAMERA.RotateFirstPerson(Vector3<>::Left * ROTATION_SPEED * DELTATIME);	}
-void RotateUp()	   { CAMERA.RotateFirstPerson(Vector3<>::Up * ROTATION_SPEED * DELTATIME);		}
+void RotateRight() { CAMERA.RotateFirstPerson(Vectors::Right * ROTATION_SPEED * DELTATIME); 	}
+void RotateDown()  { CAMERA.RotateFirstPerson(Vectors::Down * ROTATION_SPEED * DELTATIME);	}
+void RotateLeft()  { CAMERA.RotateFirstPerson(Vectors::Left * ROTATION_SPEED * DELTATIME);	}
+void RotateUp()	   { CAMERA.RotateFirstPerson(Vectors::Up * ROTATION_SPEED * DELTATIME);		}
 
 #define MOVESPEED 4.0f
 
@@ -52,7 +53,7 @@ void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
 void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
 
-GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera<>(Vector3<>::Forward, Vector3<>::Zero, Vector3<>::Up, Vector3<>::Right)), deltaTime(0) {
+GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vectors::Forward, Vectors::Zero, Vectors::Up, Vectors::Right)), deltaTime(0) {
 
 	rot = 0.0f;
 
@@ -121,7 +122,7 @@ static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
 
-	rat_mesh->Render(Vector3<>(0, 0, -5), Vector3<>(0, 0, 90), Vector3<>(0.025), camera);
+	rat_mesh->Render(Vectors::Vector3<>(0, 0, -5), Vectors::Vector3<>(0, 0, 90), Vectors::Vector3<>(0.025), camera);
 }
 
 void GL_entry_point::Update() {

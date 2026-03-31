@@ -1,7 +1,8 @@
 #pragma once
 
+#include "Vector.h"
+#include "Colour.h"
 #include "GLLibs.h"
-#include "Poly.h"
 
 namespace GLExtras {
 
@@ -14,18 +15,14 @@ namespace GLExtras {
 	/// Adds a vertex to the scene. 
 	/// </summary>
 	/// <param name="position">The x,y, and z of the vertex's location in the scene. </param>
-	void AddVertex(const Vector3<>& position);
+	void AddVertex(const Vectors::Vector3<>& position);
 
 	/// <summary>
 	/// Add vertices to the scene. 3 vertices make a triangle.
 	/// </summary>
 	/// <param name="points_array">Each Vector3 represents the x, y, and z of a vertex.</param>
 	/// <param name="length">The length of the array.</param>
-	void AddVertices(Vector3<>* points_array, const uint length);
-
-	void AddPolygon(const Poly& polygon, const Vector3<>* vertices);
-
-	void AddPolygons(const Poly* polygons, const uint length, const Vector3<>* vertices);
+	void AddVertices(Vectors::Vector3<>* points_array, const uint length);
 
 	/// <summary>
 	/// Set The current vertex colour using a 8 digit hexadecimal code. <br/>
