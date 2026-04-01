@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[]) {
 
-	Vectors::Vector3<float> test(4, 1, 5);
+	Vector3<float> test(4, 1, 5);
 	Vectors::Vector<short, 7> test2 = Vectors::Zero;
 	std::cout << Vectors::Right + test;
 

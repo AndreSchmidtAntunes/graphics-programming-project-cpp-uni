@@ -207,26 +207,45 @@
 
 #include "Vector.h"
 
-namespace Vectors {
-	// Specialized Vectors
+template <typename T = double>
+struct Vector3 : Vectors::Vector<T, 3> {
 
-	template <typename T = double>
-	struct Vector3 : Vector<T, 3> {
+	T& x;
+	T& y;
+	T& z;
 
-		T& x;
-		T& y;
-		T& z;
+	constexpr Vector3() :
+		x(this->data[0]),
+		y(this->data[1]),
+		z(this->data[2])
+	{ }
 
-		constexpr Vector3() : Vector<T, 3>(),
-			x(this->data[0]),
-			y(this->data[1]),
-			z(this->data[2])
-		{ }
+	template <typename T1> requires (std::is_arithmetic<T1>::value)
+	explicit constexpr Vector3(Vectors::Vector<T1, 3> vector) : Vector3() { 
+		x = static_cast<T>(vector[0]);
+		y = static_cast<T>(vector[1]);
+		z = static_cast<T>(vector[2]);
+	}
 
-		constexpr Vector3(const T x_, const T y_, const T z_) : Vector3() {
-			x = x_;
-			y = y_;
-			z = z_;
-		}
-	};
-}
+	constexpr Vector3(const T x_, const T y_, const T z_) : Vector3() {
+		x = x_;
+		y = y_;
+		z = z_;
+	}
+
+	template<typename T1, uint Dim> requires (std::is_arithmetic<T1>::value && Dim >= 3) // might not need arithmetic check!!!!!!!!!!!!!
+	constexpr operator Vectors::Vector<T, Dim>() const {
+		return Vectors::Vector<T, Dim>(x, y, z);
+	}
+
+	template<typename T1, uint Dim> requires (std::is_arithmetic<T1>::value && Dim < 3) // might not need arithmetic check!!!!!!!!!!!!!
+	constexpr operator Vectors::Vector<T, Dim>() const {
+		Vectors::Vector<T, Dim> return_vector;
+		for (int i = 0; i < Dim; i++)
+			return_vector[i] = SELF[i];
+
+		return return_vector;
+	}
+};
+
+

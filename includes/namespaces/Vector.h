@@ -15,7 +15,7 @@ template <typename T = double, uint Dim = 3> struct Vector {
 
 private:
 
-	using THIS_TYPE = Vector<T, Dim>;
+	#define THIS_TYPE Vector<T, Dim>
 
 	constexpr void set_at(uint idx, const T& value) {
 		this->data[idx] = value;
@@ -95,6 +95,7 @@ public:
 		return false;
 	}
 
+	template <typename T = double, uint Dim = 3>
 	friend std::ostream& operator << (std::ostream& ostream, const THIS_TYPE& vector) {
 
 		ostream << '(';
@@ -168,27 +169,27 @@ public:
 	}
 
 	template <typename T1, uint Dim1>
-	constexpr const THIS_TYPE operator + (const Vector<T1, Dim1>& other) const { 
+	friend constexpr const THIS_TYPE operator + (const Vector<T1, Dim1>& other) const { 
 		return THIS_TYPE(SELF) += other; 
 	}
 
 	template <typename T1, uint Dim1>
-	constexpr const THIS_TYPE operator - (const Vector<T1, Dim1>& other) const { 
+	friend constexpr const THIS_TYPE operator - (const Vector<T1, Dim1>& other) const {
 		return THIS_TYPE(SELF) -= other; 
 	}
 
 	template <typename T1, uint Dim1>
-	constexpr const THIS_TYPE operator * (const Vector<T1, Dim1>& other) const { 
+	friend constexpr const THIS_TYPE operator * (const Vector<T1, Dim1>& other) const {
 		return THIS_TYPE(SELF) *= other; 
 	}
 
 	template <typename T1, uint Dim1>
-	constexpr const THIS_TYPE operator / (const Vector<T1, Dim1>& other) const { 
+	friend constexpr const THIS_TYPE operator / (const THIS_TYPE& first, const Vector<T1, Dim1>& other) const {
 		return THIS_TYPE(SELF) /= other; 
 	}
 
 	template <typename T1>
-	constexpr const THIS_TYPE operator * (const T1& other) const {
+	friend constexpr const THIS_TYPE operator * (const T1& other) const {
 		return THIS_TYPE(SELF) *= other; 
 	}
 

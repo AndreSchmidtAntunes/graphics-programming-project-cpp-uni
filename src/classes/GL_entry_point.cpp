@@ -39,10 +39,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
-void RotateRight() { CAMERA.RotateFirstPerson(Vectors::Right * ROTATION_SPEED * DELTATIME); 	}
+void RotateRight() { CAMERA.RotateFirstPerson(Vectors::Right * ROTATION_SPEED * DELTATIME); }
 void RotateDown()  { CAMERA.RotateFirstPerson(Vectors::Down * ROTATION_SPEED * DELTATIME);	}
 void RotateLeft()  { CAMERA.RotateFirstPerson(Vectors::Left * ROTATION_SPEED * DELTATIME);	}
-void RotateUp()	   { CAMERA.RotateFirstPerson(Vectors::Up * ROTATION_SPEED * DELTATIME);		}
+void RotateUp()	   { CAMERA.RotateFirstPerson(Vectors::Up * ROTATION_SPEED * DELTATIME);	}
 
 #define MOVESPEED 4.0f
 
@@ -122,7 +122,7 @@ static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
 
-	rat_mesh->Render(Vectors::Vector3<>(0, 0, -5), Vectors::Vector3<>(0, 0, 90), Vectors::Vector3<>(0.025), camera);
+	rat_mesh->Render(Vector3<>(0, 0, -5), Vector3<>(0, 0, 90), Vector3<>(0.025), camera);
 }
 
 void GL_entry_point::Update() {

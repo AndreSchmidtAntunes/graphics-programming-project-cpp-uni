@@ -6,7 +6,7 @@
 #define HALF_PI 1.570796327f
 
 template <typename T>
-void Camera<T>::Rotate(const Vectors::Vector3<T>& rotation)
+void Camera<T>::Rotate(const Vector3<T>& rotation)
 {
 	//this->rotation += rotation;
 
@@ -26,7 +26,7 @@ void Camera<T>::Rotate(const Vectors::Vector3<T>& rotation)
 /// </summary>
 /// <param name="rotation"> x = yaw z = pitch, y = roll </param>
 template <typename T>
-void Camera<T>::RotateFirstPerson(const Vectors::Vector3<T>& rotation) {
+void Camera<T>::RotateFirstPerson(const Vector3<T>& rotation) {
 
 	Matrix3x3<T> yaw = Matrix3x3<T>::RotationMatrix(Vectors::Down, rotation.x * DEG2RAD);
 	Matrix3x3<T> pitch = Matrix3x3<T>::RotationMatrix(Vectors::Left, rotation.y * DEG2RAD);
