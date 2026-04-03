@@ -122,7 +122,7 @@ static const Mesh* rat_mesh = new Mesh("rat.obj");
 
 void GL_entry_point::DrawPolygons() {
 
-	rat_mesh->Render(Vector3<>(0, 0, -5), Vector3<>(0, 0, 90), Vector3<>(0.025), camera);
+	rat_mesh->Render(Vector3(0, 0, -5), Vector3(0, 0, 90), Vector3(0.025), camera);
 }
 
 void GL_entry_point::Update() {

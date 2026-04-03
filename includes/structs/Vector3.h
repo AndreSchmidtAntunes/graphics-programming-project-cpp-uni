@@ -207,31 +207,25 @@
 
 #include "Vector.h"
 
+template<typename T>
+struct VECTOR3_MEMORY_LAYOUT {
+
+	union {
+		struct { T x, y, z; };
+		std::array<T, 3> data { };
+	};
+};
+
 template <typename T = double>
-struct Vector3 : Vectors::Vector<T, 3> {
+struct Vector3 : Vectors::Vector<T, 3, VECTOR3_MEMORY_LAYOUT<T>> {
+	
+	using type = Vectors::Vector<T, 3>;
 
-	T& x;
-	T& y;
-	T& z;
-
-	constexpr Vector3() :
-		x(this->data[0]),
-		y(this->data[1]),
-		z(this->data[2])
-	{ }
-
-	template <typename T1> requires (std::is_arithmetic<T1>::value)
-	explicit constexpr Vector3(Vectors::Vector<T1, 3> vector) : Vector3() { 
-		x = static_cast<T>(vector[0]);
-		y = static_cast<T>(vector[1]);
-		z = static_cast<T>(vector[2]);
-	}
-
-	constexpr Vector3(const T x_, const T y_, const T z_) : Vector3() {
-		x = x_;
-		y = y_;
-		z = z_;
-	}
+	using type::Vector;
+	using type::operator*;
+	using type::operator/;
+	using type::operator+;
+	using type::operator-;
 
 	template<typename T1, uint Dim> requires (std::is_arithmetic<T1>::value && Dim >= 3) // might not need arithmetic check!!!!!!!!!!!!!
 	constexpr operator Vectors::Vector<T, Dim>() const {
@@ -246,6 +240,20 @@ struct Vector3 : Vectors::Vector<T, 3> {
 
 		return return_vector;
 	}
+
+private:
+
+	#define THIS_TYPE Vectors::Vector<T, 3>
+	
+public:
+
+	union {
+		Vectors::Vector<T, 3> (*this);
+		struct { T x, y, z; };
+	};
+
+	constexpr Vector(T value = T{}) : THIS_TYPE(value) {}
 };
 
-
+//template <typename T>
+//using Vector3 = Vectors::Vector<T, 3>;

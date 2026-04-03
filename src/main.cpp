@@ -11,7 +11,12 @@
 
 int main(int argc, char* argv[]) {
 
-	Vector3<float> test(4, 1, 5);
+	//Vector3<float> test(4, 1, 5);
+
+	Vector3<> test(1.0);
+
+	std::cout << (test.x);
+
 	Vectors::Vector<short, 7> test2 = Vectors::Zero;
 	std::cout << Vectors::Right + test;
 

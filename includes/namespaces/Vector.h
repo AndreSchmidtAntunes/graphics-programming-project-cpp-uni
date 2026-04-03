@@ -11,7 +11,13 @@
 
 namespace Vectors {
 
-template <typename T = double, uint Dim = 3> struct Vector {
+	template<typename T, uint Dim>
+	struct DEFAULT_MEMORY_STRUCTURE {
+		std::array<T, Dim> data{ };
+	};
+
+template <typename T = double, uint Dim = 3, typename MEMORY_STRUCTURE = DEFAULT_MEMORY_STRUCTURE<T, Dim>> 
+struct Vector : MEMORY_STRUCTURE {
 
 private:
 
@@ -41,8 +47,6 @@ public:
 
 	using valueType = T;
 	static constexpr uint dimensionCount = Dim;
-
-	std::array<T, Dim> data { };
 
 	constexpr Vector(T value = T{}) { data.fill(value); }
 
@@ -168,34 +172,41 @@ public:
 		return SELF;
 	}
 
-	template <typename T1, uint Dim1>
-	friend constexpr const THIS_TYPE operator + (const Vector<T1, Dim1>& other) const { 
-		return THIS_TYPE(SELF) += other; 
+	// +
+
+	template <typename T1, uint Dim1> requires (Dim >= Dim1)
+	friend constexpr const THIS_TYPE operator + (const THIS_TYPE& first, const Vector<T1, Dim1>& other) const {
+		return THIS_TYPE(first) += other;
 	}
 
-	template <typename T1, uint Dim1>
-	friend constexpr const THIS_TYPE operator - (const Vector<T1, Dim1>& other) const {
-		return THIS_TYPE(SELF) -= other; 
+	// -
+
+	template <typename T1, uint Dim1> requires (Dim >= Dim1)
+	friend constexpr const THIS_TYPE operator - (const THIS_TYPE& first, const Vector<T1, Dim1>& other) const {
+		return THIS_TYPE(first) -= other;
 	}
 
-	template <typename T1, uint Dim1>
-	friend constexpr const THIS_TYPE operator * (const Vector<T1, Dim1>& other) const {
-		return THIS_TYPE(SELF) *= other; 
+	// *
+
+
+	template <typename T1, uint Dim1> requires (Dim >= Dim1)
+		friend constexpr const THIS_TYPE operator * (const THIS_TYPE& first, const Vector<T1, Dim1>& other) const {
+		return THIS_TYPE(first) *= other;
 	}
 
 	template <typename T1, uint Dim1>
 	friend constexpr const THIS_TYPE operator / (const THIS_TYPE& first, const Vector<T1, Dim1>& other) const {
-		return THIS_TYPE(SELF) /= other; 
+		return THIS_TYPE(first) /= other;
 	}
 
 	template <typename T1>
-	friend constexpr const THIS_TYPE operator * (const T1& other) const {
-		return THIS_TYPE(SELF) *= other; 
+	friend constexpr const THIS_TYPE operator * (const THIS_TYPE& first, const T1& other) const {
+		return THIS_TYPE(first) *= other;
 	}
 
 	template <typename T1>
-	constexpr const THIS_TYPE operator / (const T1& other) const {
-		return THIS_TYPE(SELF) /= other; 
+	friend constexpr const THIS_TYPE operator / (const THIS_TYPE& first, const T1& other) const {
+		return THIS_TYPE(first) /= other;
 	}
 
 	constexpr const THIS_TYPE operator - () const {
