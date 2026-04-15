@@ -1,54 +1,55 @@
 #include "Transform.h"
 
-template <typename T>
-void Transform<T>::SetOnChangedFunc(void (*callback)(Vector3<T>, Vector3<T>, Vector3<T>)) {
+#include "Matrix3x3.h"
+
+void Transform::SetOnChangedFunc(void (*callback)(Vector3, Vector3, Vector3)) {
 	anyChangedFunc = callback;
 }
 
-template <typename T>
-void Transform<T>::SetOnPositionChangedFunc(void (*callback)(Vector3<T>)) {
+
+void Transform::SetOnPositionChangedFunc(void (*callback)(Vector3)) {
 	posChangedFunc = callback;
 }
 
-template <typename T>
-void Transform<T>::SetOnRotationChangedFunc(void (*callback)(Vector3<T>)) {
+
+void Transform::SetOnRotationChangedFunc(void (*callback)(Vector3)) {
 	rotChangedFunc = callback;
 }
 
-template <typename T>
-void Transform<T>::SetOnScaleChangedFunc(void (*callback)(Vector3<T>)) {
+
+void Transform::SetOnScaleChangedFunc(void (*callback)(Vector3)) {
 	scaleChangedFunc = callback;
 }
 
 // Setters
 
-template <typename T>
-inline void Transform<T>::setPosition(Vector3<T> position) {
+
+inline void Transform::setPosition(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
 	posChangedFunc(position);
 	this->position = position;
 }
 
-template <typename T>
-inline void Transform<T>::setRotation(Vector3<T> position) {
+
+inline void Transform::setRotation(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
 	posChangedFunc(position);
 	this->position = position;
 }
 
-template <typename T>
-inline void Transform<T>::setScale(Vector3<T> position) {
+
+inline void Transform::setScale(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
 	posChangedFunc(position);
 	this->position = position;
 }
 
-template <typename T>
-void Transform<T>::setParent(Transform<T>* parent, int index, bool keep_transform) {
+
+void Transform::setParent(Transform* parent, int index, bool keep_transform) {
 
 	// Remove transform from old parent's child array
 	this->parent->child_count--;
-	this->parentparent->children.erase(this->parent->children.begin() + child_index);
+	this->parent->children.erase(this->parent->children.begin() + child_index);
 
 	if (keep_transform)
 	
@@ -64,48 +65,45 @@ void Transform<T>::setParent(Transform<T>* parent, int index, bool keep_transfor
 
 // Getters
 
-template <typename T>
-inline Vector3<T>& Transform<T>::getPosition() {
+
+inline Vector3& Transform::getPosition() {
 	return position;
 }
 
-template <typename T>
-inline Vector3<T>& Transform<T>::getRotation() {
+
+inline Vector3& Transform::getRotation() {
 	return rotation;
 }
 
-template <typename T>
-inline Vector3<T>& Transform<T>::getScale() {
+
+inline Vector3& Transform::getScale() {
 	return scale;
 }
 
-template <typename T>
-Vector3<T> Transform<T>::getWorldScale() {
-	if (parent->is_root)
+
+Vector3 Transform::getWorldScale() {
+	if (is_root)
 		return this->scale;
 	else
-		return position * (parent->scale) + parent->getWorldPosition();
+		return Matrix3x3::ScaleMatrix(parent->getWorldScale()) * this->scale;
 }
 
-template <typename T>
-Vector3<T> Transform<T>::getWorldRotation() {
 
-	if (parent->is_root)
-		return this->scale;
-	else
-		return position * (parent->scale) + parent->getWorldPosition();
+Vector3 Transform::getWorldRotation() {
+
+	return Vector3::Zero; /// TODO: make this after finishing Quaternion implementation
 }
 
-template <typename T>
-Vector3<T> Transform<T>::getWorldPosition() {
+
+Vector3 Transform::getWorldPosition() {
 	if (parent->is_root)
 		return this->position;
 	else
-		return position * (parent->scale) + parent->getWorldPosition();
+		return (Matrix3x3::ScaleMatrix(parent->scale) * position) + parent->getWorldPosition();
 }
 
-template <typename T>
-inline int Transform<T>::getChildIndex() {
+
+inline int Transform::getChildIndex() {
 	return child_index;
 }
 

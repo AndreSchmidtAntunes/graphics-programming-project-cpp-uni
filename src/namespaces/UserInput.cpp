@@ -6,10 +6,10 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#define uint unsigned int
+#define size_t unsigned int
 #define intptr uintptr_t
 #define intptr_vec std::vector<intptr>
-#define intptr_vec_uint_umap std::unordered_map<uint, intptr_vec>
+#define intptr_vec_uint_umap std::unordered_map<size_t, intptr_vec>
 
 // This Typedef is used here to simplify the usage and storage of void callback pointers.
 // It is interchangeable with the type: void (*)(void)
@@ -24,7 +24,7 @@ namespace UserInput {
 		std::bitset<30> special = 0;
 	} inputState;
 
-	const bool IsKeyboardKeyDown(const uchar key) {
+	const bool IsKeyboardKeyDown(const unsigned char key) {
 		return inputState.keyboard[key];
 	}
 	const bool IsSpecialKeyDown(const SpecialKey key) {
@@ -43,7 +43,7 @@ namespace UserInput {
 	}
 
 	inline void RunCallbacksInPtrVector(const intptr_vec& callback_ptrs) {
-		for (uint i = 0; i < callback_ptrs.size(); i++) {			
+		for (size_t i = 0; i < callback_ptrs.size(); i++) {			
 			RunCallbackFromPointer(callback_ptrs[i]);
 		}
 	}
@@ -119,7 +119,7 @@ namespace UserInput {
 	/// <param name="dictionary">The dictionary to store the callback pointer into.</param>
 	/// <param name="key">The key to the array you want to append the callback to.</param>
 	/// <param name="callback">The callback pointer you wish to add.</param>
-	void AddCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT* callback) {
+	void AddCallback(intptr_vec_uint_umap& dictionary, const size_t key, funcT* callback) {
 
 		if (dictionary.find(key) == dictionary.end()) {
 			dictionary[key] = intptr_vec();
@@ -133,7 +133,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The keyboard key which fires the callback.</param>
 	/// <param name="">The void callback which runs when the key is pressed down.</param>
-	void AddKeyboardDownCallback(const uchar key, voidcallback) {
+	void AddKeyboardDownCallback(const unsigned char key, void (*callback)(void)) {
 		AddCallback(keyboard_down_callback_dict, key, callback);
 	}
 
@@ -142,7 +142,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The keyboard key which fires the callback.</param>
 	/// <param name="">The void callback which runs when the key is released.</param>
-	void AddKeyboardUpCallback(const uchar key, voidcallback) {
+	void AddKeyboardUpCallback(const unsigned char key, void (*callback)(void)) {
 		AddCallback(keyboard_up_callback_dict, key, callback);
 	}
 
@@ -151,7 +151,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The special keyboard key which fires the callback.</param>
 	/// <param name="">The void callback which runs when the key is pressed down.</param>
-	void AddSpecialDownCallback(const SpecialKey key, voidcallback) {
+	void AddSpecialDownCallback(const SpecialKey key, void (*callback)(void)) {
 		AddCallback(special_down_callback_dict, key, callback);
 	}
 
@@ -160,7 +160,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The special keyboard key which fires the callback.</param>
 	/// <param name="">The void callback which runs when the key is released.</param>
-	void AddSpecialUpCallback(const SpecialKey key, voidcallback) {
+	void AddSpecialUpCallback(const SpecialKey key, void (*callback)(void)) {
 		AddCallback(special_up_callback_dict, key, callback);
 	}
 
@@ -172,7 +172,7 @@ namespace UserInput {
 	/// <param name="dictionary">The dictionary holding the callback pointer to remove.</param>
 	/// <param name="key">The key to the array you want to pop a reference of the callback from.</param>
 	/// <param name="callback">The callback pointer you wish to pop from the array. </param>
-	const bool RemoveCallback(intptr_vec_uint_umap& dictionary, const uint key, funcT* callback) {
+	const bool RemoveCallback(intptr_vec_uint_umap& dictionary, const size_t key, funcT* callback) {
 
 		if (dictionary.find(key) == dictionary.end()) return false;
 
@@ -196,7 +196,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The keyboard key which is currently firing the callback.</param>
 	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveKeyboardDownCallback(const uchar key, voidcallback) {
+	const bool RemoveKeyboardDownCallback(const unsigned char key, void (*callback)(void)) {
 		return RemoveCallback(keyboard_down_callback_dict, key, callback);
 	}
 
@@ -205,7 +205,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The keyboard key which is currently firing the callback.</param>
 	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveKeyboardUpCallback(const uchar key, voidcallback) {
+	const bool RemoveKeyboardUpCallback(const unsigned char key, void (*callback)(void)) {
 		return RemoveCallback(keyboard_up_callback_dict, key, callback);
 	}
 
@@ -214,7 +214,7 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
 	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveSpecialDownCallback(const SpecialKey key, voidcallback) {
+	const bool RemoveSpecialDownCallback(const SpecialKey key, void (*callback)(void)) {
 		return RemoveCallback(special_down_callback_dict, key, callback);
 	}
 
@@ -223,27 +223,27 @@ namespace UserInput {
 	/// </summary>
 	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
 	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveSpecialUpCallback(const SpecialKey key, voidcallback) {
+	const bool RemoveSpecialUpCallback(const SpecialKey key, void (*callback)(void)) {
 		return RemoveCallback(special_up_callback_dict, key, callback);
 	}
 
-	void AddKeyboardActiveCallback(const uchar key, voidcallback) {
+	void AddKeyboardActiveCallback(const unsigned char key, void (*callback)(void)) {
 		AddCallback(keyboard_active_callback_dict, key, callback);
 	}
 
-	const bool RemoveKeyboardActiveCallback(const uchar key, voidcallback) {
+	const bool RemoveKeyboardActiveCallback(const unsigned char key, void (*callback)(void)) {
 		return RemoveCallback(keyboard_active_callback_dict, key, callback);
 	}
 
-	void AddSpecialActiveCallback(const SpecialKey key, voidcallback) {
+	void AddSpecialActiveCallback(const SpecialKey key, void (*callback)(void)) {
 		AddCallback(special_active_callback_dict, key, callback);
 	}
 
-	const bool RemoveSpecialActiveCallback(const SpecialKey key, voidcallback) {
+	const bool RemoveSpecialActiveCallback(const SpecialKey key, void (*callback)(void)) {
 		return RemoveCallback(special_active_callback_dict, key, callback);
 	}
 
-	template<uint bitset_size>
+	template<size_t bitset_size>
 	void RunActiveInputCallbacks(intptr_vec_uint_umap dictionary, std::bitset<bitset_size> state) {
 		for (auto kv : dictionary) {
 

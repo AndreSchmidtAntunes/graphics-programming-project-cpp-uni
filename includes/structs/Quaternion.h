@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Matrix3x3.h"
+#include <array>
+#include <type_traits>
+//class Matrix3x3;
 
 template<typename T = double>
 struct Quaternion {
 public:
 
-	static_assert(std::is_floating_point<T>::value,
-		"typename T can only be instantiated with floating point types. (E.g: float, double, half)");
+	static_assert(std::is_arithmetic<T>::value,
+		"Quaternion: T must be arithmetic!");
 
 	union {
 
@@ -17,8 +19,8 @@ public:
 		std::array<T, 4> data { };
 	};
 
-	T& operator [] (const uint idx) { return data[idx]; }
-	const T& operator [] (const uint idx) const { return data[idx]; }
+	T& operator [] (const size_t idx) { return data[idx]; }
+	const T& operator [] (const size_t idx) const { return data[idx]; }
 
 	const static Quaternion 
 		Identity,

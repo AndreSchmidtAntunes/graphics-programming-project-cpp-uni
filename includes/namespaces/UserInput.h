@@ -1,8 +1,5 @@
 #pragma once
 
-#define uchar unsigned char
-#define voidcallback void (*callback)(void)
-
 namespace UserInput {	
 
 	const enum SpecialKey : int 
@@ -20,30 +17,30 @@ namespace UserInput {
 
 	const int Init();
 
-	const bool IsKeyboardKeyDown(const uchar key);
+	const bool IsKeyboardKeyDown(const unsigned char key);
 	const bool IsSpecialKeyDown(const SpecialKey key);
 
 	// Keyboard inputs
 
-	void AddKeyboardDownCallback(const uchar key, voidcallback);
-	void AddKeyboardUpCallback(const uchar key, voidcallback);
+	void AddKeyboardDownCallback(const unsigned char key, void (*callback)(void));
+	void AddKeyboardUpCallback(const unsigned char key, void (*callback)(void));
 
-	const bool RemoveKeyboardDownCallback(const uchar key, voidcallback);
-	const bool RemoveKeyboardUpCallback(const uchar key, voidcallback);
+	const bool RemoveKeyboardDownCallback(const unsigned char key, void (*callback)(void));
+	const bool RemoveKeyboardUpCallback(const unsigned char key, void (*callback)(void));
 
 	// Special inputs
 
-	void AddSpecialDownCallback(const SpecialKey key, voidcallback);
-	void AddSpecialUpCallback(const SpecialKey key, voidcallback);
+	void AddSpecialDownCallback(const SpecialKey key, void (*callback)(void));
+	void AddSpecialUpCallback(const SpecialKey key, void (*callback)(void));
 
-	const bool RemoveSpecialDownCallback(const SpecialKey key, voidcallback);
-	const bool RemoveSpecialUpCallback(const SpecialKey key, voidcallback);
+	const bool RemoveSpecialDownCallback(const SpecialKey key, void (*callback)(void));
+	const bool RemoveSpecialUpCallback(const SpecialKey key, void (*callback)(void));
 
-	void AddKeyboardActiveCallback(const uchar key, voidcallback);
-	const bool RemoveKeyboardActiveCallback(const uchar key, voidcallback);
+	void AddKeyboardActiveCallback(const unsigned char key, void (*callback)(void));
+	const bool RemoveKeyboardActiveCallback(const unsigned char key, void (*callback)(void));
 
-	void AddSpecialActiveCallback(const SpecialKey key, voidcallback);
-	const bool RemoveSpecialActiveCallback(const SpecialKey key, voidcallback);
+	void AddSpecialActiveCallback(const SpecialKey key, void (*callback)(void));
+	const bool RemoveSpecialActiveCallback(const SpecialKey key, void (*callback)(void));
 
 	void UserInputActiveCallbacks();
 }

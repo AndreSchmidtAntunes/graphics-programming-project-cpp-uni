@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Vector3.h"
 #include "Colour.h"
-#include "GLLibs.h"
+#include "Vector3.h"
 
 namespace GLExtras {
 
@@ -15,28 +14,28 @@ namespace GLExtras {
 	/// Adds a vertex to the scene. 
 	/// </summary>
 	/// <param name="position">The x,y, and z of the vertex's location in the scene. </param>
-	void AddVertex(const Vector3<>& position);
+	void AddVertex(const Vector3& position);
 
 	/// <summary>
 	/// Add vertices to the scene. 3 vertices make a triangle.
 	/// </summary>
 	/// <param name="points_array">Each Vector3 represents the x, y, and z of a vertex.</param>
 	/// <param name="length">The length of the array.</param>
-	void AddVertices(Vector3<>* points_array, const uint length);
+	void AddVertices(Vector3* points_array, const size_t length);
 
 	/// <summary>
 	/// Set The current vertex colour using a 8 digit hexadecimal code. <br/>
 	/// 2 digits for red, green, blue, and alpha.
 	/// </summary>
 	/// <param name="Hex">Example: <c>0xff0000ff</c> is the hex code for red.</param>
-	void SetColourHexRGBA(const uint& hex);
+	void SetColourHexRGBA(const size_t& hex);
 
 	/// <summary>
 	/// Set The current vertex colour using a 6 digit hexadecimal code. <br/>
 	/// 2 digits for red, green, and blue.
 	/// </summary>
 	/// <param name="Hex">Example: <c>0xff0000</c> is the hex code for red.</param>
-	void SetColourHexRGB(const uint& hex);
+	void SetColourHexRGB(const size_t& hex);
 
 	/// <summary>
 	/// Set The current vertex colour. 

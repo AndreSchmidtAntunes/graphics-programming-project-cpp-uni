@@ -1,8 +1,6 @@
 #pragma once
-#include "Vector.h"
 
-#define uint unsigned int
-#define SELF (*this)
+#include "Vector.h"
 
 #define N_DIMS 2
 
@@ -22,8 +20,8 @@ struct _Vector2T : public THIS_TYPE {
 	using THIS_TYPE::_VectorT;
 
 	constexpr _Vector2T(THIS_TYPE other) {
-		for (uint i = 0; i < N_DIMS; i++) {
-			SELF[i] = other[i];
+		for (size_t i = 0; i < N_DIMS; i++) {
+			(*this)[i] = other[i];
 		}
 	}
 
@@ -39,9 +37,6 @@ struct _Vector2T : public THIS_TYPE {
 
 #undef THIS_TYPE
 #undef N_DIMS
-
-#undef uint
-#undef SELF
 
 typedef _Vector2T <double> Vector2D;
 typedef _Vector2T <float> Vector2;

@@ -2,95 +2,90 @@
 
 #include "Vector3.h"
 
-#define SELF (*this)
-#define uint unsigned int
+#define TYPE float
+#define DIMENTIONS 3
 
-template <typename T = double>
 struct Matrix3x3 {
-
-private:
-
-	static const uint DIMENTIONS = 3;
 
 public:
 
-	static_assert(std::is_arithmetic<T>::value,
-		"typename T can only be instantiated with floating point types. (E.g: float, double, half)");
+	static_assert(std::is_arithmetic<TYPE>::value,
+		"Matrix3x3: TYPE must be arithmetic!");
 
-	std::array<std::array<T, DIMENTIONS>, DIMENTIONS> data{ };
+	std::array<std::array<TYPE, DIMENTIONS>, DIMENTIONS> data{ };
 
-	Matrix3x3(
-		T m1_1, T m1_2, T m1_3,
-		T m2_1, T m2_2, T m2_3,
-		T m3_1, T m3_2, T m3_3
+	constexpr Matrix3x3(
+		TYPE m1_1, TYPE m1_2, TYPE m1_3,
+		TYPE m2_1, TYPE m2_2, TYPE m2_3,
+		TYPE m3_1, TYPE m3_2, TYPE m3_3
 	);
 
 
-	Matrix3x3(const T[DIMENTIONS][DIMENTIONS]);
-	Matrix3x3(const Vector3<T>& row_1, const Vector3<T>& row_2, const Vector3<T>& row_3);
+	constexpr Matrix3x3(const TYPE[DIMENTIONS][DIMENTIONS]);
+	constexpr Matrix3x3(const Vector3& row_1, const Vector3& row_2, const Vector3& row_3);
 
-	Matrix3x3() : Matrix3x3(identity) {};
+	constexpr Matrix3x3() : Matrix3x3(identity) {};
 
-	~Matrix3x3(void) {};
+	constexpr ~Matrix3x3(void) {};
 
 	// Static operations
 
-	static Matrix3x3<T> ScaleMatrix(const Vector3<T>& scale);
-	static Matrix3x3<T> RotationMatrix(const Vector3<T>& axis, T radians);
+	constexpr static Matrix3x3 ScaleMatrix(const Vector3& scale);
+	static Matrix3x3 RotationMatrix(const Vector3& axis, TYPE radians);
 
-	static Matrix3x3<T> CrossProductMatrix(const Vector3<T>& direction);
+	constexpr static Matrix3x3 CrossProductMatrix(const Vector3& direction);
 
 	// Setters
 
-	void setElementAt(uint row, uint column, T value);
+	constexpr void setElementAt(size_t row_index, size_t column_index, TYPE value);
 
-	void setRow(uint row_index, const Vector3<T>& elements);
+	constexpr void setRow(size_t row_index, const Vector3& elements);
 
-	void setColumn(uint column_index, const Vector3<T>& elements);
+	constexpr void setColumn(size_t column_index, const Vector3& elements);
 
 	// Getters
 
-	T getElementAt(uint row, uint column) const;
+	constexpr TYPE getElementAt(size_t row_index, size_t column_index) const;
 
-	Vector3<T> getRow(uint row_index) const;
+	constexpr Vector3 getRow(size_t row_index) const;
 
-	Vector3<T> getColumn(uint column_index) const;
+	constexpr Vector3 getColumn(size_t column_index) const;
 
 	// Operators
 	
-	Matrix3x3<T>& operator = (const Matrix3x3<T>& other);
+	constexpr Matrix3x3& operator = (const Matrix3x3& other);
 
-	Matrix3x3<T>& operator *= (const Matrix3x3<T>& other);
-	Matrix3x3<T>& operator *= (T mult);
+	constexpr Matrix3x3& operator *= (const Matrix3x3& other);
+	constexpr Matrix3x3& operator *= (TYPE mult);
 
 
-	friend Vector3<T>& operator *= (Vector3<T>& lhs, const Matrix3x3<T>& rhs);
+	constexpr friend Vector3& operator *= (Vector3& lhs, const Matrix3x3& rhs);
 
-	Vector3<T> operator * (const Vector3<T>& mult) const;
+	constexpr Vector3 operator * (const Vector3& mult) const;
 
-	Matrix3x3<T> operator * (const Matrix3x3<T>& other) const;
-	Matrix3x3<T> operator * (const T mult) const;
+	constexpr Matrix3x3 operator * (const Matrix3x3& other) const;
+	constexpr Matrix3x3 operator * (const TYPE mult) const;
 
-	std::array<T, Matrix3x3<T>::DIMENTIONS>& operator [] (const uint idx);
-	const std::array<T, Matrix3x3<T>::DIMENTIONS>& operator [] (const uint idx) const;
+	constexpr std::array<TYPE, DIMENTIONS>& operator [] (const size_t idx);
+	constexpr const std::array<TYPE, DIMENTIONS>& operator [] (const size_t idx) const;
 
 	// Constants
 
-	const static Matrix3x3 identity;
-	const static Matrix3x3 zero;
+	static const Matrix3x3 identity;
+	static const Matrix3x3 zero;
 };
 
-template <typename T>
-const Matrix3x3<T> Matrix3x3<T>::identity (
+const Matrix3x3 Matrix3x3::identity (
 	1, 0, 0,
 	0, 1, 0,
 	0, 0, 1
 );
 
-template <typename T>
-const Matrix3x3<T> Matrix3x3<T>::zero (
+const Matrix3x3 Matrix3x3::zero (
 	0, 0, 0,
 	0, 0, 0,
 	0, 0, 0
 );
 
+#undef DIMENTIONS
+#undef TYPE

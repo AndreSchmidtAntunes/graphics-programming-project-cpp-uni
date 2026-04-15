@@ -1,36 +1,38 @@
 #pragma once
 
 #include "Matrix3x3.h"
-#include "UserInput.h"
+#include "Vector3.h"
+#include <type_traits>
 
-template <typename T = double>
+#define THIS_TYPE float
+
 class Camera {
 public:
 
-	static_assert(std::is_floating_point<T>::value,
+	static_assert(std::is_arithmetic<THIS_TYPE>::value,
 		"class T can only be a floating point type, as it is the type used for 3D calculations. (E.g: float, double, half)");
 
-	Vector3<T> position, rotation;
-	Camera(Vector3<T> eye, Vector3<T> position, Vector3<T> up, Vector3<T> right) : eye(eye), position(position), up(up), right(right) {}
+	Vector3 position, rotation;
+
+	Camera(Vector3 eye, Vector3 position, Vector3 up, Vector3 right) : eye(eye), position(position), up(up), right(right) {}
 	
-	Camera(void) : Camera(Vector3<T>::Forward, Vector3<T>::Zero, Vector3<T>::Up, Vector3<T>::Right) {}
+	Camera(void) : Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right) {}
 	~Camera(void) {}
 
-	void Rotate(const Vector3<T>& rotation);
+	void Rotate(const Vector3& rotation);
 
-	void RotateFirstPerson(const Vector3<T>& rotation);
-
-	//void setRotationFirstPerson(const float pitch, const float yaw, const float roll);
+	void RotateFirstPerson(const Vector3& rotation);
 
 //private:
+
 	union {
-		Vector3<T> eye;
-		Vector3<T> forward;
+		Vector3 eye;
+		Vector3 forward;
 	};
 
-	Vector3<T> up;
-	Vector3<T> right;
+	Vector3 up;
+	Vector3 right;
 
 private:
-	Matrix3x3<T> rotation_matrix = Matrix3x3<T>::identity;
+	Matrix3x3 rotation_matrix = Matrix3x3::identity;
 };	

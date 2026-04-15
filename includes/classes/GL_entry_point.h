@@ -1,6 +1,6 @@
 #pragma once
 
-template <class T = double> class Camera;
+class Camera;
 
 class GL_entry_point {
 public:
@@ -17,5 +17,5 @@ public:
 	void DrawPolygons();
 
 //private:
-	Camera<>* camera;
+	Camera* camera;
 };

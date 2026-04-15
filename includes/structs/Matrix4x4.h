@@ -1,85 +1,98 @@
 #pragma once
 
-#include "Matrix3x3.h"
+#include "Vector3.h"
 #include "Vector4.h"
 
-#define SELF (*this)
+struct Matrix3x3;
 
-template <typename T = double>
+#define TYPE float
+#define DIMENTIONS 4
+
 struct Matrix4x4 {
-
-private:
-
-	static const uint DIMENTIONS = 4;
 
 public:
 
-	static_assert(std::is_arithmetic<T>::value,
-		"typename T can only be instantiated with floating point types. (E.g: float, double, half)");
+	static_assert(std::is_arithmetic<TYPE>::value,
+		"typename TYPE can only be instantiated with floating point types. (E.g: float, double, half)");
 
-	std::array<std::array<T, DIMENTIONS>, DIMENTIONS> data{ };
+	std::array<std::array<TYPE, DIMENTIONS>, DIMENTIONS> data{ };
 
-	Matrix4x4(
-		T m1_1, T m1_2, T m1_3, T m1_4,
-		T m2_1, T m2_2, T m2_3, T m2_4,
-		T m3_1, T m3_2, T m3_3, T m3_4, 
-		T m4_1, T m4_2, T m4_3, T m4_4 
+	constexpr Matrix4x4(
+		TYPE m1_1, TYPE m1_2, TYPE m1_3, TYPE m1_4,
+		TYPE m2_1, TYPE m2_2, TYPE m2_3, TYPE m2_4,
+		TYPE m3_1, TYPE m3_2, TYPE m3_3, TYPE m3_4,
+		TYPE m4_1, TYPE m4_2, TYPE m4_3, TYPE m4_4
 	);
 
-	Matrix4x4();
-	Matrix4x4(T[DIMENTIONS][DIMENTIONS]);
-	Matrix4x4(Vector4<T> row_1, Vector4<T> row_2, Vector4<T> row_3, Vector4<T> row_4);
+	constexpr Matrix4x4();
+	constexpr Matrix4x4(TYPE[DIMENTIONS][DIMENTIONS]);
+	constexpr Matrix4x4(Vector4 row_1, Vector4 row_2, Vector4 row_3, Vector4 row_4);
 
-	Matrix4x4(Matrix3x3<T> matrix);
+	constexpr Matrix4x4(Matrix3x3 matrix);
 
-	~Matrix4x4();
+	constexpr ~Matrix4x4();
 
 	// Static operations
 
-	static Matrix4x4 ScaleMatrix(Vector3<T> scale);
-	static Matrix4x4 RotationMatrix(Vector3<T> axis, T radians);
-	static Matrix4x4 TranslationMatrix(Vector3<T> translation);
+	constexpr static Matrix4x4 ScaleMatrix(Vector3 scale);
+	static Matrix4x4 RotationMatrix(Vector3 axis, TYPE radians);
+	constexpr static Matrix4x4 TranslationMatrix(Vector3 translation);
 
-	static Matrix4x4 CrossProductMatrix(Vector3<T> direction);
+	constexpr static Matrix4x4 CrossProductMatrix(Vector3 direction);
 
 	// Setters
 
-	void setElementAt(uint row, uint column, T value);
+	constexpr void setElementAt(size_t row_index, size_t column_index, TYPE value);
 
-	void setRow(uint row_index, Vector4<T> elements);
+	constexpr void setRow(size_t row_index, Vector4 elements);
 
-	void setColumn(uint column_index, Vector4<T> elements);
+	constexpr void setColumn(size_t column_index, Vector4 elements);
 
 	// Getters
 
-	T getElementAt(uint row, uint column);
+	constexpr TYPE getElementAt(size_t row_index, size_t column_index);
 
-	Vector4<T> getRow(uint row_index);
+	constexpr Vector4 getRow(size_t row_index);
 
-	Vector4<T> getColumn(uint column_index);
+	constexpr Vector4 getColumn(size_t column_index);
 
 	// Operators
 
-	Matrix4x4& operator = (const Matrix4x4& other);
+	constexpr Matrix4x4& operator = (const Matrix4x4& other);
 
-	Matrix4x4& operator *= (const Matrix4x4& other);
-	Matrix4x4& operator *= (const T mult);
+	constexpr Matrix4x4& operator *= (const Matrix4x4& other);
+	constexpr Matrix4x4& operator *= (const TYPE mult);
 
 
-	Vector4<T> operator * (const Vector4<T>& mult) const;
-	Vector3<T> operator * (const Vector3<T>& mult) const;
+	constexpr Vector4 operator * (const Vector4& mult) const;
+	constexpr Vector3 operator * (const Vector3& mult) const;
 
-	Matrix4x4 operator * (const Matrix4x4& other) const;
-	Matrix4x4 operator * (T mult) const;
+	constexpr Matrix4x4 operator * (const Matrix4x4& other) const;
+	constexpr Matrix4x4 operator * (TYPE mult) const;
 
-	std::array<T, Matrix4x4<T>::DIMENTIONS>& operator [] (const uint idx);
-	const std::array<T, Matrix4x4<T>::DIMENTIONS>& operator [] (const uint idx) const;
+	constexpr std::array<TYPE, DIMENTIONS>& operator [] (const size_t idx);
+	constexpr const std::array<TYPE, DIMENTIONS>& operator [] (const size_t idx) const;
 
 	// Constants
 
 	static const Matrix4x4 identity;
 	static const Matrix4x4 zero;
-
-//protected:
-//	T mElements[DIMENTIONS][DIMENTIONS];
 };
+
+
+const Matrix4x4 Matrix4x4::identity = Matrix4x4(
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
+);
+
+const Matrix4x4 Matrix4x4::zero = Matrix4x4(
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0
+);
+
+#undef DIMENTIONS
+#undef TYPE

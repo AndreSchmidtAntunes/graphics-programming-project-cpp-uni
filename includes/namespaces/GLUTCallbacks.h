@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GL_entry_point.h"
+//#include "GL_entry_point.h"
 
 class GL_entry_point;
 

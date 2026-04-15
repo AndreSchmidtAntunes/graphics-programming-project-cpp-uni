@@ -60,34 +60,19 @@
     <ClCompile Include="src\namespaces\UserInput.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
-    <ClCompile Include="src\structs\Colour.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="src\structs\Matrix3x3.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
     <ClCompile Include="src\structs\Matrix4x4.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
-    <ClCompile Include="src\structs\Vector2.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="src\structs\Quaternion.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\structs\Vector3.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\structs\Vector4.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp">
-      <Filter>Source Files\Namespaces</Filter>
-    </ClCompile>
-    <ClCompile Include="src\namespaces\Vector.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
     <ClCompile Include="src\FastInvSqrt.cpp">
@@ -150,9 +135,6 @@
     </ClInclude>
     <ClInclude Include="includes\namespaces\GLUTCallbacks.h">
       <Filter>Header Files\Namespaces</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\defines.h">
-      <Filter>Resource Files\Defines</Filter>
     </ClInclude>
     <ClInclude Include="includes\namespaces\Vector.h">
       <Filter>Header Files\Namespaces</Filter>

@@ -1,6 +1,17 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count) {
+#include "Camera.h"
+#include "Colour.h"
+
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iostream>
+
+#define TYPE GLfloat
+#define DEFAULT_VERT_COLOUR Colour::Red
+
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count) {
 	
 	this->vertices_count = vertices_count;
 	this->indices_count = indices_count;
@@ -12,17 +23,17 @@ Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indice
 	this->normals_count = normals_count;
 
 	this->vertices = new GLfloat[vertices_count];
-	for (uint i = 0; i < vertices_count; i++) {
+	for (size_t i = 0; i < vertices_count; i++) {
 		this->vertices[i] = vertices[i];
 	}
 
 	this->indices = new GLuint[indices_count];
-	for (uint i = 0; i < indices_count; i++) {
+	for (size_t i = 0; i < indices_count; i++) {
 		this->indices[i] = indices[i];
 	}
 }
 
-Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* colours, const uint colours_count) : Mesh(vertices, vertices_count, indices, indices_count) {
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* colours, const size_t colours_count) : Mesh(vertices, vertices_count, indices, indices_count) {
 
 	this->colours_count = colours_count;
 
@@ -31,12 +42,12 @@ Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indice
 	normals_count = uvs_count = 0;
 
 	this->colours = new GLfloat[colours_count];
-	for (uint i = 0; i < colours_count; i++) {
+	for (size_t i = 0; i < colours_count; i++) {
 		this->colours[i] = colours[i];
 	}
 };
 
-Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count) : Mesh(vertices, vertices_count, indices, indices_count) {
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TYPE* uvs, const size_t uvs_count) : Mesh(vertices, vertices_count, indices, indices_count) {
 
 	this->normals_count = normals_count;
 	this->uvs_count = uvs_count;
@@ -45,21 +56,21 @@ Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indice
 	colours_count = 0;
 	
 	this->normals = new GLfloat[normals_count];
-	for (uint i = 0; i < normals_count; i++) {
+	for (size_t i = 0; i < normals_count; i++) {
 		this->normals[i] = normals[i];
 	}
 	
 	this->uvs = new GLfloat[uvs_count];
-	for (uint i = 0; i < uvs_count; i++) {
+	for (size_t i = 0; i < uvs_count; i++) {
 		this->uvs[i] = uvs[i];
 	}
 }
 
-Mesh::Mesh(const double* vertices, const uint vertices_count, const uint* indices, const uint indices_count, const double* normals, const uint normals_count, const double* uvs, const uint uvs_count, const double* colours, const uint colours_count) : Mesh(vertices, vertices_count, indices, indices_count, normals, normals_count, uvs, uvs_count) {
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TYPE* uvs, const size_t uvs_count, const TYPE* colours, const size_t colours_count) : Mesh(vertices, vertices_count, indices, indices_count, normals, normals_count, uvs, uvs_count) {
 	this->colours_count = colours_count;
 
 	this->colours = new GLfloat[colours_count];
-	for (uint i = 0; i < colours_count; i++) {
+	for (size_t i = 0; i < colours_count; i++) {
 		this->colours[i] = colours[i];
 	}
 }
@@ -72,17 +83,14 @@ Mesh::~Mesh() {
 	delete[this->colours_count] colours;
 }
 
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <iostream>
+
 
 //enum ParseType { POLYGON, VERTEX, NORMAL, TEXTURE, INFO, MATERIALFILE };
 
 bool Mesh::LoadFromFile(const std::string& filename) {
 
 	std::vector<float> vertices, normals, uvs;
-	std::vector<uint> indices, uv_indices, normal_indices;
+	std::vector<size_t> indices, uv_indices, normal_indices;
 
 	vertices = normals = uvs = { };
 	indices = uv_indices = normal_indices = { };
@@ -96,7 +104,7 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 	std::string line = "";
 
-	uint _current_line = 0;
+	size_t _current_line = 0;
 	while (std::getline(file, line)) {
 		std::stringstream iss(line);
 
@@ -108,7 +116,7 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 			{
 				case 'v': { // If we are reading a vertex
 
-					double coord;
+					TYPE coord;
 
 					while (iss >> coord) 
 						vertices.push_back(coord);
@@ -118,7 +126,7 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 				case 'f': { // If we are reading a face definition
 
-					//std::vector<uint> indices;
+					//std::vector<size_t> indices;
 					
 
 					// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
@@ -130,8 +138,8 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 						std::string uv_indices_str = "";
 						std::string normal_indices_str = "";
 
-						uint datatype = 0; // 0 = vert indices, 1 = uv indices, 2 = normal indices
-						for (uint i = 0; i < vert_data.length(); i++) {
+						size_t datatype = 0; // 0 = vert indices, 1 = uv indices, 2 = normal indices
+						for (size_t i = 0; i < vert_data.length(); i++) {
 
 							while (vert_data[i] == '/') {
 								datatype++;
@@ -198,22 +206,22 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 	this->normal_indices = new GLuint[indices_count]{};
 	this->uv_indices = new GLuint[indices_count]{};
 
-	for (uint i = 0; i < vertices_count; i++)
+	for (size_t i = 0; i < vertices_count; i++)
 		this->vertices[i] = vertices[i];
 
-	for (uint i = 0; i < normals_count; i++)
+	for (size_t i = 0; i < normals_count; i++)
 		this->normals[i] = normals[i];
 
-	for (uint i = 0; i < uvs_count; i++)
+	for (size_t i = 0; i < uvs_count; i++)
 		this->uvs[i] = uvs[i];
 
-	for (uint i = 0; i < indices_count; i++)
+	for (size_t i = 0; i < indices_count; i++)
 		this->indices[i] = indices[i];
 
-	for (uint i = 0; i < indices_count; i++)
+	for (size_t i = 0; i < indices_count; i++)
 		this->normal_indices[i] = normal_indices[i];
 
-	for (uint i = 0; i < indices_count; i++)
+	for (size_t i = 0; i < indices_count; i++)
 		this->uv_indices[i] = uv_indices[i];
 
 	return true;
@@ -241,7 +249,7 @@ void Mesh::DrawElements() const {
 			glColorPointer(4, GL_FLOAT, 0, colours);
 		}
 		else
-			GLExtras::SetColour(DefaultColour);
+			GLExtras::SetColour(DEFAULT_VERT_COLOUR);
 
 		glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
 
@@ -258,14 +266,14 @@ void Mesh::DrawElements() const {
 			glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Vector3<>& scale, const Camera<>* camera) const {
+void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera* camera) const {
 	glLoadIdentity();
 
 	glPushMatrix();
 	{
-		Vector3<> rotation_from_camera = -(camera->rotation);
+		Vector3 rotation_from_camera = -(camera->rotation);
 
-		Vector3<> position_from_camera = position - (camera->position);
+		Vector3 position_from_camera = position - (camera->position);
 
 		//glRotatef(rotation_from_camera.x, 0.0f, -1.0f, 0.0f);
 		//glRotatef(rotation_from_camera.y, 0.0f, 0.0f, -1.0f);
@@ -290,11 +298,11 @@ void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Ve
 	glPopMatrix();
 }
 
-void Mesh::Render(const Vector3<>& position, const Vector3<>& rotation, const Camera<>* camera) const {
-	Render(position, rotation, Vector3<>::One, camera);
+void Mesh::Render(const Vector3& position, const Vector3& rotation, const Camera* camera) const {
+	Render(position, rotation, Vector3::One, camera);
 
 }
 
-void Mesh::Render(const Vector3<>& position, const Camera<>* camera) const {
-	Render(position, Vector3<>::Zero, Vector3<>::One, camera);
+void Mesh::Render(const Vector3& position, const Camera* camera) const {
+	Render(position, Vector3::Zero, Vector3::One, camera);
 }

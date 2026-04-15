@@ -7,10 +7,6 @@
 #include <type_traits>
 #include <utility>
 
-#define uint unsigned int
-#define SELF (*this)
-
-
 // Helper function 1/sqrt(x)
 
 inline constexpr float FastInvSqrt(float x, unsigned int iteration_count = 1) {
@@ -34,7 +30,7 @@ namespace Vector {
 	//	std::array<T, nDim> data
 	// The memory structure allows you to for example make a vector3 structure that unions data with: struct { T x, y, z; }
 
-	template<typename T, uint nDim>
+	template<typename T, size_t nDim>
 	struct DEFAULT_MEMORY_STRUCTURE { std::array<T, nDim> data { }; };
 
 	// -- Defines for readability -- //
@@ -48,14 +44,14 @@ namespace Vector {
 
 #define OTHER_TYPE _VectorT<T1, nDim1, MEMORY_STRUCTURE1>
 
-#define OTHER_TYPE_TEMPLATE template<typename T1, uint nDim1, typename MEMORY_STRUCTURE1>
-#define THIS_AND_OTHER_TYPE_TEMPLATE template<typename T, uint nDim, typename MEMORY_STRUCTURE, typename T1, uint nDim1, typename MEMORY_STRUCTURE1>
+#define OTHER_TYPE_TEMPLATE template<typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
+#define THIS_AND_OTHER_TYPE_TEMPLATE template<typename T, size_t nDim, typename MEMORY_STRUCTURE, typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
 
 #define OTHER_ARITHMETIC_TYPE_TEMPLATE template <typename T1> requires (std::is_arithmetic<T1>::value)
 
 	// -- The Vector struct -- //
 
-template <typename T, uint nDim, class MEMORY_STRUCTURE = DEFAULT_MEMORY_STRUCTURE<T, nDim>> 
+template <typename T, size_t nDim, class MEMORY_STRUCTURE = DEFAULT_MEMORY_STRUCTURE<T, nDim>> 
 struct _VectorT : public MEMORY_STRUCTURE {
 
 private:
@@ -64,11 +60,11 @@ private:
 
 	// Variadic constructor helpers
 
-	constexpr void set_at(uint idx, const T& value) {
+	constexpr void set_at(size_t idx, const T& value) {
 		this->data[idx] = value;
 	}
 
-	template<uint... idx, typename... Args>
+	template<size_t... idx, typename... Args>
 	constexpr void set_from_variadic_indexer(std::index_sequence<idx...>, Args&&... args) {
 		((set_at(idx, args)), ...);
 	}
@@ -103,7 +99,7 @@ public:
 
 	using valueType = T;
 
-	static constexpr uint dimensionCount = nDim;
+	static constexpr size_t dimensionCount = nDim;
 
 	explicit constexpr _VectorT() = default;
 
@@ -117,7 +113,7 @@ public:
 	// Implicitly onverts to a vector with more or an equal number of dimensions:
 	OTHER_TYPE_TEMPLATE requires (OTHER_DIMENTION_COUNT <= nDim)
 	constexpr _VectorT(const OTHER_TYPE& other) : _VectorT() {
-		for (uint i = 0; i < OTHER_DIMENTION_COUNT; i++) {
+		for (size_t i = 0; i < OTHER_DIMENTION_COUNT; i++) {
 			data[i] = static_cast<T>(other[i]);
 		}
 	}
@@ -125,31 +121,31 @@ public:
 	// Converts to a vector with less dimensions:
 	OTHER_TYPE_TEMPLATE requires (OTHER_DIMENTION_COUNT > nDim)
 	explicit constexpr _VectorT(const OTHER_TYPE& other) : _VectorT() {
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			data[i] = static_cast<T>(other[i]);
 		}
 	}
 
-	T& at(const uint idx) {
+	T& at(const size_t idx) {
 		return data.at(idx);
 	}
 
-	const T& at(const uint idx) const {
+	const T& at(const size_t idx) const {
 		return data.at(idx);
 	}
 
 	// ----- operators ----- //
 
-	T& operator [] (const uint idx) {
+	T& operator [] (const size_t idx) {
 		return at(idx);
 	}
 
-	const T& operator [] (const uint idx) const {
+	const T& operator [] (const size_t idx) const {
 		return at(idx);
 	}
 
 	constexpr operator bool() const {
-		for (uint i = 0; i < nDim; i++)
+		for (size_t i = 0; i < nDim; i++)
 			if (data[i]) return true;
 
 		return false;
@@ -158,7 +154,7 @@ public:
 	friend std::ostream& operator << (std::ostream& ostream, const THIS_TYPE& vector) {
 		ostream << '(';
 
-		for (uint i = 0; i < vector.dimensionCount; i++) {
+		for (size_t i = 0; i < vector.dimensionCount; i++) {
 			if (i == 0)
 				ostream << vector[i];
 			else
@@ -174,11 +170,11 @@ public:
 	OTHER_TYPE_TEMPLATE requires(nDim >= OTHER_DIMENTION_COUNT)
 		constexpr operator OTHER_TYPE () const {
 		OTHER_TYPE return_vector;
-		for (uint i = 0; i < nDim; i++) {
-			return_vector[i] = SELF.data[i];
+		for (size_t i = 0; i < nDim; i++) {
+			return_vector[i] = (*this).data[i];
 		}
 
-		for (uint i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
+		for (size_t i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
 			return_vector[i] = T{};
 		}
 
@@ -188,8 +184,8 @@ public:
 	OTHER_TYPE_TEMPLATE requires(nDim < OTHER_DIMENTION_COUNT)
 		constexpr explicit operator OTHER_TYPE () const {
 		OTHER_TYPE return_vector;
-		for (uint i = 0; i < nDim; i++) {
-			return_vector[i] = SELF.data[i];
+		for (size_t i = 0; i < nDim; i++) {
+			return_vector[i] = (*this).data[i];
 		}
 		
 		return return_vector;
@@ -200,23 +196,23 @@ public:
 	OTHER_TYPE_TEMPLATE requires(nDim <= OTHER_DIMENTION_COUNT)
 	constexpr THIS_TYPE& operator = (const OTHER_TYPE& other) {
 
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			this->data[i] = other[i];
 		}
-		return SELF;
+		return (*this);
 	}
 
 	OTHER_TYPE_TEMPLATE requires(nDim > OTHER_DIMENTION_COUNT)
 	constexpr THIS_TYPE& operator = (const OTHER_TYPE& other) {
 
-		for (uint i = 0; i < OTHER_DIMENTION_COUNT; i++) {
+		for (size_t i = 0; i < OTHER_DIMENTION_COUNT; i++) {
 			this->data[i] = other[i];
 		}
 
-		for (uint i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
+		for (size_t i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
 			this->data[i] = T{}; // reset to the type's default value (usually 0)
 		}
-		return SELF;
+		return (*this);
 	}
 
 	// - arithmetic operators - //
@@ -225,20 +221,20 @@ public:
 
 	OTHER_TYPE_TEMPLATE
 	constexpr THIS_TYPE& operator += (const OTHER_TYPE& other) {
-		for (uint i = 0; i < std::min(nDim, OTHER_DIMENTION_COUNT); i++) {
+		for (size_t i = 0; i < std::min(nDim, OTHER_DIMENTION_COUNT); i++) {
 			this->data[i] += other[i];
 		}
-		return SELF;
+		return (*this);
 	}
 
 	// Vector -= Vector
 
 	OTHER_TYPE_TEMPLATE
 	constexpr THIS_TYPE& operator -= (const OTHER_TYPE& other) {
-		for (uint i = 0; i < std::min(nDim, OTHER_DIMENTION_COUNT); i++) {
+		for (size_t i = 0; i < std::min(nDim, OTHER_DIMENTION_COUNT); i++) {
 			this->data[i] -= other[i];
 		}
-		return SELF;
+		return (*this);
 	}
 
 	// Vector *= number
@@ -246,10 +242,10 @@ public:
 	OTHER_ARITHMETIC_TYPE_TEMPLATE
 	constexpr THIS_TYPE& operator *= (const OTHER_ARITHMETIC_TYPE& value) {
 
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			this->data[i] *= value;
 		}
-		return SELF;
+		return (*this);
 	}
 	
 	// Vector /= number
@@ -257,10 +253,10 @@ public:
 	OTHER_ARITHMETIC_TYPE_TEMPLATE
 	constexpr THIS_TYPE& operator /= (const OTHER_ARITHMETIC_TYPE& value) {
 
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			this->data[i] /= value;
 		}
-		return SELF;
+		return (*this);
 	}
 
 	// non-commutative operators //
@@ -314,8 +310,8 @@ public:
 	}
 
 	constexpr const THIS_TYPE operator - () const {
-		THIS_TYPE return_vector = SELF;
-		for (uint i = 0; i < nDim; i++) {
+		THIS_TYPE return_vector = (*this);
+		for (size_t i = 0; i < nDim; i++) {
 			return_vector[i] = -return_vector[i];
 		}
 		return return_vector;
@@ -326,13 +322,13 @@ public:
 	OTHER_TYPE_TEMPLATE requires (nDim >= OTHER_DIMENTION_COUNT)
 	friend constexpr const bool operator == (const THIS_TYPE& first, const OTHER_TYPE& other) {
 		
-		for (uint i = 0; i < OTHER_DIMENTION_COUNT; i++) {
+		for (size_t i = 0; i < OTHER_DIMENTION_COUNT; i++) {
 			if (first[i] != other[i]) return false;
 		}
 
 		// if the first vector is larger than the other, 
 		// ensure the extra dimensions of the first vector are filled with default values (0)
-		for (uint i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
+		for (size_t i = OTHER_DIMENTION_COUNT; i < nDim; i++) {
 			if (first[i] != T{}) 
 				return false;
 		}
@@ -343,13 +339,13 @@ public:
 	OTHER_TYPE_TEMPLATE requires (nDim < OTHER_DIMENTION_COUNT)
 	friend constexpr const bool operator == (const THIS_TYPE& first, const OTHER_TYPE& other) {
 		
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			if (first[i] != other[i]) return false;
 		}
 
 		// if the first vector is larger than the other, 
 		// ensure the extra dimensions of the first vector are filled with default values (0)
-		for (uint i = nDim; i < OTHER_DIMENTION_COUNT; i++) {
+		for (size_t i = nDim; i < OTHER_DIMENTION_COUNT; i++) {
 			if (other[i] != T{})
 				return false;
 		}
@@ -372,7 +368,7 @@ public:
 	constexpr const T SquaredMagnitude() const {
 
 		T return_value = 0;
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			return_value += (data[i] * data[i]);
 		}
 		return return_value;
@@ -414,28 +410,28 @@ public:
 		}
 
 		if (largest_mag > UPPER_BOUND)
-			SELF *= LOWER_BOUND;
+			(*this) *= LOWER_BOUND;
 		else if (lowest_mag < LOWER_BOUND)
-			SELF *= UPPER_BOUND;
+			(*this) *= UPPER_BOUND;
 
 #undef UPPER_BOUND
 #undef LOWER_BOUND
 
 		T inv_magnitude = static_cast<T>(FastInvSqrt(SquaredMagnitude()));
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			data[i] *= inv_magnitude;
 		}
-		return SELF;
+		return (*this);
 	}
 	
 	inline constexpr const THIS_TYPE Normalised() const {
-		return THIS_TYPE(SELF).Normalise();
+		return THIS_TYPE((*this)).Normalise();
 	}
 
 	inline constexpr const THIS_TYPE Abs() const {
-		THIS_TYPE return_vector = THIS_TYPE(SELF);
+		THIS_TYPE return_vector = THIS_TYPE((*this));
 
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			if (return_vector.data[i] < T(0))
 				return_vector.data[i] = -return_vector.data[i];
 		}
@@ -450,7 +446,7 @@ public:
 	inline constexpr const T Dot(const OTHER_TYPE& rhs) const {
 		T return_value = T(0);
 
-		for (uint i = 0; i < nDim; i++) {
+		for (size_t i = 0; i < nDim; i++) {
 			return_value += data[i] * rhs[i];
 		}
 
@@ -487,10 +483,10 @@ inline constexpr const _VectorT<int,3> Forward {0, 0,  1};
 inline constexpr const _VectorT<int,4> Ana  {0, 0, 0,  1};
 inline constexpr const _VectorT<int,4> Kata {0, 0, 0, -1};
 
-template<uint nDim>
+template<size_t nDim>
 static constexpr const _VectorT<int,nDim> Zero = _VectorT<int,nDim>::Fill(0);
 
-template<uint nDim>
+template<size_t nDim>
 static constexpr const _VectorT<int,nDim> One = _VectorT<int,nDim>::Fill(1);
 
 #undef THIS_TYPE
@@ -507,6 +503,3 @@ static constexpr const _VectorT<int,nDim> One = _VectorT<int,nDim>::Fill(1);
 #undef THIS_AND_OTHER_TYPE_TEMPLATE
 
 } // namespace Vector
-
-#undef uint
-#undef SELF
