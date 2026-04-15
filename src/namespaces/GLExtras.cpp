@@ -8,38 +8,24 @@
 
 namespace GLExtras {
 
-	void AddVertex(const Vector3<>& position) {
+	void AddVertex(const Vector3& position) {
 		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
 	}
 
-	void AddVertices(Vector3<>* points_array, const uint length) {
+	void AddVertices(Vector3* points_array, const uint length) {
 		SetColour(DEFAULT_VERT_COLOUR);
 		for (uint i = 0; i < length; i++) {
-			AddVertex((points_array[i]));
+			for (uint dim = 0; i < 3; i++) {
+				AddVertex((points_array[i][dim])); // x to z
+			}
 		}
 	}
 
-	void AddVerticesWithColours(const Vector3<>* vertices, const Colour* colours, const uint length) {
+	void AddVerticesWithColours(const Vector3* vertices, const Colour* colours, const uint length) {
 		for (uint i = 0; i < length; i++) {
 			SetColour(colours ? colours[i] : DEFAULT_VERT_COLOUR);			
 			AddVertex(vertices[i]);
 		}
-	}
-
-	void AddPolygon(const Poly& polygon, const Vector3<>* vertices) {
-		glBegin(GL_POLYGON);
-
-		for (uint i = 0; i < polygon.vert_count; i++) {
-			SetColour(polygon.colours ? polygon.colours[i] : DEFAULT_VERT_COLOUR);
-			AddVertex(vertices[polygon.indices[i]]);
-		}
-
-		glEnd();
-	}
-
-	void AddPolygons(const Poly* polygons, const uint length, const Vector3<>* vertices) {
-		for (uint p = 0; p < length; p++)
-			AddPolygon(polygons[p], vertices);
 	}
 
 	//void AddMesh(const Mesh& mesh) {

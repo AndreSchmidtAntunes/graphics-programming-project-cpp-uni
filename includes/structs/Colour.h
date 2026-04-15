@@ -1,100 +1,70 @@
 #pragma once
+#include "Vector.h"
 
-#include "FastInvSqrt.h"
-#include <array>
-#include <math.h>
-#include <ostream>
-#include <stdexcept>
+#define uint unsigned int
+#define SELF (*this)
 
+#define N_DIMS 4
 
-struct Colour {
-public:
-	
+template<typename T>
+struct _COLOUR4_MEM_STRUCT {
 	union {
-		struct { float r, g, b, a; };
-		std::array<float, 4> data = { };
+		struct { T r, g, b, a; };
+		std::array<T, N_DIMS> data{ };
 	};
+};
 
-	Colour(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {};
+#define THIS_TYPE Vector::_VectorT<T, N_DIMS, _COLOUR4_MEM_STRUCT<T>>
 
-	Colour(const Colour& other) : r(other.r), g(other.g), b(other.b), a(other.a) {};
+template<typename T>
+struct _Colour4T : public THIS_TYPE {
 
-	Colour(float value = 0) : r(value), g(value), b(value), a(value) {};
+	using type = THIS_TYPE;
 
-	~Colour() { }
+	using type::_VectorT;
 
-	const Colour operator * (const Colour& other) const;
-
-	const Colour operator * (const float& value) const;
-
-	const Colour operator / (const Colour& other) const;
-
-	const Colour operator / (const float& value) const;
-	
-	const Colour operator + (const Colour& other) const;
-
-	const Colour operator - (const Colour& other) const;
-
-	Colour& operator = (const Colour& value);
-	Colour& operator *= (const Colour& value);
-	Colour& operator *= (const float& value);
-	Colour& operator /= (const Colour& value);
-	Colour& operator /= (const float& value);
-	Colour& operator += (const Colour& value);
-	Colour& operator -= (const Colour& value);
-
-	float& operator [] (std::size_t idx);
-
-	Colour operator - () const { return Colour(-r, -g, -b, -a); };
-
-	operator bool() const;
-
-	bool operator == (Colour other) const;
-	bool operator != (Colour other) const;
-
-	friend std::ostream& operator << (std::ostream& ostream, const Colour colour) {
-		ostream << "(" << colour.r << ", " << colour.g << ", " << colour.b << "," << colour.a << ")";
-		return ostream;
+	_Colour4T(THIS_TYPE other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
 	}
 
-	static const Colour RED;
-	static const Colour GREEN;
-	static const Colour BLUE;
-	static const Colour BLACK;
-	static const Colour WHITE;
-	static const Colour EMPTY;
-	static const Colour NIL;
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS >= nDim1)
+		explicit _Colour4T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < nDim1; i++) {
+			SELF[i] = other[i];
+		}
 
-	/// <summary>
-	/// Used to avoid Square rooting when possible.
-	/// </summary>
-	/// <returns>The magnitude(distance) of the given (r,g,b) vector squared. <br/> <c>r^2 + g^2 + b^2</c></returns>
-	float SquaredMagnitudeRGB() const;
+		for (uint i = nDim1; i < N_DIMS; i++) {
+			SELF[i] = T{};
+		}
+	}
 
-	/// <summary>
-	/// Uses the Quake fast inverse square root algorithm to normalise the vector.
-	/// </summary>
-	/// <returns>
-	/// A normalised copy of the current colour's red, green and blue components, keeping the same colour but maximising it's brightness. <br/> 
-	/// <c>[this] / sqrt(r^2 + g^2 + b^2)</c>
-	/// </returns>
-	Colour NormalisedRGB(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM) const;
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS < nDim1)
+		explicit _Colour4T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
+	}
 
-	/// <summary>
-	/// Normalises the current colour's red, green and blue components and assigns it to the current colour. <br/>
-	/// <c>[this] / sqrt(r^2 + g^2 + b^2)</c>
-	/// </summary>
-	/// <returns>
-	/// A referenced to the colour being normalised.
-	/// </returns>
-	Colour& NormaliseRGB(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM);
+	static constexpr const THIS_TYPE Red		{ 1, 0, 0, 1};
+	static constexpr const THIS_TYPE Green		{ 0, 1, 0, 1};
+	static constexpr const THIS_TYPE Blue		{ 0, 0, 1, 1};
 
-	/// <returns>A copy of the vector where r, g, and b are absolute values.</returns>
-	Colour Abs() const;
+	static constexpr const THIS_TYPE Yellow		{ 1, 1, 0, 1};
+	static constexpr const THIS_TYPE Cyan		{ 0, 1, 1, 1};
+	static constexpr const THIS_TYPE Magenta	{ 1, 0, 1, 1};
 
-	#define uint unsigned int
-
-	static Colour HexRGBAToColour(const uint& hex);
-	static Colour HexRGBToColour(const uint& hex);
-
+	static constexpr const THIS_TYPE White		{ 1, 1, 1, 1};
+	static constexpr const THIS_TYPE Black		{ 0, 0, 0, 1};
+	static constexpr const THIS_TYPE Null,Empty	{ 0, 0, 0, 0};
 };
+
+#undef THIS_TYPE
+#undef N_DIMS
+
+#undef uint
+#undef SELF
+
+typedef _Colour4T <float> Colour;
+typedef _Colour4T <uint8_t> Colour255;

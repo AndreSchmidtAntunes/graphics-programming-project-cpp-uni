@@ -1,259 +1,87 @@
 #pragma once
-
-//#include "FastInvSqrt.h"
-//#include <array>
-//#include <math.h>
-//#include <ostream>
-//#include <stdexcept>
-//
-//#include "defines.h"
-//
-//template <typename T = double>
-//struct Vector3 {
-//public:
-//
-//	static_assert(std::is_arithmetic<T>::value,
-//		"typename T can only be a floating point type. (E.g: float, double, half)");
-//
-//	union {
-//		struct { T x, y, z; };
-//		std::array<T, 3> data { };
-//	};
-//
-//	Vector3(const T& x, const T& y, const T& z) : x(x), y(y), z(z) {};
-//
-//	template <typename Ty>
-//	Vector3(const Vector3<Ty>& other) : x(other.x), y(other.y), z(other.z) {};
-//
-//	explicit Vector3(const T& value) : x(value), y(value), z(value) {};
-//
-//	Vector3(void) : Vector3<T>(0) {};
-//
-//	~Vector3(void) { };
-//
-//	Vector3<T>operator - () const { return Vector3<T>(-x, -y, -z); };
-//
-//	template <typename Ty>
-//	Vector3<T>& operator *= (const Vector3<Ty>& rhs) {
-//
-//		x *= rhs.x;
-//		y *= rhs.y;
-//		z *= rhs.z;
-//
-//		return *this;
-//	}
-//
-//	template <typename Ty>
-//	Vector3<T>& operator /= (const Vector3<Ty>& rhs) {
-//
-//		x /= rhs.x;
-//		y /= rhs.y;
-//		z /= rhs.z;
-//
-//		return *this;
-//	}
-//
-//	template <typename Ty>
-//	Vector3<T>& operator += (const Vector3<Ty>& rhs) {
-//
-//		x += rhs.x;
-//		y += rhs.y;
-//		z += rhs.z;
-//
-//		return *this;
-//	}
-//
-//	template <typename Ty>
-//	Vector3<T>& operator -= (const Vector3<Ty>& rhs) {
-//
-//		x -= rhs.x;
-//		y -= rhs.y;
-//		z -= rhs.z;
-//
-//		return *this;
-//	}
-//
-//
-//	template<typename Ty>
-//	Vector3<T>& operator *= (const Ty& rhs) {
-//
-//		static_assert(std::is_arithmetic<Ty>::value,
-//			"typename Ty can only be a floating point type (E.g: float, double, half)");
-//
-//		x *= rhs;
-//		y *= rhs;
-//		z *= rhs;
-//
-//		return *this;
-//	}
-//
-//	template<typename Ty>
-//	Vector3<T>& operator /= (const Ty& rhs) {
-//
-//		static_assert(std::is_arithmetic<Ty>::value,
-//			"typename Ty can only be a floating point type (E.g: float, double, half)");
-//
-//		x /= rhs;
-//		y /= rhs;
-//		z /= rhs;
-//
-//		return *this;
-//	}
-//
-//	T& operator [] (const uint idx);
-//	const T& operator [] (const uint idx) const;
-//
-//	operator bool() const;
-//
-//	const bool operator == (const Vector3<T>& other) const;
-//	const bool operator != (const Vector3<T>& other) const;
-//
-//	friend std::ostream& operator << (std::ostream& ostream, const Vector3<T>& vec) {
-//		ostream << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
-//		return ostream;
-//	}
-//
-//	/// <summary>
-//	/// Used to avoid Square rooting when possible.
-//	/// </summary>
-//	/// <returns>The magnitude(distance) of the given vector squared. <br/> <c>x^2 + y^2 + z^2</c></returns>
-//	T SquaredMagnitude() const;
-//
-//	/// <returns>The magnitude(distance) of the given vector at T floating point precision.<br/> <c>sqrt(x^2 + y^2 + z^2)</c></returns>
-//	T Magnitude() const;
-//
-//	/// <returns>The magnitude(distance) of the given vector at floating point precision. <br/> <c>sqrt(x^2 + y^2 + z^2)</c></returns>
-//	float MagnitudeF() const;
-//
-//	/// <summary>
-//	/// Uses the Quake fast inverse square root algorithm to normalise the vector.
-//	/// </summary>
-//	/// <returns>
-//	/// A copy of the vector facing in the same direction, but where it's magnitude is equal to 1. <br/> 
-//	/// <c>[this] / sqrt(x^2 + y^2 + z^2)</c>
-//	/// </returns>
-//	Vector3<T>Normalised(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM) const;
-//
-//	/// <summary>
-//	/// Normalises the current vector and assigns it to the current vector. <br/>
-//	/// <c>[this] / sqrt(x^2 + y^2 + z^2)</c>
-//	/// </summary>
-//	Vector3<T>& Normalise(InvSqrtPrecision precision = InvSqrtPrecision::MEDIUM);
-//
-//	/// <returns>A copy of the vector where x, y, and z are absolute values.</returns>
-//	Vector3<T> Abs() const;
-//
-//	static T Dot(const Vector3<T>& lhs, const Vector3<T>& rhs);
-//	static Vector3<T>Cross(const Vector3<T>& lhs, const Vector3<T>& rhs);
-//
-//	const static Vector3 Up;
-//	const static Vector3 Down;
-//	const static Vector3 Left;
-//	const static Vector3 Right;
-//	const static Vector3 Forward;
-//	const static Vector3 Back;
-//
-//	const static Vector3 Zero;
-//	const static Vector3 One;
-//};
-//
-//template <typename T> const Vector3<T> Vector3<T>::Up	   ( 0,  1,  0);
-//template <typename T> const Vector3<T> Vector3<T>::Down    ( 0, -1,  0);
-//template <typename T> const Vector3<T> Vector3<T>::Right   ( 1,  0,  0);
-//template <typename T> const Vector3<T> Vector3<T>::Left    (-1,  0,  0);
-//template <typename T> const Vector3<T> Vector3<T>::Forward ( 0,  0,  1);
-//template <typename T> const Vector3<T> Vector3<T>::Back	   ( 0,  0, -1);
-//
-//template <typename T> const Vector3<T> Vector3<T>::Zero	(0);
-//template <typename T> const Vector3<T> Vector3<T>::One	(1);
-//
-//template<typename T, typename Ty>
-//Vector3<T> operator * (const Vector3<T>& lhs, const Vector3<Ty>& rhs) {
-//	return Vector3<T>(lhs) *= rhs;
-//}
-//
-//template<typename T, typename Ty>
-//Vector3<T> operator / (const Vector3<T>& lhs, const Vector3<Ty>& rhs) {
-//	return Vector3<T>(lhs) /= rhs;
-//}
-//
-//template<typename T, typename Ty>
-//Vector3<T> operator + (const Vector3<T>& lhs, const Vector3<Ty>& rhs) {
-//	return Vector3<T>(lhs) += rhs;
-//}
-//
-//template<typename T, typename Ty>
-//Vector3<T> operator - (const Vector3<T>& lhs, const Vector3<Ty>& rhs) {
-//	return Vector3<T>(lhs) -= rhs;
-//}
-//
-//template<typename T, typename Ty> 
-//Vector3<T> operator * (const Vector3<T>& lhs, const Ty& rhs) {
-//
-//	static_assert(std::is_arithmetic<Ty>::value,
-//		"typename Ty can only be a floating point type (E.g: float, double, half)");
-//
-//	return Vector3<T>(lhs) *= rhs;
-//}
-//
-//template<typename T, typename Ty>
-//Vector3<T> operator / (const Vector3<T>& lhs, const Ty& rhs) {
-//
-//	static_assert(std::is_arithmetic<Ty>::value,
-//		"typename Ty can only be a floating point type (E.g: float, double, half)");
-//
-//	return Vector3<T>(lhs) /= rhs;
-//}
-
 #include "Vector.h"
 
+#define uint unsigned int
+#define SELF (*this)
+
+#define N_DIMS 3
+
 template<typename T>
-struct VECTOR3_MEMORY_LAYOUT {
-
+struct _VEC3_MEM_STRUCT {
 	union {
 		struct { T x, y, z; };
-		std::array<T, 3> data { };
+		struct { T r, g, b; };
+		std::array<T, N_DIMS> data{ };
 	};
 };
 
-template <typename T = double>
-struct Vector3 : Vectors::Vector<T, 3, VECTOR3_MEMORY_LAYOUT<T>> {
-	
-	using type = Vectors::Vector<T, 3>;
+#define THIS_TYPE Vector::_VectorT<T, N_DIMS, _VEC3_MEM_STRUCT<T>>
 
-	using type::Vector;
-	using type::operator*;
-	using type::operator/;
-	using type::operator+;
-	using type::operator-;
+template<typename T>
+struct _Vector3T : public THIS_TYPE {
 
-	template<typename T1, uint Dim> requires (std::is_arithmetic<T1>::value && Dim >= 3) // might not need arithmetic check!!!!!!!!!!!!!
-	constexpr operator Vectors::Vector<T, Dim>() const {
-		return Vectors::Vector<T, Dim>(x, y, z);
+	using type = THIS_TYPE;
+
+	using type::_VectorT;
+
+	_Vector3T(THIS_TYPE other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
 	}
 
-	template<typename T1, uint Dim> requires (std::is_arithmetic<T1>::value && Dim < 3) // might not need arithmetic check!!!!!!!!!!!!!
-	constexpr operator Vectors::Vector<T, Dim>() const {
-		Vectors::Vector<T, Dim> return_vector;
-		for (int i = 0; i < Dim; i++)
-			return_vector[i] = SELF[i];
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS >= nDim1)
+	explicit _Vector3T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < nDim1; i++) {
+			SELF[i] = other[i];
+		}
 
-		return return_vector;
+		for (uint i = nDim1; i < N_DIMS; i++) {
+			SELF[i] = T{};
+		}
 	}
 
-private:
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS < nDim1)
+	explicit _Vector3T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
+	}
 
-	#define THIS_TYPE Vectors::Vector<T, 3>
-	
-public:
+	static constexpr const THIS_TYPE Left{ -1, 0, 0 };
+	static constexpr const THIS_TYPE Right{ 1, 0, 0 };
 
-	union {
-		Vectors::Vector<T, 3> (*this);
-		struct { T x, y, z; };
-	};
+	static constexpr const THIS_TYPE Up{ 0,  1, 0 };
+	static constexpr const THIS_TYPE Down{ 0, -1, 0 };
 
-	constexpr Vector(T value = T{}) : THIS_TYPE(value) {}
+	static constexpr const THIS_TYPE Back{ 0, 0, -1 };
+	static constexpr const THIS_TYPE Forward{ 0, 0,  1 };
+
+	static constexpr const THIS_TYPE One = THIS_TYPE::Fill(1);
+	static constexpr const THIS_TYPE Zero = THIS_TYPE::Fill(0);
+
+	/// <summary>
+	/// Returns the cross product of the LHS and RHS vectors.
+	/// </summary>
+	static constexpr const THIS_TYPE Cross(const THIS_TYPE& lhs, const THIS_TYPE& rhs) {
+		THIS_TYPE return_value;
+
+		return_value.x = lhs.y * rhs.z - rhs.y * lhs.z;
+		return_value.y = lhs.x * rhs.z - rhs.x * lhs.z;
+		return_value.z = lhs.x * rhs.y - rhs.x * lhs.y;
+
+		return return_value;
+	}
 };
 
-//template <typename T>
-//using Vector3 = Vectors::Vector<T, 3>;
+#undef THIS_TYPE
+#undef N_DIMS
+
+#undef uint
+#undef SELF
+
+typedef _Vector3T <double> Vector3D;
+typedef _Vector3T <float> Vector3;
+typedef _Vector3T <long> Vector3L;
+typedef _Vector3T <int> Vector3I;
+typedef _Vector3T <short> Vector3S;

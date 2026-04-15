@@ -1,45 +1,70 @@
 #pragma once
+#include "Vector.h"
 
-//#include "defines.h"
-//
-//template <class T = double>
-//struct Vector2 {
-//public:
-//
-//	static_assert(std::is_arithmetic<T>::value,
-//		"class T can only be instantiated with floating point types. (E.g: float, double, half)");
-//
-//	union {
-//		struct { T x, y; };
-//		std::array<T, 2> data;
-//	};
-//
-//	Vector2(T x, T y) : x(x), y(y) { };
-//
-//	Vector2(const Vector2& other) : x(other.x), y(other.y) { };
-//
-//	Vector2(T value = 0) : x(value), y(value) { };
-//
-//	~Vector2() { };
-//
-//	T& operator[](const uint idx) {
-//		return data[idx];
-//	}
-//
-//	Vector2 operator + (const Vector2& other) const { return Vector2(x + other.x, y + other.y); }
-//	Vector2 operator - (const Vector2& other) const { return Vector2(x - other.x, y - other.y); }
-//	Vector2 operator * (const Vector2& other) const { return Vector2(x * other.x, y * other.y); }
-//	Vector2 operator / (const Vector2& other) const { return Vector2(x / other.x, y / other.y); }
-//
-//	Vector2 operator * (const T& value) const { return Vector2(x * value, y * value); }
-//	Vector2 operator / (const T& value) const { return Vector2(x / value, y / value); }
-//
-//	Vector2& operator += (const Vector2& other) { x += other.x; y += other.y; return SELF; }
-//	Vector2& operator -= (const Vector2& other) { x -= other.x; y -= other.y; return SELF; }
-//	Vector2& operator *= (const Vector2& other) { x *= other.x; y *= other.y; return SELF; }
-//	Vector2& operator /= (const Vector2& other) { x /= other.x; y /= other.y; return SELF; }
-//
-//	Vector2& operator *= (const T& value) { x *= value; y *= value; return SELF; }
-//	Vector2& operator /= (const T& value) { x /= value; y /= value; return SELF; }
-//
-//};
+#define uint unsigned int
+#define SELF (*this)
+
+#define N_DIMS 2
+
+template<typename T>
+struct _VEC2_MEM_STRUCT {
+	union {
+		struct { T x, y; };
+		std::array<T, N_DIMS> data{ };
+	};
+};
+
+#define THIS_TYPE Vector::_VectorT<T, N_DIMS, _VEC2_MEM_STRUCT<T>>
+
+template<typename T>
+struct _Vector2T : public THIS_TYPE {
+
+	using type = THIS_TYPE;
+
+	using type::_VectorT;
+
+	_Vector2T(THIS_TYPE other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
+	}
+
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS >= nDim1)
+	explicit _Vector2T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < nDim1; i++) {
+			SELF[i] = other[i];
+		}
+
+		for (uint i = nDim1; i < N_DIMS; i++) {
+			SELF[i] = T{};
+		}
+	}
+
+	template <typename T1, uint nDim1, typename MEMORY_STRUCTURE1> requires(N_DIMS < nDim1)
+	explicit _Vector2T(const Vector::_VectorT<T1, nDim1, MEMORY_STRUCTURE1>& other) {
+		for (uint i = 0; i < N_DIMS; i++) {
+			SELF[i] = other[i];
+		}
+	}
+
+	static constexpr const Vector::_VectorT<T, N_DIMS> Left{ -1, 0 };
+	static constexpr const Vector::_VectorT<T, N_DIMS> Right{ 1, 0 };
+
+	static constexpr const Vector::_VectorT<T, N_DIMS> Up{ 0,  1 };
+	static constexpr const Vector::_VectorT<T, N_DIMS> Down{ 0, -1 };
+
+	static constexpr const Vector::_VectorT<T, N_DIMS> One = Vector::_VectorT<T, N_DIMS>::Fill(1);
+	static constexpr const Vector::_VectorT<T, N_DIMS> Zero = Vector::_VectorT<T, N_DIMS>::Fill(0);
+};
+
+#undef THIS_TYPE
+#undef N_DIMS
+
+#undef uint
+#undef SELF
+
+typedef _Vector2T <double> Vector2D;
+typedef _Vector2T <float> Vector2;
+typedef _Vector2T <long> Vector2L;
+typedef _Vector2T <int> Vector2I;
+typedef _Vector2T <short> Vector2S;
