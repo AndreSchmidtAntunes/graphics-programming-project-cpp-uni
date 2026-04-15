@@ -33,7 +33,7 @@ namespace GLExtras {
 	//}
 
 	void SetColourHexRGBA(const uint& Hex) {
-		SetColour(Colour::HexRGBAToColour(Hex));
+		SetColour(Colour::Hex6(Hex));
 	}
 
 	void SetColourHexRGB(const uint& Hex) {
