@@ -20,20 +20,25 @@ struct _Vector2T : public THIS_TYPE {
 	using THIS_TYPE::_VectorT;
 
 	constexpr _Vector2T(THIS_TYPE other) {
-		for (size_t i = 0; i < N_DIMS; i++) {
+		for (unsigned int i = 0; i < N_DIMS; i++) {
 			(*this)[i] = other[i];
 		}
 	}
 
-	static constexpr const Vector::_VectorT<T, N_DIMS> Left{ -1, 0 };
-	static constexpr const Vector::_VectorT<T, N_DIMS> Right{ 1, 0 };
-
-	static constexpr const Vector::_VectorT<T, N_DIMS> Up{ 0,  1 };
-	static constexpr const Vector::_VectorT<T, N_DIMS> Down{ 0, -1 };
-
-	static constexpr const Vector::_VectorT<T, N_DIMS> One = Vector::_VectorT<T, N_DIMS>::Fill(1);
-	static constexpr const Vector::_VectorT<T, N_DIMS> Zero = Vector::_VectorT<T, N_DIMS>::Fill(0);
+	static const _Vector2T Left;
+	static const _Vector2T Right;
+	static const _Vector2T Up;
+	static const _Vector2T Down;
+	static const _Vector2T One;
+	static const _Vector2T Zero;
 };
+
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::Left	(-1,  0);
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::Right	( 1,  0);
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::Up		( 0,  1);
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::Down	( 0, -1);
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::One	( 1,  1);
+template<typename T> inline const _Vector2T<T> _Vector2T<T>::Zero	( 0,  0);
 
 #undef THIS_TYPE
 #undef N_DIMS
