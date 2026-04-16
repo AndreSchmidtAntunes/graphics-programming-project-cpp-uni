@@ -80,10 +80,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="models\rat.obj">
+    <Object Include="models\teapot.obj">
       <Filter>Resource Files\Models</Filter>
     </Object>
-    <Object Include="models\teapot.obj">
+    <Object Include="models\rat.obj">
       <Filter>Resource Files\Models</Filter>
     </Object>
   </ItemGroup>

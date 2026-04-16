@@ -25,8 +25,12 @@
     <ClCompile Include="src\structs\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="models\rat.obj" />
-    <Object Include="models\teapot.obj" />
+    <Object Include="models\rat.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
+    <Object Include="models\teapot.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\classes\Camera.h" />
@@ -87,9 +91,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\_Libraries\freeglut.3.2.1;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(ProjectDir)src\namespaces;$(ProjectDir)src\structs;$(ProjectDir)src\classes;$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(IncludePath)</IncludePath>
@@ -110,6 +115,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(ProjectDir)includes\_Libraries\freeglut.3.2.1\freeglut.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

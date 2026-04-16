@@ -199,7 +199,19 @@ constexpr Matrix4x4 Matrix4x4::operator * (const TYPE mult) const {
 	return result;
 }
 
+const Matrix4x4 Matrix4x4::identity = Matrix4x4(
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
+);
 
+const Matrix4x4 Matrix4x4::zero = Matrix4x4(
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0
+);
 
 #undef DIMENTIONS
 #undef TYPE

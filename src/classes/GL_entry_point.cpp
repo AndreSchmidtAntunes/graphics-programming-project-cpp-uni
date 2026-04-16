@@ -2,12 +2,10 @@
 
 #include "Camera.h"
 #include "common.h"
-
 #include "GLExtras.h"
 #include "GLUTCallbacks.h"
 #include "Mesh.h"
 #include "UserInput.h"
-
 #include <Windows.h>
 
 const char* vertexShaderSource = "#version 330 core\n"
