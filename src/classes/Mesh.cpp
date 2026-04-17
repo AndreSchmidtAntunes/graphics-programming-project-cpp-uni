@@ -1,8 +1,5 @@
 #include "Mesh.h"
 
-#include "Camera.h"
-#include "Colour.h"
-
 #include <fstream>
 #include <sstream>
 #include <vector>

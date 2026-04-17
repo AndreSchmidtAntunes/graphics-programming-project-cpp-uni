@@ -1,9 +1,10 @@
 #include "GL_entry_point.h"
 
 #include "Camera.h"
-#include "common.h"
+#include "common.h" 
 #include "GLExtras.h"
-#include "GLUTCallbacks.h"
+#include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
+#include "Matrix4x4.h"
 #include "Mesh.h"
 #include "UserInput.h"
 #include <Windows.h>
@@ -111,16 +112,16 @@ GL_entry_point::~GL_entry_point(void) {
 void GL_entry_point::Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clears out the last frame
 
-	DrawPolygons();	// Draw vertices: 
+	Draw();	// Draw vertices: 
 
 	glFlush(); // Passes the scene draw to the graphics card
 	glutSwapBuffers();
 }
 
-//static const Mesh* teapot_mesh = new Mesh("teapot.obj");
-static const Mesh* rat_mesh = new Mesh("rat.obj");
+//static const Mesh* teapot_mesh = new Mesh("models/teapot.obj");
+static const Mesh* rat_mesh = new Mesh("models/rat.obj");
 
-void GL_entry_point::DrawPolygons() {
+void GL_entry_point::Draw() {
 
 	rat_mesh->Render(Vector3(0, 0, -5), Vector3(0, 0, 90), Vector3(0.025), camera);
 }

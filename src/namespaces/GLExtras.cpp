@@ -1,9 +1,6 @@
 #include "GLExtras.h"
 
-//#include "Mesh.h"
-
-#include "GLLibs.h"
-
+#include "Mesh.h"
 
 #define DEFAULT_VERT_COLOUR Colour::Red
 

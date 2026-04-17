@@ -60,12 +60,6 @@
     <ClCompile Include="src\namespaces\UserInput.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
-    <ClCompile Include="src\structs\Matrix3x3.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\structs\Matrix4x4.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="src\structs\Quaternion.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>

@@ -1,5 +1,4 @@
 #include "Transform.h"
-
 #include "Matrix3x3.h"
 
 void Transform::SetOnChangedFunc(void (*callback)(Vector3, Vector3, Vector3)) {
@@ -16,13 +15,11 @@ void Transform::SetOnRotationChangedFunc(void (*callback)(Vector3)) {
 	rotChangedFunc = callback;
 }
 
-
 void Transform::SetOnScaleChangedFunc(void (*callback)(Vector3)) {
 	scaleChangedFunc = callback;
 }
 
 // Setters
-
 
 inline void Transform::setPosition(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
@@ -30,20 +27,17 @@ inline void Transform::setPosition(Vector3 position) {
 	this->position = position;
 }
 
-
 inline void Transform::setRotation(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
 	posChangedFunc(position);
 	this->position = position;
 }
 
-
 inline void Transform::setScale(Vector3 position) {
 	anyChangedFunc(position, rotation, scale);
 	posChangedFunc(position);
 	this->position = position;
 }
-
 
 void Transform::setParent(Transform* parent, int index, bool keep_transform) {
 

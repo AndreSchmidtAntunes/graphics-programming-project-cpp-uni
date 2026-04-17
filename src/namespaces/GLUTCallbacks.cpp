@@ -1,10 +1,8 @@
 #include "GLUTCallbacks.h"
 
-#include "GL_entry_point.h"
-#include "GLExtras.h"
-#include "GLLibs.h"
-#include "UserInput.h"
 #include <iostream>
+#include "GLExtras.h"
+#include "UserInput.h"
 
 namespace GLUTCallbacks {
 

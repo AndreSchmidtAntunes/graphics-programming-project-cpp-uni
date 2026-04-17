@@ -20,8 +20,6 @@
     <ClCompile Include="src\namespaces\GLExtras.cpp" />
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
-    <ClCompile Include="src\structs\Matrix3x3.cpp" />
-    <ClCompile Include="src\structs\Matrix4x4.cpp" />
     <ClCompile Include="src\structs\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +89,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\_Libraries\freeglut.3.2.1;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\_Libraries\freeglut.3.2.1;$(ProjectDir);$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(ProjectDir)src\namespaces;$(ProjectDir)src\structs;$(ProjectDir)src\classes;$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
@@ -115,7 +113,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(ProjectDir)includes\_Libraries\freeglut.3.2.1\freeglut.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

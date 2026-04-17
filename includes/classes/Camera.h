@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Matrix3x3.h"
 #include "Vector3.h"
+#include "Matrix3x3.h"
+#include "UserInput.h"
 #include <type_traits>
 
 #define THIS_TYPE float

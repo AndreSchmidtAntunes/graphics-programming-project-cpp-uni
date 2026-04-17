@@ -14,7 +14,7 @@ public:
 	void Update();
 
 	void Display();
-	void DrawPolygons();
+	void Draw();
 
 //private:
 	Camera* camera;
