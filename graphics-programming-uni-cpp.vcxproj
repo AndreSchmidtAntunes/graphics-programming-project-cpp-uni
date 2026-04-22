@@ -21,6 +21,7 @@
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
     <ClCompile Include="src\structs\Quaternion.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\rat.obj">
@@ -49,6 +50,7 @@
     <ClInclude Include="includes\structs\Quaternion.h" />
     <ClInclude Include="includes\structs\Vector3.h" />
     <ClInclude Include="includes\structs\Vector4.h" />
+    <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -89,7 +91,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\_Libraries\freeglut.3.2.1;$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir);$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)src;$(ProjectDir)src\namespaces;$(ProjectDir)src\structs;$(ProjectDir)src\classes;$(SourcePath)</SourcePath>
     <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
@@ -109,12 +111,12 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(ProjectDir)includes\_Libraries\freeglut.3.2.1\freeglut.lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);$(ProjectDir)includes\_Libraries\freeglut.3.2.1\freeglut.dll;$(ProjectDir)includes\_Libraries\freeglut.3.2.1\freeglut.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>

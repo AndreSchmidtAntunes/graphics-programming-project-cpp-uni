@@ -72,6 +72,9 @@
     <ClCompile Include="src\FastInvSqrt.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\teapot.obj">
@@ -135,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="includes\FastInvSqrt.h">
       <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
