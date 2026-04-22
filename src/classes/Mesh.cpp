@@ -4,29 +4,32 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include "Texture2D.h"
 
 #define TYPE GLfloat
 #define DEFAULT_VERT_COLOUR Colour::Red
 
 Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count) {
 	
-	this->vertices_count = vertices_count;
-	this->indices_count = indices_count;
+	this->vertices_size = vertices_count;
+	this->vert_indices_size = indices_count;
 
-	normals = uvs = colours = nullptr;
-	normal_indices = uv_indices = nullptr;
-	normals_count = uvs_count = colours_count = 0;
+	normals = nullptr;
+	colours = nullptr;
+	tex_coords = nullptr;
+	normal_indices = nullptr;
+	normals_size = tex_coords_size = colours_count = 0;
 
-	this->normals_count = normals_count;
+	this->normals_size = normals_size;
 
 	this->vertices = new GLfloat[vertices_count];
 	for (size_t i = 0; i < vertices_count; i++) {
 		this->vertices[i] = vertices[i];
 	}
 
-	this->indices = new GLuint[indices_count];
+	this->vert_indices = new GLuint[indices_count];
 	for (size_t i = 0; i < indices_count; i++) {
-		this->indices[i] = indices[i];
+		this->vert_indices[i] = indices[i];
 	}
 }
 
@@ -34,9 +37,10 @@ Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indi
 
 	this->colours_count = colours_count;
 
-	normals = uvs = nullptr;
-	normal_indices = uv_indices = nullptr;
-	normals_count = uvs_count = 0;
+	normals = nullptr;
+	tex_coords = nullptr;
+	normal_indices = nullptr;
+	normals_size = tex_coords_size = 0;
 
 	this->colours = new GLfloat[colours_count];
 	for (size_t i = 0; i < colours_count; i++) {
@@ -44,10 +48,10 @@ Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indi
 	}
 };
 
-Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TYPE* uvs, const size_t uvs_count) : Mesh(vertices, vertices_count, indices, indices_count) {
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TexCoord* tex_coords, const size_t tex_coord_count) : Mesh(vertices, vertices_count, indices, indices_count) {
 
-	this->normals_count = normals_count;
-	this->uvs_count = uvs_count;
+	this->normals_size = normals_count;
+	this->tex_coords_size = tex_coord_count;
 
 	colours = nullptr;
 	colours_count = 0;
@@ -57,13 +61,13 @@ Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indi
 		this->normals[i] = normals[i];
 	}
 	
-	this->uvs = new GLfloat[uvs_count];
-	for (size_t i = 0; i < uvs_count; i++) {
-		this->uvs[i] = uvs[i];
+	this->tex_coords = new TexCoord[tex_coord_count];
+	for (size_t i = 0; i < tex_coord_count; i++) {
+		this->tex_coords[i] = tex_coords[i];
 	}
 }
 
-Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TYPE* uvs, const size_t uvs_count, const TYPE* colours, const size_t colours_count) : Mesh(vertices, vertices_count, indices, indices_count, normals, normals_count, uvs, uvs_count) {
+Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const TYPE* normals, const size_t normals_count, const TexCoord* tex_coords, const size_t tex_coord_count, const TYPE* colours, const size_t colours_count) : Mesh(vertices, vertices_count, indices, indices_count, normals, normals_count, tex_coords, tex_coord_count) {
 	this->colours_count = colours_count;
 
 	this->colours = new GLfloat[colours_count];
@@ -73,31 +77,29 @@ Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indi
 }
 
 Mesh::~Mesh() {
-	delete[this->vertices_count] vertices;
-	delete[this->indices_count] indices;
-	delete[this->normals_count] normals;
-	delete[this->uvs_count] uvs;
-	delete[this->colours_count] colours;
+	delete[this->vertices_size] this->vertices;
+	delete[this->normals_size] this->normals;
+	delete[this->tex_coords_size] this->tex_coords;
+	delete[this->vert_indices_size] this->vert_indices;
+	delete[this->normal_indices_size] this->normal_indices;
+	delete[this->tex_coord_indices_size] this->tex_coord_indices;
 }
 
+bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 
+	std::vector<float> vertices = {}, normals = {};
+	std::vector<TexCoord> tex_coords = {};
 
-//enum ParseType { POLYGON, VERTEX, NORMAL, TEXTURE, INFO, MATERIALFILE };
-
-bool Mesh::LoadFromFile(const std::string& filename) {
-
-	std::vector<float> vertices, normals, uvs;
-	std::vector<size_t> indices, uv_indices, normal_indices;
-
-	vertices = normals = uvs = { };
-	indices = uv_indices = normal_indices = { };
+	std::vector<size_t> vert_indices = {}, tex_coord_indices = {}, normal_indices = {};
 
 	std::ifstream file(filename);
 
-	if (!file.is_open()) {
+	if (!file.good()) {
 		std::cerr << "Error opening file: " << filename << std::endl;
 		return false;
 	}
+
+	this->texture = texture;
 
 	std::string line = "";
 
@@ -107,119 +109,140 @@ bool Mesh::LoadFromFile(const std::string& filename) {
 
 		_current_line++;
 
-		char type;
-		if (iss >> type)
-			switch (type)
-			{
-				case 'v': { // If we are reading a vertex
+		std::string type;
+		if (iss >> type) {
+			if (type == "v") { // vertex defenition list (points)
 
-					TYPE coord;
+				TYPE coord;
 
-					while (iss >> coord) 
-						vertices.push_back(coord);
+				while (iss >> coord) 
+					vertices.push_back(coord);
 
-					continue;
+				continue;
+			}
+
+			else if (type == "vt") { // vertex texture coordinate list
+
+				TexCoord new_tex_coord;
+				
+#define TEX_COORD_N_DIM 2
+
+				int i = 0;
+				while (i < TEX_COORD_N_DIM && iss >> new_tex_coord[i]) { // add each coordinate to the correct index in new_tex_coord
+					i++;
 				}
+#undef TEX_COORD_N_DIM
 
-				case 'f': { // If we are reading a face definition
+				tex_coords.push_back(new_tex_coord);
+				continue;
+			}
 
-					//std::vector<size_t> indices;
-					
+			else if (type == "vn") { // vertex normals list
 
-					// Loop through however many points are referenced in a face dynamically, as they can have 3 or 4 or 5 etc
+				TYPE coord;
 
-					std::string vert_data;
-					
-					while (iss >> vert_data) {
-						std::string indices_str = "";
-						std::string uv_indices_str = "";
-						std::string normal_indices_str = "";
+				while (iss >> coord)
+					normals.push_back(coord);
+			}
 
-						size_t datatype = 0; // 0 = vert indices, 1 = uv indices, 2 = normal indices
-						for (size_t i = 0; i < vert_data.length(); i++) {
+			else if (type == "f") { // face defenition (polygon)
 
-							while (vert_data[i] == '/') {
-								datatype++;
-								i++;
-							}
+				std::string vert_data;
 
-							while (std::isspace(vert_data[i])) {
-								datatype = 0;
-								i++;
-							}
+				while (iss >> vert_data) {
+					std::string indices_str = "";
+					std::string tex_coord_indices_str = "";
+					std::string normal_indices_str = "";
 
-							switch (datatype) {
+					size_t datatype = 0; // 0 = vert indices, 1 = texture coordinate indices, 2 = normal indices
+					for (size_t i = 0; i < vert_data.length(); i++) {
 
-							case 0: indices_str += (vert_data[i]); break;
-							case 1: uv_indices_str += (vert_data[i]); break;
-							case 2: normal_indices_str += (vert_data[i]); break;
-
-							default: return false;
-							}
-
-							
+						while (vert_data[i] == '/') {
+							datatype++;
+							i++;
 						}
 
-						char* strtol_output;
+						while (std::isspace(vert_data[i])) {
+							datatype = 0;
+							i++;
+						}
 
-						indices.push_back(std::strtol(indices_str.c_str(), &strtol_output, 10));
-						uv_indices.push_back(std::strtol(uv_indices_str.c_str(), &strtol_output, 10));
-						normal_indices.push_back(std::strtol(normal_indices_str.c_str(), &strtol_output, 10));
+						switch (datatype) {
+
+						case 0: indices_str += (vert_data[i]); break;
+						case 1: tex_coord_indices_str += (vert_data[i]); break;
+						case 2: normal_indices_str += (vert_data[i]); break;
+							    
+						default: return false;
+						}
 					}
 
-					continue;
-				}
-				case 'o': { // comment
-					continue;
-				}
+					char* strtol_output;
 
-				case '#': { // comment
-					continue;
-				} 
+					vert_indices.push_back(std::strtol(indices_str.c_str(), &strtol_output, 10));
+					normal_indices.push_back(std::strtol(normal_indices_str.c_str(), &strtol_output, 10));
+					tex_coord_indices.push_back(std::strtol(tex_coord_indices_str.c_str(), &strtol_output, 10));
 
-				default: { // erroneous first istring
-					std::cerr << "Erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
-					continue;
 				}
-
+				continue;
 			}
+
+			else if (type == "o") { // mesh name 
+				continue; /// TODO: add data to mesh class
+			}
+
+			else if (type[0] == '#') { // comment
+				continue;
+			} 
+
+			else { // unknown or erroneous line mode
+				std::cerr << "Unknown or erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
+				continue;
+			}
+		}
 	}
 	
-	this->vertices_count = vertices.size();
-	this->indices_count  = indices.size();
-	this->normals_count  = normals.size();
-	this->uvs_count   =    uvs.size();
+	this->vertices_size = vertices.size();
+	this->normals_size = normals.size();
+	this->tex_coords_size = tex_coords.size();
 
-	delete[this->vertices_count] this->vertices;
-	delete[this->indices_count]  this->indices;
-	delete[this->normals_count]  this->normals;
-	delete[this->uvs_count]		 this->uvs;
+	this->vert_indices_size = vert_indices.size();
+	this->normal_indices_size = normal_indices.size();
+	this->tex_coord_indices_size = tex_coord_indices.size();
 
-	this->vertices = new GLfloat[vertices_count] {};
-	this->normals  = new GLfloat[normals_count] {};
-	this->uvs   =	 new GLfloat[uvs_count] {};
+	delete[this->vertices_size] this->vertices;
+	delete[this->normals_size] this->normals;
+	delete[this->tex_coords_size] this->tex_coords;
 
-	this->indices = new GLuint[indices_count]{};
-	this->normal_indices = new GLuint[indices_count]{};
-	this->uv_indices = new GLuint[indices_count]{};
+	delete[this->vert_indices_size] this->vert_indices;
+	delete[this->normal_indices_size] this->normal_indices;
+	delete[this->tex_coord_indices_size] this->tex_coord_indices;
 
-	for (size_t i = 0; i < vertices_count; i++)
+	this->vertices = new GLfloat[vertices_size]{};
+	this->normals  = new GLfloat[normals_size]{};
+	this->tex_coords = new TexCoord[tex_coords_size]{};
+
+	this->vert_indices = new GLuint[vert_indices_size]{};
+	this->normal_indices = new GLuint[vert_indices_size]{};
+	this->tex_coord_indices = new GLuint[normal_indices_size]{};
+
+	for (size_t i = 0; i < vertices_size; i++)
 		this->vertices[i] = vertices[i];
 
-	for (size_t i = 0; i < normals_count; i++)
+	for (size_t i = 0; i < normals_size; i++)
 		this->normals[i] = normals[i];
 
-	for (size_t i = 0; i < uvs_count; i++)
-		this->uvs[i] = uvs[i];
+	for (size_t i = 0; i < tex_coords_size; i++)
+		this->tex_coords[i] = tex_coords[i];
 
-	for (size_t i = 0; i < indices_count; i++)
-		this->indices[i] = indices[i];
+	for (size_t i = 0; i < vert_indices_size; i++)
+		this->vert_indices[i] = vert_indices[i];
 
-	for (size_t i = 0; i < indices_count; i++)
+	for (size_t i = 0; i < normal_indices_size; i++)
 		this->normal_indices[i] = normal_indices[i];
 
-	for (size_t i = 0; i < indices_count; i++)
-		this->uv_indices[i] = uv_indices[i];
+	for (size_t i = 0; i < tex_coord_indices_size; i++)
+		this->tex_coord_indices[i] = tex_coord_indices[i];
 
 	return true;
 }
@@ -231,32 +254,32 @@ void Mesh::DrawElements() const {
 
 		glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-		if (normals != nullptr && normals_count > 0) {
+		if (normals != nullptr && normals_size > 0) {
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glNormalPointer(GL_FLOAT, 0, normals);
 		}
 
-		if (uvs != nullptr && uvs_count > 0) {
+		if (tex_coords != nullptr && tex_coords_size > 0) {
+			glBindTexture(GL_TEXTURE_2D, texture->getID());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(2, GL_FLOAT, 0, uvs);
-		}
+			glTexCoordPointer(2, GL_FLOAT, 0, tex_coords);
+		} // where should i use uv and normal indicies?
 
 		if (colours != nullptr && colours_count > 0) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, 0, colours);
 		}
-		else
-			GLExtras::SetColour(DEFAULT_VERT_COLOUR);
+		//else
+		//	GLExtras::SetColour(DEFAULT_VERT_COLOUR);
 
-		glDrawElements(GL_TRIANGLES, indices_count, GL_UNSIGNED_INT, indices);
-
+		glDrawElements(GL_TRIANGLES, vert_indices_size, GL_UNSIGNED_INT, vert_indices);
 	
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		if (normals != nullptr)
 			glDisableClientState(GL_NORMAL_ARRAY);
 
-		if (normals != nullptr)
+		if (tex_coords != nullptr)
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		if (colours == nullptr)
@@ -270,15 +293,11 @@ void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector
 	{
 		Vector3 rotation_from_camera = -(camera->rotation);
 
-		Vector3 position_from_camera = position - (camera->position);
-
-		//glRotatef(rotation_from_camera.x, 0.0f, -1.0f, 0.0f);
-		//glRotatef(rotation_from_camera.y, 0.0f, 0.0f, -1.0f);
-		//glRotatef(rotation_from_camera.z, -1.0f, 0.0f, 0.0f);
+		Vector3 position_from_camera = position - camera->position;
 
 		gluLookAt(
 			camera->eye.x, camera->eye.y, camera->eye.z,  // eye
-			0,0,0, // camera->position.x, camera->position.y, camera->position.z, // position
+			0,0,0,
 			camera->up.x, camera->up.y, camera->up.z // up
 		);
 

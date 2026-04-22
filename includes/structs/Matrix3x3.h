@@ -139,7 +139,7 @@ public:
 	};
 
 	constexpr Vector3 operator * (const Vector3& mult) const {
-		Vector3 result = Vector3();
+		Vector3 result;
 
 		for (size_t i = 0; i < DIMENTIONS; i++) {
 
