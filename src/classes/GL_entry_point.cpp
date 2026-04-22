@@ -94,7 +94,12 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -119,12 +124,11 @@ void GL_entry_point::Display() {
 
 //static const Mesh* teapot_mesh = new Mesh("models/teapot.obj");
 static const Texture2D* texture = Texture2D::Load("textures/penguins.raw", 512, 512);
-static const Mesh* rat_mesh = new Mesh("models/rat.obj", texture);
-
+static const Mesh* rat_mesh = new Mesh((char*)"models/suzanne.obj", texture);
 
 void GL_entry_point::Draw() {
 
-	rat_mesh->Render(Vector3(0, 0, -5), Vector3(0, 0, 90), Vector3::One * 0.025f, camera);
+	rat_mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);
 }
 
 void GL_entry_point::Update() {

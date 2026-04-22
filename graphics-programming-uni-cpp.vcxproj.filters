@@ -83,6 +83,12 @@
     <Object Include="models\rat.obj">
       <Filter>Resource Files\Models</Filter>
     </Object>
+    <Object Include="models\suzanne.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Object>
+    <Object Include="models\cube.obj">
+      <Filter>Resource Files\Models</Filter>
+    </Object>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\classes\Camera.h">
@@ -141,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="Texture2D.h">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

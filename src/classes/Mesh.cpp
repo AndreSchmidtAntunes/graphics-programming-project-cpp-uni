@@ -77,11 +77,12 @@ Mesh::Mesh(const TYPE* vertices, const size_t vertices_count, const size_t* indi
 }
 
 Mesh::~Mesh() {
-	delete[this->vertices_size] vertices;
-	delete[this->vert_indices_size] vert_indices;
-	delete[this->normals_size] normals;
-	delete[this->tex_coords_size] tex_coords;
-	delete[this->colours_count] colours;
+	delete[this->vertices_size] this->vertices;
+	delete[this->normals_size] this->normals;
+	delete[this->tex_coords_size] this->tex_coords;
+	delete[this->vert_indices_size] this->vert_indices;
+	delete[this->normal_indices_size] this->normal_indices;
+	delete[this->tex_coord_indices_size] this->tex_coord_indices;
 }
 
 bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
@@ -108,11 +109,9 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 
 		_current_line++;
 
-		char type;
-		if (iss >> type)
-		switch (type)
-		{
-			case 'v': { // vertex defenition list (points)
+		std::string type;
+		if (iss >> type) {
+			if (type == "v") { // vertex defenition list (points)
 
 				TYPE coord;
 
@@ -122,20 +121,23 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 				continue;
 			}
 
-			case 'vt': { // vertex texture coordinate list
+			else if (type == "vt") { // vertex texture coordinate list
 
 				TexCoord new_tex_coord;
+				
+#define TEX_COORD_N_DIM 2
 
 				int i = 0;
-				while (iss >> new_tex_coord[i]) { // add each coordinate to the correct index in new_tex_coord
+				while (i < TEX_COORD_N_DIM && iss >> new_tex_coord[i]) { // add each coordinate to the correct index in new_tex_coord
 					i++;
 				}
+#undef TEX_COORD_N_DIM
 
 				tex_coords.push_back(new_tex_coord);
 				continue;
 			}
 
-			case 'vn': { // vertex normals list
+			else if (type == "vn") { // vertex normals list
 
 				TYPE coord;
 
@@ -143,7 +145,7 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 					normals.push_back(coord);
 			}
 
-			case 'f': { // face defenition (polygon)
+			else if (type == "f") { // face defenition (polygon)
 
 				std::string vert_data;
 
@@ -170,31 +172,31 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 						case 0: indices_str += (vert_data[i]); break;
 						case 1: tex_coord_indices_str += (vert_data[i]); break;
 						case 2: normal_indices_str += (vert_data[i]); break;
-
+							    
 						default: return false;
-
 						}
 					}
 
 					char* strtol_output;
 
 					vert_indices.push_back(std::strtol(indices_str.c_str(), &strtol_output, 10));
-					tex_coord_indices.push_back(std::strtol(tex_coord_indices_str.c_str(), &strtol_output, 10));
 					normal_indices.push_back(std::strtol(normal_indices_str.c_str(), &strtol_output, 10));
+					tex_coord_indices.push_back(std::strtol(tex_coord_indices_str.c_str(), &strtol_output, 10));
+
 				}
 				continue;
 			}
 
-			case 'o': { // comment
-				continue;
+			else if (type == "o") { // mesh name 
+				continue; /// TODO: add data to mesh class
 			}
 
-			case '#': { // comment
+			else if (type[0] == '#') { // comment
 				continue;
 			} 
 
-			default: { // erroneous first istring
-				std::cerr << "Erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
+			else { // unknown or erroneous line mode
+				std::cerr << "Unknown or erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
 				continue;
 			}
 		}
@@ -205,21 +207,24 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 	this->tex_coords_size = tex_coords.size();
 
 	this->vert_indices_size = vert_indices.size();
-	this->tex_coord_indices_size = tex_coord_indices.size();
 	this->normal_indices_size = normal_indices.size();
+	this->tex_coord_indices_size = tex_coord_indices.size();
 
 	delete[this->vertices_size] this->vertices;
-	delete[this->vert_indices_size] this->vert_indices;
 	delete[this->normals_size] this->normals;
 	delete[this->tex_coords_size] this->tex_coords;
 
-	this->vertices = new GLfloat[vertices_size] {};
-	this->normals  = new GLfloat[normals_size] {};
-	this->tex_coords = new TexCoord[tex_coords_size] {};
+	delete[this->vert_indices_size] this->vert_indices;
+	delete[this->normal_indices_size] this->normal_indices;
+	delete[this->tex_coord_indices_size] this->tex_coord_indices;
+
+	this->vertices = new GLfloat[vertices_size]{};
+	this->normals  = new GLfloat[normals_size]{};
+	this->tex_coords = new TexCoord[tex_coords_size]{};
 
 	this->vert_indices = new GLuint[vert_indices_size]{};
 	this->normal_indices = new GLuint[vert_indices_size]{};
-	this->tex_coord_indices = new GLuint[vert_indices_size]{};
+	this->tex_coord_indices = new GLuint[normal_indices_size]{};
 
 	for (size_t i = 0; i < vertices_size; i++)
 		this->vertices[i] = vertices[i];
@@ -233,8 +238,11 @@ bool Mesh::LoadFromFile(const std::string& filename, const Texture2D* texture) {
 	for (size_t i = 0; i < vert_indices_size; i++)
 		this->vert_indices[i] = vert_indices[i];
 
-	for (size_t i = 0; i < vert_indices_size; i++)
+	for (size_t i = 0; i < normal_indices_size; i++)
 		this->normal_indices[i] = normal_indices[i];
+
+	for (size_t i = 0; i < tex_coord_indices_size; i++)
+		this->tex_coord_indices[i] = tex_coord_indices[i];
 
 	return true;
 }
@@ -255,17 +263,16 @@ void Mesh::DrawElements() const {
 			glBindTexture(GL_TEXTURE_2D, texture->getID());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glTexCoordPointer(2, GL_FLOAT, 0, tex_coords);
-		}
+		} // where should i use uv and normal indicies?
 
 		if (colours != nullptr && colours_count > 0) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, 0, colours);
 		}
-		else
-			GLExtras::SetColour(DEFAULT_VERT_COLOUR);
+		//else
+		//	GLExtras::SetColour(DEFAULT_VERT_COLOUR);
 
 		glDrawElements(GL_TRIANGLES, vert_indices_size, GL_UNSIGNED_INT, vert_indices);
-
 	
 		glDisableClientState(GL_VERTEX_ARRAY);
 
