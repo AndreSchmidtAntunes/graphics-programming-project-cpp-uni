@@ -7,7 +7,7 @@
 namespace GLExtras {
 
 	void AddVertex(const Vector3& position) {
-		glVertex3d((GLdouble)position.x, (GLdouble)position.y, (GLdouble)position.z);
+		glVertex3f(position.x, position.y, position.z);
 	}
 
 	void AddVertices(Vector3* points_array, const size_t length) {

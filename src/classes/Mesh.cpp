@@ -253,7 +253,7 @@ void Mesh::DrawElements() const {
 		glEnableClientState(GL_VERTEX_ARRAY);
 
 		glVertexPointer(3, GL_FLOAT, 0, vertices);
-
+		
 		if (normals != nullptr && normals_size > 0) {
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glNormalPointer(GL_FLOAT, 0, normals);
@@ -269,21 +269,13 @@ void Mesh::DrawElements() const {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, 0, colours);
 		}
-		//else
-		//	GLExtras::SetColour(DEFAULT_VERT_COLOUR);
 
 		glDrawElements(GL_TRIANGLES, vert_indices_size, GL_UNSIGNED_INT, vert_indices);
 	
 		glDisableClientState(GL_VERTEX_ARRAY);
-
-		if (normals != nullptr)
-			glDisableClientState(GL_NORMAL_ARRAY);
-
-		if (tex_coords != nullptr)
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		if (colours == nullptr)
-			glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera* camera) const {
@@ -316,7 +308,6 @@ void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector
 
 void Mesh::Render(const Vector3& position, const Vector3& rotation, const Camera* camera) const {
 	Render(position, rotation, Vector3::One, camera);
-
 }
 
 void Mesh::Render(const Vector3& position, const Camera* camera) const {

@@ -6,7 +6,6 @@
 
 namespace GLUTCallbacks {
 
-
 	static GL_entry_point* entry_point = nullptr;
 
 	GL_entry_point& GetEntryPoint() {

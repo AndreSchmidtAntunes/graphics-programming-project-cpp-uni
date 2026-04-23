@@ -91,7 +91,6 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 		UserInput::AddKeyboardActiveCallback('s', MoveBack);
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
-
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
 	glEnable(GL_LIGHTING);
@@ -127,12 +126,10 @@ static const Texture2D* texture = Texture2D::Load("textures/penguins.raw", 512, 
 static const Mesh* rat_mesh = new Mesh((char*)"models/suzanne.obj", texture);
 
 void GL_entry_point::Draw() {
-
 	rat_mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);
 }
 
 void GL_entry_point::Update() {
-
 	rot += 1.0f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
