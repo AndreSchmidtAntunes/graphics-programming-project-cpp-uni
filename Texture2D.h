@@ -5,27 +5,35 @@
 #include "GLLibs.h"
 
 #define N_DIMS 2
-#define SIZE_TYPE size_t
 #define ID_TYPE GLuint
 
 struct Texture2D {
 
-	const ID_TYPE getID() const { return _ID; }
-	const SIZE_TYPE getWidth() const { return width; }
-	const SIZE_TYPE getHeight() const { return height; }
+	const ID_TYPE& getID() const { return _ID; }
+	const size_t& getWidth() const { return data[0]; }
+	const size_t& getHeight() const { return data[1]; }
 
-	static const Texture2D* Load(const char* path, const SIZE_TYPE width, const SIZE_TYPE height);
+	static const Texture2D* FromFile(const char* file_path, const size_t width, const size_t height);
+	const bool LoadFile(const char* file_path, const size_t width, const size_t height);
+
+	Texture2D(const char* file_path, const size_t width, const size_t height) {
+		LoadFile(file_path, width, height);
+	}
+
+	constexpr ~Texture2D(void) {
+		if (_ID != 0)
+			glDeleteTextures(1, &_ID);
+	}
 
 protected:
 	union {
-		std::array<SIZE_TYPE, N_DIMS> data;
-		struct { SIZE_TYPE width, height; };
+		std::array<size_t, N_DIMS> data;
+		struct { size_t width, height; };
 	};
 	ID_TYPE _ID = -1;
 
 	// internal constructor 
 	constexpr Texture2D(void) : data({}) {}
-	constexpr ~Texture2D(void) { }
 };
 
 #undef N_DIMS

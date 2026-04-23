@@ -47,7 +47,7 @@ public:
 
 	bool LoadOBJ(const char* obj_filename, const Texture2D* texture = nullptr);
 	bool LoadOBJ(const char* obj_filename, const char* raw_texture_filename, const size_t texture_width, const size_t texture_height) 
-	{ return LoadOBJ(obj_filename, Texture2D::Load(raw_texture_filename, texture_width, texture_height)); }
+	{ return LoadOBJ(obj_filename, Texture2D::FromFile(raw_texture_filename, texture_width, texture_height)); }
 
 	Mesh(const char* obj_filename, const Texture2D* texture = nullptr) { LoadOBJ(obj_filename, texture); }
 

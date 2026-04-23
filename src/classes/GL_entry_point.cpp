@@ -123,7 +123,7 @@ void GL_entry_point::Display() {
 }
 
 //static const Mesh* teapot_mesh = new Mesh("models/teapot.obj");
-static const Texture2D* texture = Texture2D::Load("textures/penguins.raw", 512, 512);
+static const Texture2D* texture = Texture2D::FromFile("textures/penguins.raw", 512, 512);
 static const Mesh* mesh = new Mesh("models/suzanne.obj", texture);
 
 /// TODO: the gnererated texture still isnt getting a unique id (always 0)
