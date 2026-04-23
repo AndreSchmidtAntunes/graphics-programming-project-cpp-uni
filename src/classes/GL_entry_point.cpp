@@ -93,8 +93,8 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -123,10 +123,12 @@ void GL_entry_point::Display() {
 
 //static const Mesh* teapot_mesh = new Mesh("models/teapot.obj");
 static const Texture2D* texture = Texture2D::Load("textures/penguins.raw", 512, 512);
-static const Mesh* rat_mesh = new Mesh((char*)"models/suzanne.obj", texture);
+static const Mesh* mesh = new Mesh("models/cube.obj", texture);
+
+/// TODO: the gnererated texture still isnt getting a unique id (always 0)
 
 void GL_entry_point::Draw() {
-	rat_mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);
+	mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);
 }
 
 void GL_entry_point::Update() {
