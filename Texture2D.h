@@ -14,8 +14,6 @@ struct Texture2D {
 	const SIZE_TYPE getWidth() const { return width; }
 	const SIZE_TYPE getHeight() const { return height; }
 
-
-
 	static const Texture2D* Load(const char* path, const SIZE_TYPE width, const SIZE_TYPE height);
 
 protected:
@@ -23,10 +21,10 @@ protected:
 		std::array<SIZE_TYPE, N_DIMS> data;
 		struct { SIZE_TYPE width, height; };
 	};
-	ID_TYPE _ID;
+	ID_TYPE _ID = -1;
 
 	// internal constructor 
-	constexpr Texture2D(void) : data({}), _ID(0) {}
+	constexpr Texture2D(void) : data({}) {}
 	constexpr ~Texture2D(void) { }
 };
 

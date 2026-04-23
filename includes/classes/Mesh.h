@@ -28,6 +28,10 @@ public:
 	vertex_data* vertices = nullptr; size_t vertices_size;
 	GLuint* vert_indices; size_t vert_indices_count;
 
+
+	std::string name;
+	bool shade_smooth = false;
+
 	bool has_colours, has_normals, has_tex_coords = false;
 
 	const Texture2D *texture = nullptr;

@@ -1,15 +1,15 @@
 #include "Transform.h"
+
 #include "Matrix3x3.h"
+#include "GLLibs.h"
 
 void Transform::SetOnChangedFunc(void (*callback)(Vector3, Vector3, Vector3)) {
 	anyChangedFunc = callback;
 }
 
-
 void Transform::SetOnPositionChangedFunc(void (*callback)(Vector3)) {
 	posChangedFunc = callback;
 }
-
 
 void Transform::SetOnRotationChangedFunc(void (*callback)(Vector3)) {
 	rotChangedFunc = callback;
@@ -59,35 +59,31 @@ void Transform::setParent(Transform* parent, int index, bool keep_transform) {
 
 // Getters
 
-
 inline Vector3& Transform::getPosition() {
 	return position;
 }
-
 
 inline Vector3& Transform::getRotation() {
 	return rotation;
 }
 
-
 inline Vector3& Transform::getScale() {
 	return scale;
 }
 
-
 Vector3 Transform::getWorldScale() {
-	if (is_root)
+	if (is_root) {
 		return this->scale;
-	else
+	}
+	else {
 		return Matrix3x3::ScaleMatrix(parent->getWorldScale()) * this->scale;
+	}		
 }
-
 
 Vector3 Transform::getWorldRotation() {
 
 	return Vector3::Zero; /// TODO: make this after finishing Quaternion implementation
 }
-
 
 Vector3 Transform::getWorldPosition() {
 	if (parent->is_root)
@@ -96,8 +92,6 @@ Vector3 Transform::getWorldPosition() {
 		return (Matrix3x3::ScaleMatrix(parent->scale) * position) + parent->getWorldPosition();
 }
 
-
 inline int Transform::getChildIndex() {
 	return child_index;
 }
-

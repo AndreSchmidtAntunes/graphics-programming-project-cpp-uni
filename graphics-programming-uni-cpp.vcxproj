@@ -57,6 +57,8 @@
     <ClInclude Include="includes\structs\Vector3.h" />
     <ClInclude Include="includes\structs\Vector4.h" />
     <ClInclude Include="Lighting.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>

@@ -142,8 +142,24 @@ bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
 				continue;
 			}
 
+			else if (type == "s") { // shading mode
+				std::string mode;
+				iss >> mode;
+				if (mode == "0" || mode == "off") {
+					shade_smooth = false;
+				}
+				else if (mode == "1" || mode == "on") {
+					shade_smooth = true;
+				}
+				else {
+					std::cerr << "Unknown shading mode at file: " << filename << ", line: " << _current_line << std::endl;
+				}
+				continue;
+			}
+
 			else if (type == "o") { // mesh name 
-				continue; /// TODO: add data to mesh class
+				name = iss.str();
+				continue;
 			}
 
 			else if (type[0] == '#') { // comment
@@ -203,6 +219,13 @@ void Mesh::DrawElements() const {
 		if (has_colours) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 32);
+		}
+
+		if (shade_smooth) {
+			glShadeModel(GL_SMOOTH);
+		}
+		else {
+			glShadeModel(GL_FLAT);
 		}
 
 		glDrawElements(GL_TRIANGLES, vert_indices_count, GL_UNSIGNED_INT, vert_indices);
