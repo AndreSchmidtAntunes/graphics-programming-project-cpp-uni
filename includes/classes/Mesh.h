@@ -28,7 +28,6 @@ public:
 	vertex_data* vertices = nullptr; size_t vertices_size;
 	GLuint* vert_indices; size_t vert_indices_count;
 
-
 	std::string name;
 	bool shade_smooth = false;
 
@@ -45,11 +44,12 @@ public:
 	void Render(const Vector3& position, const Vector3& rotation, const Camera*) const;
 	void Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera*) const;
 
-	bool LoadOBJ(const char* obj_filename, const Texture2D* texture = nullptr);
-	bool LoadOBJ(const char* obj_filename, const char* raw_texture_filename, const size_t texture_width, const size_t texture_height) 
-	{ return LoadOBJ(obj_filename, Texture2D::FromFile(raw_texture_filename, texture_width, texture_height)); }
+	bool LoadFromFile(const char* file_name, const Texture2D* texture = nullptr);
 
-	Mesh(const char* obj_filename, const Texture2D* texture = nullptr) { LoadOBJ(obj_filename, texture); }
+	bool LoadFromFile(const char* file_name, const char* raw_texture_filename, const size_t texture_width, const size_t texture_height) { 
+		return LoadFromFile(file_name, Texture2D::FromFile(raw_texture_filename, texture_width, texture_height)); 
+	}
+	Mesh(const char* file_name, const Texture2D* texture = nullptr) { LoadFromFile(file_name, texture); }
 
 private:
 	void DrawElements() const;

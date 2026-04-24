@@ -54,6 +54,9 @@ void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
 void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
 
+static Texture2D* texture;
+static Mesh* mesh;
+
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
 
 	rot = 0.0f;
@@ -107,7 +110,67 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 		gluPerspective(80, 1, 0.1, 1000.0);
 	glMatrixMode(GL_MODELVIEW);
 
+	/// TODO: the gnererated texture still isnt getting a unique id (always 0)
+	texture = new Texture2D("textures/penguins.raw", 512, 512);
+	mesh = new Mesh("models/suzanne.obj", texture);
+
 	glutMainLoop();
+}
+
+#include <map>
+#include <typeindex>
+
+const static std::map<std::type_index, std::vector<void*>*> asset_cache_map {
+	{ std::type_index(typeid(Texture2D)),	(new std::vector<void*>) }, // void* means Texture2D* here
+	{ std::type_index(typeid(Mesh)),		(new std::vector<void*>) } // void* means Mesh* here
+};
+
+template <typename T> requires( 
+	std::common_type<T, Texture2D>::value || 
+	std::common_type<T, Mesh>::value
+	)
+static void RemoveFromAssetCache(const T* asset) {
+	// cast cache pointer to cache vector pointer, to then get vector as reference
+	std::vector<T>& asset_cache = *static_cast<std::vector<T>*>(&asset_cache_map[typeid(T)]);
+
+	auto it = std::find(asset_cache.begin(), asset_cache.end(), texture);
+
+	if (it != asset_cache.end()) {
+		delete *it;
+		asset_cache.erase(it);
+	}
+}
+
+template <typename T> requires(
+	std::common_type<T,Texture2D>::value || 
+	std::common_type<T,Mesh>::value
+	)
+static void RemoveFromAssetCache(const size_t& asset_cache_index) {
+	std::vector<T>& asset_cache = *static_cast<std::vector<T>*>(&asset_cache_map[typeid(T)]);
+
+	delete asset_cache[asset_cache_index];
+	asset_cache.erase(asset_cache.begin() + asset_cache_index);
+}
+
+template <typename T> requires( 
+	std::common_type<T,Texture2D>::value || 
+	std::common_type<T,Mesh>::value
+	)
+static void AppendToAssetCache(const T* asset) {
+	// Cast cache pointer to cache vector pointer, to then get vector as reference
+	std::vector<T>& asset_cache = *static_cast<std::vector<T>*>(&asset_cache_map[typeid(T)]);
+
+	asset_cache.push_back(asset);
+}
+
+template <typename T> requires(
+	std::common_type<T, Texture2D>::value ||
+	std::common_type<T, Mesh>::value
+	)
+static void InsertIntoAssetCache(const size_t& asset_cache_index, const T* asset) {
+	std::vector<T>& asset_cache = *static_cast<std::vector<T>*>(&asset_cache_map[typeid(T)]);
+	
+	asset_cache.insert(asset_cache.begin() + asset_cache_index, asset_cache_index);
 }
 
 GL_entry_point::~GL_entry_point(void) {
@@ -121,12 +184,6 @@ void GL_entry_point::Display() {
 	glFlush(); // Passes the scene draw to the graphics card
 	glutSwapBuffers();
 }
-
-//static const Mesh* teapot_mesh = new Mesh("models/teapot.obj");
-static const Texture2D* texture = Texture2D::FromFile("textures/penguins.raw", 512, 512);
-static const Mesh* mesh = new Mesh("models/suzanne.obj", texture);
-
-/// TODO: the gnererated texture still isnt getting a unique id (always 0)
 
 void GL_entry_point::Draw() {
 	mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);

@@ -9,8 +9,8 @@
 
 struct Texture2D {
 
-	const ID_TYPE& getID() const { return _ID; }
-	const size_t& getWidth() const { return data[0]; }
+	const ID_TYPE& getID() const	{ return _ID; }
+	const size_t& getWidth() const	{ return data[0]; }
 	const size_t& getHeight() const { return data[1]; }
 
 	static const Texture2D* FromFile(const char* file_path, const size_t width, const size_t height);
@@ -30,7 +30,7 @@ protected:
 		std::array<size_t, N_DIMS> data;
 		struct { size_t width, height; };
 	};
-	ID_TYPE _ID = -1;
+	ID_TYPE _ID = 0;
 
 	// internal constructor 
 	constexpr Texture2D(void) : data({}) {}

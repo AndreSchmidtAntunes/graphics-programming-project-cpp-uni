@@ -93,7 +93,7 @@ namespace UserInput {
 	}
 
 	const int Init() {
-		if (glutGet(GLUT_INIT_STATE) == 1) {
+		if (glutGet(GLUT_INIT_STATE) == 1 && !has_namespace_been_initialised) {
 
 			glutKeyboardFunc(KeyboardDownCallback);
 			glutKeyboardUpFunc(KeyboardUpCallback);

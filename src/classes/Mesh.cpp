@@ -36,17 +36,19 @@ Mesh::~Mesh() {
 	delete[vert_indices_count] vert_indices;
 }
 
-bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
+bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
+
+	/// TODO: add svg support or whatever its called
 
 	std::vector<Vector3> l_vertices = {}, l_normals = {};
 	std::vector<TexCoord> l_tex_coords = {};
 
 	std::vector<size_t> l_vert_indices, l_tex_coord_indices, l_normal_indices;
 
-	std::ifstream file(filename);
+	std::ifstream file(file_name);
 
 	if (!file.good()) {
-		std::cerr << "Error opening file: " << filename << std::endl;
+		std::cerr << "Error opening file: " << file_name << std::endl;
 		return false;
 	}
 
@@ -152,7 +154,7 @@ bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
 					shade_smooth = true;
 				}
 				else {
-					std::cerr << "Unknown shading mode at file: " << filename << ", line: " << _current_line << std::endl;
+					std::cerr << "Unknown shading mode at file: " << file_name << ", line: " << _current_line << std::endl;
 				}
 				continue;
 			}
@@ -167,7 +169,7 @@ bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
 			} 
 
 			else { // unknown or erroneous line mode
-				std::cerr << "Unknown or erroneous command at file: " << filename << ", line: " << _current_line << std::endl;
+				std::cerr << "Unknown or erroneous command at file: " << file_name << ", line: " << _current_line << std::endl;
 				continue;
 			}
 		}
@@ -192,7 +194,7 @@ bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
 		this->vertices[vert_index].normal = l_normals[normal_index];
 	}
 
-	std::cout << "Successfully loaded mesh: " << filename << std::endl;
+	std::cout << "Successfully loaded mesh: " << file_name << std::endl;
 	return true;
 }
 
@@ -202,8 +204,9 @@ bool Mesh::LoadOBJ(const char* filename, const Texture2D* texture) {
 
 void Mesh::DrawElements() const {
 		glEnableClientState(GL_VERTEX_ARRAY);
-
 		glVertexPointer(3, GL_FLOAT, VERTEX_DATA_STRIDE, vertices );
+
+		glShadeModel(shade_smooth ? GL_SMOOTH : GL_FLAT);
 
 		if (has_tex_coords) {
 			glBindTexture(GL_TEXTURE_2D, texture->getID());
@@ -219,13 +222,6 @@ void Mesh::DrawElements() const {
 		if (has_colours) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 32);
-		}
-
-		if (shade_smooth) {
-			glShadeModel(GL_SMOOTH);
-		}
-		else {
-			glShadeModel(GL_FLAT);
 		}
 
 		glDrawElements(GL_TRIANGLES, vert_indices_count, GL_UNSIGNED_INT, vert_indices);
