@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssetCache.cpp" />
     <ClCompile Include="src\classes\Camera.cpp" />
     <ClCompile Include="src\classes\GL_entry_point.cpp" />
     <ClCompile Include="src\classes\Mesh.cpp" />
@@ -20,7 +21,6 @@
     <ClCompile Include="src\namespaces\GLExtras.cpp" />
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
-    <ClCompile Include="src\structs\Quaternion.cpp" />
     <ClCompile Include="Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +38,7 @@
     </Object>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetCache.h" />
     <ClInclude Include="includes\classes\Camera.h" />
     <ClInclude Include="includes\classes\GL_entry_point.h" />
     <ClInclude Include="includes\classes\Mesh.h" />

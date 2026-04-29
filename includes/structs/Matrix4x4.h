@@ -3,6 +3,8 @@
 #include "Vector4.h"
 #include "Vector3.h"
 
+#include "Quaternion.h"
+
 struct Matrix3x3;
 
 #define TYPE float
@@ -78,6 +80,15 @@ public:
 			0, 0, 0, 1
 		);
 	};
+
+	static const Matrix4x4 RotationMatrix(const Quaternion& quaternion) { /// WARNING: might be the cause of a circular include 
+		return Matrix4x4(
+			1.0f - 2.0f * quaternion.y * quaternion.y - 2.0f * quaternion.z * quaternion.z, 2.0f * quaternion.x * quaternion.y - 2.0f * quaternion.z * quaternion.w, 2.0f * quaternion.x * quaternion.z + 2.0f * quaternion.y * quaternion.w, 0.0f,
+			2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * quaternion.x * quaternion.x - 2.0f * quaternion.z * quaternion.z, 2.0f * quaternion.y * quaternion.z - 2.0f * quaternion.x * quaternion.w, 0.0f,
+			2.0f * quaternion.x * quaternion.z - 2.0f * quaternion.y * quaternion.w, 2.0f * quaternion.y * quaternion.z + 2.0f * quaternion.x * quaternion.w, 1.0f - 2.0f * quaternion.x * quaternion.x - 2.0f * quaternion.y * quaternion.y, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
 
 	constexpr static const Matrix4x4 TranslationMatrix(const Vector3& translation) {
 		return Matrix4x4(

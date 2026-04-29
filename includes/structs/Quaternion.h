@@ -14,8 +14,8 @@ struct _QuaternionT {
 
 	union {
 
-		struct { T i, j, k, scaler; };
-		struct { T x, y, z, w;		};
+		struct { T scaler, i, j, k; };
+		struct { T w, x, y, z;		};
 
 		std::array<T, 4> data { };
 	};
@@ -32,34 +32,44 @@ struct _QuaternionT {
 	constexpr const T& operator [] (const size_t idx) const { return data[idx]; }
 
 	template<typename T1> requires(std::is_convertible<T1, T>::value)
-		_QuaternionT<T>& operator=(const _QuaternionT<T1>& other) {
+	constexpr _QuaternionT<T>& operator=(const _QuaternionT<T1>& other) {
+		w = other.w;
 		x = other.x;
 		y = other.y;
 		z = other.z;
-		w = other.w;
+
 		return *this;
 	}
 
 	template<typename T1>
-	_QuaternionT<T> operator+=(const _QuaternionT<T1>& y) {
-		x += y.x();
-		y += y.y();
-		z += y.z();
-		w += y.w();
+	constexpr _QuaternionT<T> operator += (const _QuaternionT<T1>& other) {
+		w += other.w();
+		x += other.x();
+		y += other.y();
+		z += other.z();
+
 		return *this;
+	}
+	template<typename T1>
+	constexpr friend const _QuaternionT<T> operator + (const _QuaternionT<T1>& lhs, const _QuaternionT<T1>& rhs) const {
+		return Quaternion(lhs) += rhs;
 	}
 
 	template<typename T1>
-	_QuaternionT<T> operator-=(const _QuaternionT<T1>& y) {
-		x -= y.x;
-		y -= y.y;
-		z -= y.z;
-		w -= y.w;
+	_QuaternionT<T> operator -= (const _QuaternionT<T1>& other) {
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+		w -= other.w;
 		return *this;
+	}
+	template<typename T1>
+	constexpr friend const _QuaternionT<T> operator - (const _QuaternionT<T1>& lhs, const _QuaternionT<T1>& rhs) const {
+		return Quaternion(lhs) -= rhs;
 	}
 
 	template<typename T1>
-	_QuaternionT<T> operator*=(const _QuaternionT<T1>& other) {
+	constexpr _QuaternionT<T> operator *= (const _QuaternionT<T1>& other) {
 
 		T temp_x = w * other.x + x * other.w + other * other.z - z * other.y;
 		T temp_y = w * other.y - x * other.z + other * other.w + z * other.x;
@@ -73,9 +83,13 @@ struct _QuaternionT {
 
 		return *this;
 	}
+	template<typename T1>
+	constexpr friend const _QuaternionT<T> operator * (const _QuaternionT<T1>& lhs, const _QuaternionT<T1>& rhs) const {
+		return Quaternion(lhs) *= rhs;
+	}
 
 	template<typename T1>
-	_QuaternionT<T> operator/=(const _QuaternionT<T1>& other) {
+	constexpr _QuaternionT<T> operator /= (const _QuaternionT<T1>& other) {
 
 		T norm_squared = other.NormSquarez;
 
@@ -91,29 +105,44 @@ struct _QuaternionT {
 
 		return *this;
 	}
+	template<typename T1>
+	constexpr friend const _QuaternionT<T> operator / (const _QuaternionT<T1>& lhs, const _QuaternionT<T1>& rhs) const {
+		return Quaternion(lhs) /= rhs;
+	}
+
 	template<typename T1> requires(std::is_convertible<T1, T>::value)
-	_QuaternionT<T> operator+=(const T1& value) {
+	constexpr _QuaternionT<T> operator += (const T1& value) {
 		w += value;
 		return *this;
 	}
 	template<typename T1> requires(std::is_convertible<T1, T>::value)
-	_QuaternionT<T> operator-=(const T1& value) {
-		w -= value;
-		return *this;
+	constexpr friend const _QuaternionT<T> operator + (const _QuaternionT<T1>& lhs, const T1& value) const {
+		return Quaternion(lhs) += rhs;
 	}
 
 	template<typename T1> requires(std::is_convertible<T1, T>::value)
-		_QuaternionT(const  _QuaternionT<T1>& other) : x(other.x), y(other.y), z(other.z), w(other.w) {}
-
-	_QuaternionT operator+() const {
+	constexpr _QuaternionT<T> operator -= (const T1& value) {
+		w -= value;
 		return *this;
 	}
-	_QuaternionT operator-() const {
+	template<typename T1> requires(std::is_convertible<T1, T>::value)
+		constexpr friend const _QuaternionT<T> operator - (const _QuaternionT<T1>& lhs, const T1& value) const {
+		return Quaternion(lhs) -= rhs;
+	}
+
+	template<typename T1> requires(std::is_convertible<T1, T>::value)
+	constexpr _QuaternionT(const  _QuaternionT<T1>& other) : x(other.x), y(other.y), z(other.z), w(other.w) {}
+
+	constexpr _QuaternionT operator+() const {
+		return *this;
+	}
+	constexpr _QuaternionT operator-() const {
 		return { -x, -y, -z, -w };
 	}
 
 	template<typename T1> requires(std::is_convertible<T1, T>::value)
 	constexpr _QuaternionT(const T1& i = 0, const T1& j = 0, const T1& k = 0, const T1& scaler = 0) : i(i), j(j), k(k), scaler(scaler) {};
+	constexpr _QuaternionT(void) : _QuaternionT(0,0,0,1) {};
 	constexpr ~_QuaternionT(void) {};
 
 	template<typename T1> requires(std::is_convertible<T1, T>::value)

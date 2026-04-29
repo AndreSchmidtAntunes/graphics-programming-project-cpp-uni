@@ -1,97 +1,106 @@
 #include "Transform.h"
 
-#include "Matrix3x3.h"
 #include "GLLibs.h"
+#include "Matrix4x4.h"
+#include "Scene.h"
 
-void Transform::SetOnChangedFunc(void (*callback)(Vector3, Vector3, Vector3)) {
-	anyChangedFunc = callback;
+inline void Transform::setLocalPosition(const Vector3& position) {
+	local_position = position;
 }
 
-void Transform::SetOnPositionChangedFunc(void (*callback)(Vector3)) {
-	posChangedFunc = callback;
+inline void Transform::setLocalRotation(const Quaternion& rotation) {
+	local_rotation = rotation;
 }
 
-void Transform::SetOnRotationChangedFunc(void (*callback)(Vector3)) {
-	rotChangedFunc = callback;
+inline void Transform::setLocalScale(const Vector3& scale) {
+	local_scale = scale;
 }
 
-void Transform::SetOnScaleChangedFunc(void (*callback)(Vector3)) {
-	scaleChangedFunc = callback;
-}
+inline void Transform::setParent(Transform* parent, int index) {
 
-// Setters
-
-inline void Transform::setPosition(Vector3 position) {
-	anyChangedFunc(position, rotation, scale);
-	posChangedFunc(position);
-	this->position = position;
-}
-
-inline void Transform::setRotation(Vector3 position) {
-	anyChangedFunc(position, rotation, scale);
-	posChangedFunc(position);
-	this->position = position;
-}
-
-inline void Transform::setScale(Vector3 position) {
-	anyChangedFunc(position, rotation, scale);
-	posChangedFunc(position);
-	this->position = position;
-}
-
-void Transform::setParent(Transform* parent, int index, bool keep_transform) {
+	if (parent == this->parent) return;
 
 	// Remove transform from old parent's child array
-	this->parent->child_count--;
 	this->parent->children.erase(this->parent->children.begin() + child_index);
-
-	if (keep_transform)
 	
 	this->parent = parent;
 
 	// Insert transform into new parent's child array
 	
-	this->parent->child_count++;
-	this->parent->children.insert(this->parent->children.begin(), this);
+	this->parent->children.insert(this->parent->children.begin() + index, this);
 
 	/// TODO: Test if the insert section works!!!
 }
 
+inline void Transform::setParent(Transform* parent) {
+	setParent(parent, this->parent->children.size());
+}
+
+inline void Transform::setScene(Scene* scene, int index) {
+	scene->InsertChild(this, index);
+}
+
+inline void Transform::setScene(Scene* scene) {
+	scene->InsertChild(this);
+}
+
 // Getters
 
-inline Vector3& Transform::getPosition() {
-	return position;
-}
-
-inline Vector3& Transform::getRotation() {
-	return rotation;
-}
-
-inline Vector3& Transform::getScale() {
-	return scale;
-}
-
-Vector3 Transform::getWorldScale() {
-	if (is_root) {
-		return this->scale;
-	}
-	else {
-		return Matrix3x3::ScaleMatrix(parent->getWorldScale()) * this->scale;
-	}		
-}
-
-Vector3 Transform::getWorldRotation() {
-
-	return Vector3::Zero; /// TODO: make this after finishing Quaternion implementation
-}
-
-Vector3 Transform::getWorldPosition() {
-	if (parent->is_root)
-		return this->position;
+inline const Vector3 Transform::getWorldPosition() const {
+	if (is_root)
+		return local_position;
 	else
-		return (Matrix3x3::ScaleMatrix(parent->scale) * position) + parent->getWorldPosition();
+		return getTransformMatrix(parent) * local_position;
 }
 
-inline int Transform::getChildIndex() {
+inline const Quaternion Transform::getWorldRotation() const {
+	if (is_root)
+		return local_rotation;
+	else
+		return parent->getWorldRotation() * local_rotation;
+}
+
+inline const Vector3& Transform::getLocalScale() const {
+	return local_scale;
+}
+
+inline const Vector3& Transform::getLocalPosition() const
+{
+	return local_position;
+}
+
+inline const Quaternion& Transform::getLocalRotation() const
+{
+	return local_rotation;
+}
+
+inline Transform* Transform::getParent() const {
+	return parent;
+}
+
+inline const int Transform::getChildIndex() const {
 	return child_index;
+}
+
+inline Scene* Transform::getScene() const {
+	return scene;
+}
+
+inline const std::vector<Transform*> Transform::getAllChildren() const {
+	return children;
+}
+
+inline Transform* Transform::getChild(const size_t index) const {
+	return children[index];
+}
+
+inline const Matrix4x4 getTransformMatrix(Transform* transform) {
+	if (transform->getIsRoot())
+		return getLocalTransformMatrix(transform);
+	else
+		return getTransformMatrix(transform->getParent()) * getLocalTransformMatrix(transform);
+}
+
+inline const Matrix4x4 getLocalTransformMatrix(Transform* transform) {
+	return Matrix4x4::ScaleMatrix(transform->getLocalScale()) * Matrix4x4::RotationMatrix(transform->getLocalRotation()) * Matrix4x4::TranslationMatrix(transform->getLocalPosition());
 }
