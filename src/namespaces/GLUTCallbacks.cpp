@@ -32,7 +32,7 @@ namespace GLUTCallbacks {
 
 		entry_point->Update();
 
-		UserInput::UserInputActiveCallbacks();
+		UserInput::RunAllActiveCallbacks();
 
 		updateDuration = glutGet(GLUT_ELAPSED_TIME) - updateDuration;
 		

@@ -40,6 +40,14 @@ const char* vertexShaderSource = "#version 330 core\n"
 		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
 	}
 
+	void DRAG() {
+		std::cout << "DRAGGING: (" << UserInput::mousePos.x << "\t, " << UserInput::mousePos.y << "\t)" << std::endl;
+	}
+
+	void MOUSEMOVE() {
+		std::cout << "MOUSING:  (" << UserInput::mousePos.x << "\t, " << UserInput::mousePos.y << "\t)" << std::endl;
+	}
+
 	static const double PI = 3.141592653589793;
 	static const double PHI = 1.570796326794897;
 	static const double RAD2DEG = 57.29577951308232;
@@ -96,17 +104,20 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 		UserInput::AddKeyboardDownCallback('h', PrintWorld);
 
-		UserInput::AddSpecialDownCallback(UserInput::SpecialKey::LEFT_SHIFT, PrintUP);
+		UserInput::AddSpecialDownCallback(UserInput::SpecialInputs::LEFT_SHIFT, PrintUP);
 
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::LEFT, RotateLeft);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::UP, RotateUp);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::RIGHT, RotateRight);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialKey::DOWN, RotateDown);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::LEFT, RotateLeft);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::UP, RotateUp);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::RIGHT, RotateRight);
+		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::DOWN, RotateDown);
 
 		UserInput::AddKeyboardActiveCallback('d', MoveRight);
 		UserInput::AddKeyboardActiveCallback('a', MoveLeft);
 		UserInput::AddKeyboardActiveCallback('w', MoveForward);
 		UserInput::AddKeyboardActiveCallback('s', MoveBack);
+
+		UserInput::AddMouseDragCallback(DRAG);
+		UserInput::AddMouseMoveCallback(MOUSEMOVE);
 
 	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
@@ -146,6 +157,7 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	transform_C->setMesh(suzanne_mesh);
 
 	transform_D = new Transform(scene->root);
+	transform_D->setLocalPosition(Vector3::Back * 5 + Vector3::Left * 2);
 	transform_D->setMesh(suzanne_mesh);
 
 // hierarchy:

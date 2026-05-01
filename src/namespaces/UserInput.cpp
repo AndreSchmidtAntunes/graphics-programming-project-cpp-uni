@@ -6,14 +6,13 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#define size_t unsigned int
 #define intptr uintptr_t
 #define intptr_vec std::vector<intptr>
 #define intptr_vec_uint_umap std::unordered_map<size_t, intptr_vec>
 
 // This Typedef is used here to simplify the usage and storage of void callback pointers.
 // It is interchangeable with the type: void (*)(void)
-typedef void funcT(void); 
+typedef void funcT(void);
 
 namespace UserInput {
 
@@ -21,14 +20,20 @@ namespace UserInput {
 
 	static struct InputState {
 		std::bitset<128> keyboard = 0;
-		std::bitset<30> special = 0;
+		std::bitset<32> special = 0;
+		std::bitset<3> mouse = 0;
 	} inputState;
 
 	const bool IsKeyboardKeyDown(const unsigned char key) {
 		return inputState.keyboard[key];
 	}
-	const bool IsSpecialKeyDown(const SpecialKey key) {
+
+	const bool IsSpecialKeyDown(const SpecialInputs key) {
 		return inputState.special[key];
+	}
+
+	const bool IsMouseDown(const MouseInputs key) {
+		return inputState.mouse[key];
 	}
 
 	static intptr_vec_uint_umap
@@ -36,6 +41,10 @@ namespace UserInput {
 
 	static intptr_vec_uint_umap
 		special_down_callback_dict, special_active_callback_dict, special_up_callback_dict;
+
+	static intptr_vec_uint_umap
+		mouse_down_callback_dict, mouse_active_callback_dict, mouse_up_callback_dict;
+	static intptr_vec mouse_drag_callbacks, mouse_move_callbacks;
 
 	inline void RunCallbackFromPointer(const intptr& ptr) {
 		funcT* callback = (funcT*)(ptr);
@@ -92,6 +101,41 @@ namespace UserInput {
 		}
 	}
 
+	void MouseCallback(int button, int state, int mouse_x, int mouse_y) {
+
+		size_t index = -1;
+		switch (button) {
+			case GLUT_LEFT_BUTTON: index = 0; break;
+			case GLUT_MIDDLE_BUTTON: index = 1; break;
+			case GLUT_RIGHT_BUTTON: index = 2; break;
+		}
+
+		bool is_down = !state; // mouse state has UP as 1 and DOWN as 0, so invert it
+
+		if (inputState.mouse[index] != is_down) { // run update of mouse input state if it has changed
+			
+			auto& dict = is_down ? mouse_down_callback_dict : mouse_up_callback_dict;
+
+			RunCallbacksInPtrVector(dict[index]);
+			inputState.mouse.set(index, is_down);
+		}
+	}
+
+	void setVec2Values(_vec2I& vec2, int x, int y) {
+		vec2._x = x;
+		vec2._y = y;
+	}
+
+	void MouseDragCallback(int mouse_x, int mouse_y) {
+		setVec2Values(mousePos, mouse_x, mouse_y);
+		RunCallbacksInPtrVector(mouse_drag_callbacks);
+	}
+
+	void MouseMoveCallback(int mouse_x, int mouse_y) {
+		setVec2Values(mousePos, mouse_x, mouse_y);
+		RunCallbacksInPtrVector(mouse_move_callbacks);
+	}
+	
 	const int Init() {
 		if (glutGet(GLUT_INIT_STATE) == 1 && !has_namespace_been_initialised) {
 
@@ -100,6 +144,11 @@ namespace UserInput {
 
 			glutSpecialFunc(SpecialDownCallback);
 			glutSpecialUpFunc(SpecialUpCallback);
+
+			glutMouseFunc(MouseCallback);
+
+			glutMotionFunc(MouseDragCallback);
+			glutPassiveMotionFunc(MouseMoveCallback);
 
 			has_namespace_been_initialised = true;
 			
@@ -129,42 +178,6 @@ namespace UserInput {
 	}
 
 	/// <summary>
-	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
-	/// </summary>
-	/// <param name="key">The keyboard key which fires the callback.</param>
-	/// <param name="">The void callback which runs when the key is pressed down.</param>
-	void AddKeyboardDownCallback(const unsigned char key, void (*callback)(void)) {
-		AddCallback(keyboard_down_callback_dict, key, callback);
-	}
-
-	/// <summary>
-	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
-	/// </summary>
-	/// <param name="key">The keyboard key which fires the callback.</param>
-	/// <param name="">The void callback which runs when the key is released.</param>
-	void AddKeyboardUpCallback(const unsigned char key, void (*callback)(void)) {
-		AddCallback(keyboard_up_callback_dict, key, callback);
-	}
-
-	/// <summary>
-	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
-	/// </summary>
-	/// <param name="key">The special keyboard key which fires the callback.</param>
-	/// <param name="">The void callback which runs when the key is pressed down.</param>
-	void AddSpecialDownCallback(const SpecialKey key, void (*callback)(void)) {
-		AddCallback(special_down_callback_dict, key, callback);
-	}
-
-	/// <summary>
-	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
-	/// </summary>
-	/// <param name="key">The special keyboard key which fires the callback.</param>
-	/// <param name="">The void callback which runs when the key is released.</param>
-	void AddSpecialUpCallback(const SpecialKey key, void (*callback)(void)) {
-		AddCallback(special_up_callback_dict, key, callback);
-	}
-
-	/// <summary>
 	/// Pops a stored reference to the given void callback from the array paired with the given key inside of the given dictionary.<br/>
 	/// When a void callback <c>Foo()</c> is given with the key being <c>a</c>, 
 	/// a pointer to <c>Foo()</c> would attempt to be removed from an array in the given dictionary at the key <c>a</c>. 
@@ -184,11 +197,31 @@ namespace UserInput {
 		vect.erase(it);
 
 		if (vect.size() == 0) {
-			delete &dictionary[key];
+			delete& dictionary[key];
 			dictionary.erase(key);
 		}
 
 		return true;
+	}
+
+	// --- Keyboard --- //
+
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
+	/// </summary>
+	/// <param name="key">The keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is pressed down.</param>
+	void AddKeyboardDownCallback(const unsigned char key, void (*callback)(void)) {
+		AddCallback(keyboard_down_callback_dict, key, callback);
+	}
+
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
+	/// </summary>
+	/// <param name="key">The keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is released.</param>
+	void AddKeyboardUpCallback(const unsigned char key, void (*callback)(void)) {
+		AddCallback(keyboard_up_callback_dict, key, callback);
 	}
 
 	/// <summary>
@@ -209,24 +242,6 @@ namespace UserInput {
 		return RemoveCallback(keyboard_up_callback_dict, key, callback);
 	}
 
-	/// <summary>
-	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is pressed down.
-	/// </summary>
-	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
-	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveSpecialDownCallback(const SpecialKey key, void (*callback)(void)) {
-		return RemoveCallback(special_down_callback_dict, key, callback);
-	}
-
-	/// <summary>
-	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is released.
-	/// </summary>
-	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
-	/// <param name="">The void callback to be removed from the fire order.</param>
-	const bool RemoveSpecialUpCallback(const SpecialKey key, void (*callback)(void)) {
-		return RemoveCallback(special_up_callback_dict, key, callback);
-	}
-
 	void AddKeyboardActiveCallback(const unsigned char key, void (*callback)(void)) {
 		AddCallback(keyboard_active_callback_dict, key, callback);
 	}
@@ -235,16 +250,100 @@ namespace UserInput {
 		return RemoveCallback(keyboard_active_callback_dict, key, callback);
 	}
 
-	void AddSpecialActiveCallback(const SpecialKey key, void (*callback)(void)) {
+	// --- Special --- //
+
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is pressed down.
+	/// </summary>
+	/// <param name="key">The special keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is pressed down.</param>
+	void AddSpecialDownCallback(const SpecialInputs key, void (*callback)(void)) {
+		AddCallback(special_down_callback_dict, key, callback);
+	}
+
+	/// <summary>
+	/// Stores a reference to the given callback pointer, so that the callback is ran whenever the given key is released.
+	/// </summary>
+	/// <param name="key">The special keyboard key which fires the callback.</param>
+	/// <param name="">The void callback which runs when the key is released.</param>
+	void AddSpecialUpCallback(const SpecialInputs key, void (*callback)(void)) {
+		AddCallback(special_up_callback_dict, key, callback);
+	}
+
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is pressed down.
+	/// </summary>
+	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveSpecialDownCallback(const SpecialInputs key, void (*callback)(void)) {
+		return RemoveCallback(special_down_callback_dict, key, callback);
+	}
+
+	/// <summary>
+	/// Removes a reference of the given callback pointer, so that it will no longer be ran when the given special keyboard key is released.
+	/// </summary>
+	/// <param name="key">The special keyboard key which is currently firing the callback.</param>
+	/// <param name="">The void callback to be removed from the fire order.</param>
+	const bool RemoveSpecialUpCallback(const SpecialInputs key, void (*callback)(void)) {
+		return RemoveCallback(special_up_callback_dict, key, callback);
+	}
+
+	void AddSpecialActiveCallback(const SpecialInputs key, void (*callback)(void)) {
 		AddCallback(special_active_callback_dict, key, callback);
 	}
 
-	const bool RemoveSpecialActiveCallback(const SpecialKey key, void (*callback)(void)) {
+	const bool RemoveSpecialActiveCallback(const SpecialInputs key, void (*callback)(void)) {
 		return RemoveCallback(special_active_callback_dict, key, callback);
 	}
 
+	// --- Mouse --- //
+
+	void AddMouseDownCallback(const MouseInputs input, void (*callback)(void)) {
+		AddCallback(mouse_down_callback_dict, input, callback);
+	}
+
+	const bool RemoveMouseDownCallback(const MouseInputs input, void(*callback)(void)) {
+		return RemoveCallback(mouse_down_callback_dict, input, callback);
+	}
+
+	void AddMouseUpCallback(const MouseInputs input, void(*callback)(void)) {
+		AddCallback(mouse_up_callback_dict, input, callback);
+	}
+
+	const bool RemoveMouseUpCallback(const MouseInputs input, void(*callback)(void)) {
+		return RemoveCallback(mouse_up_callback_dict, input, callback);
+	}
+
+	void AddMouseMoveCallback(void(*callback)(void)) {
+		mouse_move_callbacks.push_back((*(intptr*)(&callback)));
+	}
+
+	const bool RemoveMouseMoveCallback(void(*callback)(void)) {
+		intptr_vec::iterator it = std::find(mouse_move_callbacks.begin(), mouse_move_callbacks.end(), (*(intptr*)(&callback))); //  (*(intptr*)(&callback))) again, retrieves the pointer to the callback.
+
+		if (it == mouse_move_callbacks.end()) return false;
+
+		mouse_move_callbacks.erase(it);
+
+		return true;
+	}
+
+	void AddMouseDragCallback(void(*callback)(void)) {
+		mouse_drag_callbacks.push_back((*(intptr*)(&callback)));
+	}
+
+	const bool RemoveMouseDragCallback(void(*callback)(void)) {
+		intptr_vec::iterator it = std::find(mouse_drag_callbacks.begin(), mouse_drag_callbacks.end(), (*(intptr*)(&callback))); //  (*(intptr*)(&callback))) again, retrieves the pointer to the callback.
+
+		if (it == mouse_drag_callbacks.end()) return false;
+
+		mouse_drag_callbacks.erase(it);
+
+		return true;
+	}
+
 	template<size_t bitset_size>
-	void RunActiveInputCallbacks(intptr_vec_uint_umap dictionary, std::bitset<bitset_size> state) {
+	void RunActiveCallbacks(intptr_vec_uint_umap dictionary, std::bitset<bitset_size> state) {
 		for (auto kv : dictionary) {
 
 			if (state[kv.first])
@@ -252,9 +351,10 @@ namespace UserInput {
 		}
 	}
 
-	void UserInputActiveCallbacks() {
+	void RunAllActiveCallbacks() {
 		if (has_namespace_been_initialised)
-			RunActiveInputCallbacks(keyboard_active_callback_dict, inputState.keyboard);
-			RunActiveInputCallbacks(special_active_callback_dict, inputState.special);
+			RunActiveCallbacks(keyboard_active_callback_dict, inputState.keyboard);
+			RunActiveCallbacks(special_active_callback_dict, inputState.special);
+			RunActiveCallbacks(mouse_active_callback_dict, inputState.mouse);
 	}
 }
