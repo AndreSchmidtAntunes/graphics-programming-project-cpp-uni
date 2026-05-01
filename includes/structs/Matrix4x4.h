@@ -4,8 +4,7 @@
 #include "Vector3.h"
 
 #include "Quaternion.h"
-
-struct Matrix3x3;
+#include "Matrix3x3.h"
 
 #define TYPE float
 #define DIMENTIONS 4
@@ -46,7 +45,7 @@ public:
 		setRow(3, row_4);
 	}
 
-	constexpr Matrix4x4(const Matrix3x3& matrix) : Matrix4x4(
+	constexpr Matrix4x4(const Matrix3x3& matrix) : Matrix4x4 (
 		matrix[0][0], matrix[0][1], matrix[0][2], 0,
 		matrix[1][0], matrix[1][1], matrix[1][2], 0,
 		matrix[2][0], matrix[2][1], matrix[2][2], 0,
@@ -81,12 +80,20 @@ public:
 		);
 	};
 
-	static const Matrix4x4 RotationMatrix(const Quaternion& quaternion) { /// WARNING: might be the cause of a circular include 
+	// thank you to the quaternions library by ferd36 for this rotation matrix conversion implementation below.
+// The entire module can be found here: https://github.com/ferd36/quaternions/tree/master
+	static const Matrix4x4 RotationMatrix(const Quaternion& q) { /// WARNING: might be the cause of a circular include 
+
+		TYPE a2 = q.w * q.w, b2 = q.x * q.x, c2 = q.y * q.y, d2 = q.z * q.z;
+		TYPE ab = q.w * q.x, ac = q.w * q.y, ad = q.w * q.z;
+		TYPE bc = q.x * q.y, bd = q.x * q.z;
+		TYPE cd = q.y * q.z;
+
 		return Matrix4x4(
-			1.0f - 2.0f * quaternion.y * quaternion.y - 2.0f * quaternion.z * quaternion.z, 2.0f * quaternion.x * quaternion.y - 2.0f * quaternion.z * quaternion.w, 2.0f * quaternion.x * quaternion.z + 2.0f * quaternion.y * quaternion.w, 0.0f,
-			2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * quaternion.x * quaternion.x - 2.0f * quaternion.z * quaternion.z, 2.0f * quaternion.y * quaternion.z - 2.0f * quaternion.x * quaternion.w, 0.0f,
-			2.0f * quaternion.x * quaternion.z - 2.0f * quaternion.y * quaternion.w, 2.0f * quaternion.y * quaternion.z + 2.0f * quaternion.x * quaternion.w, 1.0f - 2.0f * quaternion.x * quaternion.x - 2.0f * quaternion.y * quaternion.y, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f);
+			a2 + b2 - c2 - d2,	2 * (bc - ad),		2 * (bd + ac),		0.0f,
+			2 * (bc + ad),		a2 - b2 + c2 - d2,	2 * (cd - ab),		0.0f,
+			2 * (bd - ac),		2 * (cd + ab),		a2 - b2 - c2 + d2,	0.0f,
+			0.0f,				0.0f,				0.0f,				1.0f);
 	}
 
 

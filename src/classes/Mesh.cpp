@@ -9,6 +9,11 @@
 #define TYPE GLfloat
 #define DEFAULT_VERT_COLOUR Colour::Red
 
+static const double PI  = 3.141592653589793;
+static const double PHI = 1.570796326794897;
+static const double RAD2DEG = 57.29577951308232;
+static const double DEG2RAD = 0.017453292519943;
+
 Mesh::Mesh(const Vector3* vertices, const size_t vertices_count, const GLuint* indices, const size_t indices_count, const Vector3* normals, const size_t normals_count, const TexCoord* tex_coords, const size_t tex_coords_count, const Colour* colours, const size_t colours_count, const Texture2D* texture) {
 	
 	this->vertices_size = vertices_count;
@@ -35,6 +40,8 @@ Mesh::~Mesh() {
 	delete[vertices_size] vertices;
 	delete[vert_indices_count] vert_indices;
 }
+
+
 
 bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
 
@@ -232,12 +239,38 @@ void Mesh::DrawElements() const {
 		glDisableClientState(GL_COLOR_ARRAY);
 }
 
-void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera* camera) const {
-	glLoadIdentity();
+void Mesh::RenderWithoutMatrices(Camera* const camera, const Vector3& position, const Quaternion& rotation, const Vector3& scale) const {
+	//glLoadIdentity(); /// might need to remove
+
+	//glPushMatrix();
+	//{
+		Vector3 rotation_from_camera = -(camera->euler_rotation);
+
+		Vector3 position_from_camera = position - camera->position;
+
+		gluLookAt(
+			camera->eye.x, camera->eye.y, camera->eye.z,  // eye
+			0, 0, 0,
+			camera->up.x, camera->up.y, camera->up.z // up
+		);
+
+		glTranslatef(position_from_camera.x, position_from_camera.y, position_from_camera.z);
+
+		glScalef(scale.x, scale.y, scale.z);
+
+		glRotatef(2 * acos(rotation.w) * RAD2DEG, rotation.x, rotation.y, rotation.z);
+
+		DrawElements();
+	//}
+	//glPopMatrix();
+}
+void Mesh::Render(Camera* const camera, const Vector3& position, const Quaternion& rotation, const Vector3& scale) const
+{
+	glLoadIdentity(); /// might need to remove
 
 	glPushMatrix();
 	{
-		Vector3 rotation_from_camera = -(camera->rotation);
+		Vector3 rotation_from_camera = -(camera->euler_rotation);
 
 		Vector3 position_from_camera = position - camera->position;
 
@@ -251,19 +284,9 @@ void Mesh::Render(const Vector3& position, const Vector3& rotation, const Vector
 
 		glScalef(scale.x, scale.y, scale.z);
 
-		glRotatef(rotation.x, 0.0f, -1.0f, 0.0f);
-		glRotatef(rotation.y, 0.0f, 0.0f, -1.0f);
-		glRotatef(rotation.z, -1.0f, 0.0f, 0.0f);
+		glRotatef(2 * acos(rotation.w) * RAD2DEG, rotation.x, rotation.y, rotation.z);
 
 		DrawElements();
 	}
 	glPopMatrix();
-}
-
-void Mesh::Render(const Vector3& position, const Vector3& rotation, const Camera* camera) const {
-	Render(position, rotation, Vector3::One, camera);
-}
-
-void Mesh::Render(const Vector3& position, const Camera* camera) const {
-	Render(position, Vector3::Zero, Vector3::One, camera);
 }

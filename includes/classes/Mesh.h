@@ -5,6 +5,7 @@
 #include "GLLibs.h"
 #include "Texture2D.h"
 #include "Vector3.h"
+#include "Quaternion.h"
 
 class Camera;
 
@@ -40,9 +41,9 @@ public:
 	Mesh(void) : Mesh(nullptr, 0, nullptr, 0) {};
 	~Mesh(void);
 
-	void Render(const Vector3& position, const Camera*) const;
-	void Render(const Vector3& position, const Vector3& rotation, const Camera*) const;
-	void Render(const Vector3& position, const Vector3& rotation, const Vector3& scale, const Camera*) const;
+	void RenderWithoutMatrices(Camera* const camera, const Vector3& position = Vector3::Zero, const Quaternion& rotation = Quaternion::Identity, const Vector3& scale = Vector3::One) const;
+
+	void Render(Camera* const camera, const Vector3& position = Vector3::Zero, const Quaternion& rotation = Quaternion::Identity, const Vector3& scale = Vector3::One) const;
 
 	bool LoadFromFile(const char* file_name, const Texture2D* texture = nullptr);
 
@@ -51,7 +52,6 @@ public:
 	}
 	Mesh(const char* file_name, const Texture2D* texture = nullptr) { LoadFromFile(file_name, texture); }
 
-private:
 	void DrawElements() const;
 };
 

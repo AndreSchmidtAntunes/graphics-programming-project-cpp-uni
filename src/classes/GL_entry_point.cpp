@@ -1,10 +1,11 @@
-#include "GL_entry_point.h"
+﻿#include "GL_entry_point.h"
 
 #include "Camera.h"
 #include "common.h" 
 #include "GLExtras.h"
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
 #include "Matrix4x4.h"
+#include "Vector2.h"
 #include "Scene.h"
 #include "Mesh.h"
 #include "UserInput.h"
@@ -38,7 +39,12 @@ const char* vertexShaderSource = "#version 330 core\n"
 		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
 	}
 
-#define ROTATION_SPEED 80.0f
+	static const double PI = 3.141592653589793;
+	static const double PHI = 1.570796326794897;
+	static const double RAD2DEG = 57.29577951308232;
+	static const double DEG2RAD = 0.017453292519943;
+
+#define ROTATION_SPEED 90.0f
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
@@ -57,7 +63,12 @@ void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
 void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
 
 static Texture2D* texture;
-static Mesh* mesh;
+
+static Transform* transform_A;
+static Transform* transform_B;
+static Transform* transform_C;
+static Transform* transform_D;
+
 static Scene* scene;
 
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
@@ -110,12 +121,38 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glViewport(0, 0, 800, 800);
-		gluPerspective(80, 1, 0.1, 1000.0);
+		gluPerspective(80, 1, 0.1, 10000.0);
 	glMatrixMode(GL_MODELVIEW);
 
 	/// TODO: the gnererated texture still isnt getting a unique id (always 0)
 	texture = new Texture2D("textures/penguins.raw", 512, 512);
-	mesh = new Mesh("models/suzanne.obj", texture);
+	Mesh* suzanne_mesh = new Mesh("models/suzanne.obj", texture);
+	Mesh* cube_mesh = new Mesh("models/cube.obj", texture);
+
+	scene = new Scene();
+
+	transform_A = new Transform(scene->root, Vector3(5, -1, -5));
+	transform_A->setLocalScale(Vector3::One * 0.5);
+	transform_A->setMesh(suzanne_mesh);
+
+	transform_B = new Transform(transform_A, Vector3(0, 0, -10));
+	transform_A->setLocalScale(Vector3::One * 10);
+	transform_B->setMesh(cube_mesh);
+
+	transform_C = new Transform(scene->root, Vector3(-3, -3, -4));
+	transform_C->setParent(transform_B); // changed C's parent from root to B.
+	transform_A->setLocalScale(Vector3::One * 0.2);
+	transform_C->setMesh(suzanne_mesh);
+
+	transform_D = new Transform(scene->root);
+	transform_D->setMesh(suzanne_mesh);
+
+// hierarchy:
+	//	root
+	//	╟══	A
+	//	║	╚══	B
+	//	║		╚══ C
+	//	╚══	D
 
 	glutMainLoop();
 }
@@ -133,19 +170,16 @@ void GL_entry_point::Display() {
 }
 
 void GL_entry_point::Draw() {
-	mesh->Render(Vector3(0, 0, -5), Vector3::Zero, camera);
+	//mesh->Render(camera, Vector3(0, 0, -5), Vector3::Zero);
+	transform_A->setLocalRotation(Quaternion::Euler(0.0, rot * DEG2RAD, 0.0));
+
+	transform_B->setLocalRotation(Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0));
+	transform_B->setLocalScale(Vector3::One * (sin(rot * DEG2RAD) + 1.5f));
+	scene->Draw(camera);
 }
 
 void GL_entry_point::Update() {
 	rot += 1.0f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
-
-	//glLoadIdentity();
-
-	//gluLookAt(
-	//	camera->eye.x, camera->eye.y, camera->eye.z,  // eye
-	//	camera->position.x, camera->position.y, camera->position.z, // position
-	//	camera->up.x, camera->up.y, camera->up.z // up
-	//);
 }

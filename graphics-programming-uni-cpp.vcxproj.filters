@@ -60,9 +60,6 @@
     <ClCompile Include="src\namespaces\UserInput.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
-    <ClCompile Include="src\structs\Quaternion.cpp">
-      <Filter>Source Files\Structs</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -73,6 +70,9 @@
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
     <ClCompile Include="Texture2D.cpp">
+      <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetCache.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
   </ItemGroup>
@@ -156,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetCache.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

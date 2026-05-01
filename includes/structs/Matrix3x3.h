@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
+#include "Quaternion.h"
 
 #define TYPE float
 #define DIMENTIONS 3
@@ -38,6 +39,21 @@ public:
 		setRow(1, row_2);
 		setRow(2, row_3);
 	};
+
+	// thank you to the quaternions library by ferd36 for this rotation matrix conversion implementation below.
+	// The entire module can be found here: https://github.com/ferd36/quaternions/tree/master
+	static const Matrix3x3 RotationMatrix(const Quaternion& q) { /// WARNING: might be the cause of a circular include 
+
+		TYPE a2 = q.w * q.w, b2 = q.x * q.x, c2 = q.y * q.y, d2 = q.z * q.z;
+		TYPE ab = q.w * q.x, ac = q.w * q.y, ad = q.w * q.z;
+		TYPE bc = q.x * q.y, bd = q.x * q.z;
+		TYPE cd = q.y * q.z;
+
+		return Matrix3x3(
+			a2 + b2 - c2 - d2, 2 * (bc - ad), 2 * (bd + ac),
+			2 * (bc + ad), a2 - b2 + c2 - d2, 2 * (cd - ab),
+			2 * (bd - ac), 2 * (cd + ab), a2 - b2 - c2 + d2);
+	}
 
 	constexpr ~Matrix3x3(void) {};
 
@@ -142,7 +158,6 @@ public:
 		Vector3 result;
 
 		for (size_t i = 0; i < DIMENTIONS; i++) {
-
 			TYPE sum = 0;
 			for (size_t j = 0; j < DIMENTIONS; j++) {
 				sum += ((*this)[i][j] * mult[j]);

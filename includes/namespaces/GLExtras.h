@@ -3,6 +3,9 @@
 #include "GLLibs.h"
 #include "Colour.h"
 #include "Vector3.h"
+#include "Quaternion.h"
+
+class Camera;
 
 namespace GLExtras {
 
@@ -53,6 +56,7 @@ namespace GLExtras {
 	/// <param name="colour">The colour you would like to use.</param>
 	void SetColour(const Colour& colour);
 
+	void PerformTransformation(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 
-
+	void LookAt(const Vector3& eye, const Vector3& target, const Vector3& up);
 }

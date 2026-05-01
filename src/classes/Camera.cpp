@@ -1,39 +1,44 @@
 #include "Camera.h"
 
 #include "Matrix3x3.h"
+#include "Quaternion.h"
+#include "Vector3.h"
 
 #define DEG2RAD 0.017453292f
 #define HALF_PI 1.570796327f
 
 #include <iostream>
 
-void Camera::Rotate(const Vector3& rotation)
+void Camera::Rotate(const Quaternion& rotation)
 {
-	//this->rotation += rotation;
-
-	Matrix3x3 yaw  =  Matrix3x3::RotationMatrix(Vector::Up, rotation.x * DEG2RAD);
-	Matrix3x3 pitch = Matrix3x3::RotationMatrix(Vector::Left, rotation.y * DEG2RAD);
-	Matrix3x3 roll =  Matrix3x3::RotationMatrix(Vector::Back, rotation.z * DEG2RAD);
-
-	rotation_matrix *= yaw * pitch * roll;
-
-	this->up = rotation_matrix * Vector3::Up;
-	this->forward = rotation_matrix * Vector3::Forward;
-	this->right = rotation_matrix * Vector3::Right;
+	this->rotation *= rotation;
+	UpdateDirections();
 }
 
-/// <param name="rotation"> x = yaw z = pitch, y = roll </param>
-void Camera::RotateFirstPerson(const Vector3& rotation) {
+void Camera::UpdateDirections() {
+	const Matrix3x3 rot_matrix = Matrix3x3::RotationMatrix(rotation);
+	up		= rot_matrix * Vector3::Up;
+	forward = rot_matrix * Vector3::Forward;
+	right	= rot_matrix * Vector3::Right;
+	euler_rotation = rotation.Euler();
+}
 
-	Matrix3x3 yaw = Matrix3x3::RotationMatrix(Vector3::Down, rotation.x * DEG2RAD);
-	Matrix3x3 pitch = Matrix3x3::RotationMatrix(Vector3::Left, rotation.y * DEG2RAD);
-	Matrix3x3 roll = Matrix3x3::RotationMatrix(Vector3::Back, rotation.z * DEG2RAD);
+/// <summary>
+/// Rotates the given quaternion by the given angle (radians) in the given axis in worldspace.
+/// </summary>
+Quaternion WorldSpaceRotation(const Quaternion rotation, const Vector3& axis, float angle) {
+	Quaternion localAxisAdjusted = rotation.Conjugate() * Quaternion(0.0f, axis.x, axis.y, axis.z) * rotation * sin(0.5 * angle);
+	return rotation * Quaternion((float)cos(0.5 * angle), localAxisAdjusted.x, localAxisAdjusted.y, localAxisAdjusted.z);
+}
 
-	rotation_matrix *= yaw * pitch * roll;
+void Camera::RotateFirstPerson(const Vector3& look_dir) {
+	float x =  look_dir.y * DEG2RAD;
+	float y =  -look_dir.x * DEG2RAD;
 
-	this->up = rotation_matrix * Vector3::Up;
-	this->forward = rotation_matrix * Vector3::Forward;	
-	this->right = rotation_matrix * Vector3::Right;	
+	Quaternion world_rot_horr = Quaternion::Euler(0.0f, y, 0.0f);
 
-	this->right = Matrix3x3::RotationMatrix(Vector3::Down, HALF_PI) * forward;
+	rotation = rotation * rotation.Inverse() * world_rot_horr * rotation;
+	rotation = rotation * Quaternion::Euler(x, 0.0f, 0.0f);
+
+	UpdateDirections();
 }
