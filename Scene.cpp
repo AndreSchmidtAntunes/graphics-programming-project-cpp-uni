@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Camera.h"
 #include "GLExtras.h"
 #include "Mesh.h"
 #include "Transform.h"
@@ -30,7 +31,7 @@ void Scene::DrawFamilyHierarchy(Transform* const parent) const {
 	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
 
 	if (parent->mesh != nullptr && parent->is_mesh_enabled)
-		parent->mesh->DrawElements();
+		parent->mesh->DrawElements(parent->material, parent->texture);
 
 	for (auto child : parent->getChildren()) {
 		DrawFamilyHierarchy(child);

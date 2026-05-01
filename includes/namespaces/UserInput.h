@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+
+#include "Vector2.h"
 
 namespace UserInput {	
 
@@ -18,22 +21,14 @@ namespace UserInput {
 
 	enum MouseInputs : size_t { LMB, MMB, RMB };
 
-	class _vec2I {
-		int _x = 1;
-		int _y = 0;
-
-		friend void setVec2Values(_vec2I& vec2, int x, int y);
-
-	public:
-		const int& x = _x;
-		const int& y = _y;
-
-	} static mousePos;
+	const Vector2I& getMousePos();
+	const Vector2I getMouseDelta();
 
 	const int Init();
 
 	const bool IsKeyboardKeyDown(const unsigned char key);
 	const bool IsSpecialKeyDown(const SpecialInputs key);
+	const bool IsMouseDown(const MouseInputs key);
 
 	// Keyboard inputs
 

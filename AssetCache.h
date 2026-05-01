@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
+#include "Texture2D.h"
 
 #define _AssetCacheMethodsTemplate template <typename T> requires( std::common_type<T, Texture2D>::value || std::common_type<T, Mesh>::value )
 namespace AssetCache {

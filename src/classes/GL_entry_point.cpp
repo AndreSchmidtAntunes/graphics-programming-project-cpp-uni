@@ -9,76 +9,42 @@
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
 #include "Matrix4x4.h"
 #include "Mesh.h"
+#include "Material.h"
 #include "UserInput.h"
 #include "Vector2.h"
 #include <Windows.h>
-
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-#define REFRESH_RATE 16
-
-// using these functions to test input callback system
-
-	void PrintHello() {
-		std::cout << "HELLO!!!" << std::endl;
-	}
-
-	void PrintWorld() {
-		std::cout << "WOOORRLLDD!!!!!" << std::endl;
-	}
-
-	void PrintUP() {
-		std::cout << "UP!!!" << std::endl;
-	}
-
-	void PRINTKEY(size_t key, size_t x, size_t y) {
-		std::cout << ((key >= 100) ? key - 87 : key) << std::endl;
-	}
-
-	void DRAG() {
-		std::cout << "DRAGGING: (" << UserInput::mousePos.x << "\t, " << UserInput::mousePos.y << "\t)" << std::endl;
-	}
-
-	void MOUSEMOVE() {
-		std::cout << "MOUSING:  (" << UserInput::mousePos.x << "\t, " << UserInput::mousePos.y << "\t)" << std::endl;
-	}
 
 	static const double PI = 3.141592653589793;
 	static const double PHI = 1.570796326794897;
 	static const double RAD2DEG = 57.29577951308232;
 	static const double DEG2RAD = 0.017453292519943;
 
-#define ROTATION_SPEED 90.0f
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
 
+#define ROTATION_SPEED 15.0f
 void RotateRight() { CAMERA.RotateFirstPerson(Vector3::Right * ROTATION_SPEED * DELTATIME); }
 void RotateDown()  { CAMERA.RotateFirstPerson(Vector3::Down * ROTATION_SPEED * DELTATIME);	}
 void RotateLeft()  { CAMERA.RotateFirstPerson(Vector3::Left * ROTATION_SPEED * DELTATIME);	}
 void RotateUp()	   { CAMERA.RotateFirstPerson(Vector3::Up * ROTATION_SPEED * DELTATIME);	}
 
-#define MOVESPEED 4.0f
+void CameraDragRotate() {
+	if (UserInput::IsMouseDown(UserInput::MouseInputs::RMB)) {
+		CAMERA.RotateFirstPerson(Vector3(UserInput::getMouseDelta()) * ROTATION_SPEED * DELTATIME);
+	}
+}
 
+#define MOVESPEED 4.0f
 void MoveForward() { CAMERA.position -= CAMERA.forward * MOVESPEED * DELTATIME; }
 void MoveBack()    { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME; }
 void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
-void MoveUp()	   { CAMERA.position += CAMERA.up * MOVESPEED * DELTATIME;		}
-void MoveDown()	   { CAMERA.position -= CAMERA.up * MOVESPEED * DELTATIME;		}
 
-static Texture2D* texture;
-
+static Scene* scene;
 static Transform* transform_A;
 static Transform* transform_B;
 static Transform* transform_C;
 static Transform* transform_D;
-
-static Scene* scene;
 
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
 
@@ -93,33 +59,22 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	GLUTCallbacks::Init(this);
 
+	// --- User Input --- //
+
 	UserInput::Init();
 
-	// below block is to test new input callback system
+	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::LEFT, RotateLeft);
+	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::UP, RotateUp);
+	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::RIGHT, RotateRight);
+	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::DOWN, RotateDown);
 
-		UserInput::AddKeyboardDownCallback('h', PrintHello);
-		UserInput::AddKeyboardDownCallback('h', PrintHello);
+	UserInput::AddKeyboardActiveCallback('d', MoveRight);
+	UserInput::AddKeyboardActiveCallback('a', MoveLeft);
+	UserInput::AddKeyboardActiveCallback('w', MoveForward);
+	UserInput::AddKeyboardActiveCallback('s', MoveBack);
 
-		UserInput::RemoveKeyboardDownCallback('h', PrintHello);
+	UserInput::AddMouseDragCallback(CameraDragRotate);
 
-		UserInput::AddKeyboardDownCallback('h', PrintWorld);
-
-		UserInput::AddSpecialDownCallback(UserInput::SpecialInputs::LEFT_SHIFT, PrintUP);
-
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::LEFT, RotateLeft);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::UP, RotateUp);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::RIGHT, RotateRight);
-		UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::DOWN, RotateDown);
-
-		UserInput::AddKeyboardActiveCallback('d', MoveRight);
-		UserInput::AddKeyboardActiveCallback('a', MoveLeft);
-		UserInput::AddKeyboardActiveCallback('w', MoveForward);
-		UserInput::AddKeyboardActiveCallback('s', MoveBack);
-
-		UserInput::AddMouseDragCallback(DRAG);
-		UserInput::AddMouseMoveCallback(MOUSEMOVE);
-
-	glutTimerFunc(REFRESH_RATE, GLUTCallbacks::Timer, REFRESH_RATE);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
 	glEnable(GL_LIGHTING);
@@ -136,29 +91,38 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 		gluPerspective(80, 1, 0.1, 10000.0);
 	glMatrixMode(GL_MODELVIEW);
 
-	/// TODO: the gnererated texture still isnt getting a unique id (always 0)
-	texture = new Texture2D("textures/penguins.raw", 512, 512);
-	Mesh* suzanne_mesh = new Mesh("models/suzanne.obj", texture);
-	Mesh* cube_mesh = new Mesh("models/cube.obj", texture);
+	Texture2D* penguins_texture = new Texture2D("textures/penguins.raw", 512, 512);
+	Material* shiny_blue_material = new Material(Colour::Blue, Colour(0.75, 0.75, 0.75, 1), Colour::White, 1);
+	Material* matt_red_material = new Material(Colour::Red, Colour::Red, Colour::Red, 0.1);
+	Material* bight_green_material = new Material(Colour::Green, Colour::Green, Colour::White, 1);
+	Material* bight_magenta_material = new Material(Colour::Magenta, Colour::Magenta, Colour::White, 1);
 
-	scene = new Scene();
+	Mesh* suzanne_mesh = new Mesh("models/suzanne.obj");
+	Mesh* cube_mesh = new Mesh("models/cube.obj");
+
+	scene = new Scene;
 
 	transform_A = new Transform(scene->root, Vector3(5, -1, -5));
 	transform_A->setLocalScale(Vector3::One * 0.5);
 	transform_A->setMesh(suzanne_mesh);
+	transform_A->setMaterial(bight_green_material);
 
 	transform_B = new Transform(transform_A, Vector3(0, 0, -10));
-	transform_A->setLocalScale(Vector3::One * 10);
+	transform_B->setLocalScale(Vector3::One * 10);
 	transform_B->setMesh(cube_mesh);
+	transform_B->setMaterial(bight_magenta_material);
 
 	transform_C = new Transform(scene->root, Vector3(-3, -3, -4));
 	transform_C->setParent(transform_B); // changed C's parent from root to B.
-	transform_A->setLocalScale(Vector3::One * 0.2);
+	transform_C->setLocalScale(Vector3::One * 0.2);
+	transform_C->setMaterial(matt_red_material);
 	transform_C->setMesh(suzanne_mesh);
 
 	transform_D = new Transform(scene->root);
 	transform_D->setLocalPosition(Vector3::Back * 5 + Vector3::Left * 2);
 	transform_D->setMesh(suzanne_mesh);
+	transform_D->setTexture(penguins_texture);
+	transform_D->setMaterial(shiny_blue_material);
 
 // hierarchy:
 	//	root
@@ -167,12 +131,20 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	//	║		╚══ C
 	//	╚══	D
 
+	glutTimerFunc(16, GLUTCallbacks::Timer, 16);
 	glutMainLoop();
 }
 
 GL_entry_point::~GL_entry_point(void) {
 	delete camera;
 }
+
+/// TODO: let player click to select a transform
+/// TODO: key which sets forces the user to look at the selected transform
+/// TODO: make lights a transform derived class and add light support to the scene graph
+/// TODO: display text showing the current transform's properties, and current fps
+/// TODO: a visual representation of which transform is selected
+/// TODO: a visual representation of which transoform the user is hovering over
 
 void GL_entry_point::Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clears out the last frame

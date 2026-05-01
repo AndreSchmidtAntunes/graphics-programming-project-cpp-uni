@@ -23,7 +23,7 @@ void Camera::UpdateDirections() {
 }
 
 void Camera::RotateFirstPerson(const Vector3& look_dir) {
-	float x =  look_dir.y * DEG2RAD;
+	float x =  -look_dir.y * DEG2RAD;
 	float y =  -look_dir.x * DEG2RAD;
 
 	Quaternion world_rot_horr = Quaternion::Euler(0.0f, y, 0.0f);

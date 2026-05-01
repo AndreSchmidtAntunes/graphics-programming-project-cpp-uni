@@ -1,8 +1,8 @@
 #include "AssetCache.h"
 
-#include <vector>
 #include <map>
 #include <typeindex>
+#include <vector>
 
 namespace AssetCache {
 	const static std::map<std::type_index, std::vector<void*>*> asset_cache_map {

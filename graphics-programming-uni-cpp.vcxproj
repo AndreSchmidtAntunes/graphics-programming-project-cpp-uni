@@ -23,6 +23,7 @@
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\cube.obj">
@@ -62,6 +63,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

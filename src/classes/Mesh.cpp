@@ -5,6 +5,9 @@
 #include <sstream>
 #include <vector>
 
+#include "Camera.h"
+
+
 #define TYPE GLfloat
 #define DEFAULT_VERT_COLOUR Colour::Red
 
@@ -13,20 +16,20 @@ static const double PHI = 1.570796326794897;
 static const double RAD2DEG = 57.29577951308232;
 static const double DEG2RAD = 0.017453292519943;
 
-Mesh::Mesh(const Vector3* vertices, const size_t vertices_count, const GLuint* indices, const size_t indices_count, const Vector3* normals, const size_t normals_count, const TexCoord* tex_coords, const size_t tex_coords_count, const Colour* colours, const size_t colours_count, const Texture2D* texture) {
+Mesh::Mesh(const Vector3* vertices, const size_t vertices_count, const size_t* indices, const size_t indices_count, const Vector3* normals, const size_t normals_count, const TexCoord* tex_coords, const size_t tex_coords_count, const Colour* colours, const size_t colours_count, const Texture2D* texture) {
 	
 	this->vertices_size = vertices_count;
 	this->vertices = new vertex_data[vertices_count];
 
 	this->vert_indices_count = indices_count;
-	this->vert_indices = new GLuint[indices_count];
+	this->vert_indices = new size_t[indices_count];
 
 	for (size_t vert = 0; vert < vertices_count; vert++) {
 		this->vertices[vert] = vertex_data(vertices[vert], tex_coords[vert], normals[vert]);
 	}
 	if (normals != nullptr && normals_count > 0) {
 		this->has_normals = true;
-	}
+	} 
 	if (tex_coords != nullptr && tex_coords_count > 0) {
 		this->has_tex_coords = true;
 	}
@@ -40,7 +43,7 @@ Mesh::~Mesh() {
 	delete[vert_indices_count] vert_indices;
 }
 
-bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
+bool Mesh::LoadFromFile(const char* file_name) {
 
 	/// TODO: add svg support or whatever its called
 
@@ -55,8 +58,6 @@ bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
 		std::cerr << "Error opening file: " << file_name << std::endl;
 		return false;
 	}
-
-	this->texture = texture;
 
 	std::string line = "";
 
@@ -180,7 +181,7 @@ bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
 	}
 
 	vert_indices_count = l_vert_indices.size();
-	vert_indices = new GLuint[vert_indices_count]{};
+	vert_indices = new size_t[vert_indices_count]{};
 
 	this->vertices = new vertex_data[l_vertices.size()]{ };
 
@@ -203,16 +204,18 @@ bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
 }
 
 #include "GLExtras.h"
+#include "Texture2D.h"
+#include "Material.h"
 
 #define VERTEX_DATA_STRIDE 48
 
-void Mesh::DrawElements() const {
+void Mesh::DrawElements(Material* const material, Texture2D* const texture) const {
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, VERTEX_DATA_STRIDE, vertices );
 
 		glShadeModel(shade_smooth ? GL_SMOOTH : GL_FLAT);
 
-		if (has_tex_coords) {
+		if (has_tex_coords && texture) {
 			glBindTexture(GL_TEXTURE_2D, texture->getID());
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glTexCoordPointer(2, GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 12);
@@ -221,6 +224,10 @@ void Mesh::DrawElements() const {
 		if (has_normals) {
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glNormalPointer(GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 20);
+		}
+
+		if (has_tex_coords && has_normals && material) {
+			Material::setMatrial(material);
 		}
 
 		if (has_colours) {
@@ -287,3 +294,7 @@ void Mesh::Render(Camera* const camera, const Vector3& position, const Quaternio
 	}
 	glPopMatrix();
 }
+
+vertex_data::vertex_data(const Vector3& position, const TexCoord& tex_coord, const Vector3& normal, const Colour& colour) :
+	position(position), tex_coord(tex_coord), normal(normal), colour(colour)
+{}

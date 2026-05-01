@@ -5,7 +5,16 @@
 
 class Camera {
 public:
+
 	Vector3 position, euler_rotation;
+
+	union {
+		Vector3 eye;
+		Vector3 forward;
+	};
+	Vector3 up, right;
+
+	Quaternion rotation;
 
 	Camera(Vector3 eye, Vector3 position, Vector3 up, Vector3 right) : eye(eye), position(position), up(up), right(right) {}
 	
@@ -19,11 +28,5 @@ public:
 
 //private:
 
-	union {
-		Vector3 eye;
-		Vector3 forward;
-	};
-	Vector3 up, right;
 
-	Quaternion rotation;
 };	

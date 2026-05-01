@@ -10,6 +10,8 @@
 struct Matrix4x4;
 struct Scene;
 class Mesh;
+class Material;
+class Texture2D;
 
 class Transform {
 
@@ -23,6 +25,8 @@ class Transform {
 
 	
 	Mesh* mesh = nullptr;
+	Texture2D* texture = nullptr;
+	Material* material = nullptr;
 
 	Scene* scene; // scene which this transform is inside of
 	const bool is_root = false;
@@ -76,6 +80,8 @@ public:
 	inline void setParent(Transform* const parent) { setParent(parent, -1); }
 
 	inline void setMesh(Mesh* const mesh) { this->mesh = mesh; }
+	inline void setTexture(Texture2D* const texture) { this->texture = texture; }
+	inline void setMaterial(Material* const material) { this->material = material; }
 
 	inline const Vector3 getWorldPosition() const;
 	inline const Quaternion getWorldRotation() const;

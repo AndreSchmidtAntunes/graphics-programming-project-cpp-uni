@@ -103,39 +103,51 @@ namespace UserInput {
 
 	void MouseCallback(int button, int state, int mouse_x, int mouse_y) {
 
-		size_t index = -1;
+		size_t state_index;
 		switch (button) {
-			case GLUT_LEFT_BUTTON: index = 0; break;
-			case GLUT_MIDDLE_BUTTON: index = 1; break;
-			case GLUT_RIGHT_BUTTON: index = 2; break;
+		case GLUT_LEFT_BUTTON: state_index = 0; break;
+		case GLUT_MIDDLE_BUTTON: state_index = 1; break;
+		case GLUT_RIGHT_BUTTON: state_index = 2; break;
 		}
 
 		bool is_down = !state; // mouse state has UP as 1 and DOWN as 0, so invert it
 
-		if (inputState.mouse[index] != is_down) { // run update of mouse input state if it has changed
+		if (inputState.mouse[state_index] != is_down) { // run update of mouse input state if it has changed
 			
 			auto& dict = is_down ? mouse_down_callback_dict : mouse_up_callback_dict;
 
-			RunCallbacksInPtrVector(dict[index]);
-			inputState.mouse.set(index, is_down);
+			RunCallbacksInPtrVector(dict[state_index]);
+			inputState.mouse.set(state_index, is_down);
 		}
 	}
 
-	void setVec2Values(_vec2I& vec2, int x, int y) {
-		vec2._x = x;
-		vec2._y = y;
+	Vector2I _oldMousePos;
+	Vector2I _mousePos;
+
+	const Vector2I& getMousePos() {
+		return _mousePos;
+	}
+
+	const Vector2I getMouseDelta() {
+		return _mousePos - _oldMousePos;
 	}
 
 	void MouseDragCallback(int mouse_x, int mouse_y) {
-		setVec2Values(mousePos, mouse_x, mouse_y);
+		_mousePos.x = mouse_x;
+		_mousePos.y = mouse_y;
 		RunCallbacksInPtrVector(mouse_drag_callbacks);
+		_oldMousePos = _mousePos;
 	}
 
 	void MouseMoveCallback(int mouse_x, int mouse_y) {
-		setVec2Values(mousePos, mouse_x, mouse_y);
+		_mousePos.x = mouse_x;
+		_mousePos.y = mouse_y;
 		RunCallbacksInPtrVector(mouse_move_callbacks);
+		_oldMousePos = _mousePos;
 	}
 	
+
+
 	const int Init() {
 		if (glutGet(GLUT_INIT_STATE) == 1 && !has_namespace_been_initialised) {
 

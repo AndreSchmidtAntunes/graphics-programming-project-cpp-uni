@@ -19,8 +19,8 @@ struct Light {
 	}
 
 	static void setLight(Light *light) {
-		glLightfv(GL_LIGHT0, GL_AMBIENT,   &light->ambient[0]);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE,   &light->diffuse[0]);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, &light->ambient[0]);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, &light->diffuse[0]);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, &light->specular[0]);
 		glLightfv(GL_LIGHT0, GL_POSITION, &light->position[0]);
 	}

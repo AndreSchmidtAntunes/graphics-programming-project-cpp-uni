@@ -45,16 +45,18 @@ const bool Texture2D::LoadFile(const char* file_path, const size_t width, const 
 
     glGenTextures(1, &_ID);
 
-    if (!glIsTexture(_ID)) {
-        std::cerr << "[GL] Failed to generate texture name for file: " << file_path << std::endl;
-        return false;
-    }
 
     glBindTexture(GL_TEXTURE_2D, _ID);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, tempTextureData);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tempTextureData);
+
+
+    if (!glIsTexture(_ID)) {
+        std::cerr << "[GL] Failed to generate texture name for file: " << file_path << std::endl;
+        return false;
+    }
 
     delete[fileSize] tempTextureData;
 

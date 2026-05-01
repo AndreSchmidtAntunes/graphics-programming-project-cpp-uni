@@ -75,6 +75,12 @@
     <ClCompile Include="AssetCache.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\teapot.obj">
@@ -151,14 +157,17 @@
     <ClInclude Include="Lighting.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="AssetCache.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
