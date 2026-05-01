@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Vector3.h"
-#include "Vector2.h"
-#include "Matrix3x3.h"
 #include "Quaternion.h"
-#include "UserInput.h"
-#include <type_traits>
 
 class Camera {
 public:
@@ -16,7 +12,7 @@ public:
 	Camera(void) : Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right) {}
 	~Camera(void) {}
 
-	void RotateFirstPerson(const Vector3& rotation);
+	void RotateFirstPerson(const Vector3& look_dir);
 	void Rotate(const Quaternion& rotation);
 
 	void UpdateDirections();

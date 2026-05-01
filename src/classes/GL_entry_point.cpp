@@ -1,15 +1,16 @@
 ﻿#include "GL_entry_point.h"
 
+#include "AssetCache.h"
+#include "Scene.h"
+#include "Transform.h"
 #include "Camera.h"
 #include "common.h" 
 #include "GLExtras.h"
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
 #include "Matrix4x4.h"
-#include "Vector2.h"
-#include "Scene.h"
 #include "Mesh.h"
 #include "UserInput.h"
-#include "AssetCache.h"
+#include "Vector2.h"
 #include <Windows.h>
 
 const char* vertexShaderSource = "#version 330 core\n"

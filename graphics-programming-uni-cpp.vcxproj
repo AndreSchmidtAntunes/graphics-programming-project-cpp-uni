@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetCache.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="src\classes\Camera.cpp" />
     <ClCompile Include="src\classes\GL_entry_point.cpp" />
     <ClCompile Include="src\classes\Mesh.cpp" />

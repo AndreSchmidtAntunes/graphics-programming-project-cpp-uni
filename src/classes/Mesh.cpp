@@ -1,10 +1,9 @@
 #include "Mesh.h"
 
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
-#include <iostream>
-#include "Texture2D.h"
 
 #define TYPE GLfloat
 #define DEFAULT_VERT_COLOUR Colour::Red
@@ -40,8 +39,6 @@ Mesh::~Mesh() {
 	delete[vertices_size] vertices;
 	delete[vert_indices_count] vert_indices;
 }
-
-
 
 bool Mesh::LoadFromFile(const char* file_name, const Texture2D* texture) {
 

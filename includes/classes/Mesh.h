@@ -2,7 +2,6 @@
 
 #include "Camera.h"
 #include "Colour.h"
-#include "GLLibs.h"
 #include "Texture2D.h"
 #include "Vector3.h"
 #include "Quaternion.h"
