@@ -11,19 +11,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AssetCache.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\backends\imgui_impl_glut.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\backends\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\imgui.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="includes\_Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\classes\Camera.cpp" />
     <ClCompile Include="src\classes\GL_entry_point.cpp" />
     <ClCompile Include="src\classes\Mesh.cpp" />
+    <ClCompile Include="src\classes\Scene.cpp" />
     <ClCompile Include="src\classes\Transform.cpp" />
+    <ClCompile Include="src\classes\User.cpp" />
     <ClCompile Include="src\FastInvSqrt.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\namespaces\AssetCache.cpp" />
     <ClCompile Include="src\namespaces\GLExtras.cpp" />
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
-    <ClCompile Include="Texture2D.cpp" />
-    <ClCompile Include="User.cpp" />
+    <ClCompile Include="src\structs\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\cube.obj">
@@ -40,30 +46,38 @@
     </Object>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssetCache.h" />
     <ClInclude Include="includes\classes\Camera.h" />
     <ClInclude Include="includes\classes\GL_entry_point.h" />
     <ClInclude Include="includes\classes\Mesh.h" />
+    <ClInclude Include="includes\classes\Scene.h" />
     <ClInclude Include="includes\classes\Transform.h" />
+    <ClInclude Include="includes\classes\User.h" />
     <ClInclude Include="includes\common.h" />
     <ClInclude Include="includes\FastInvSqrt.h" />
     <ClInclude Include="includes\GLLibs.h" />
+    <ClInclude Include="includes\namespaces\AssetCache.h" />
     <ClInclude Include="includes\namespaces\GLExtras.h" />
     <ClInclude Include="includes\namespaces\GLUTCallbacks.h" />
     <ClInclude Include="includes\namespaces\UserInput.h" />
     <ClInclude Include="includes\namespaces\Vector.h" />
     <ClInclude Include="includes\structs\Colour.h" />
+    <ClInclude Include="includes\structs\Lighting.h" />
+    <ClInclude Include="includes\structs\Material.h" />
     <ClInclude Include="includes\structs\Matrix3x3.h" />
     <ClInclude Include="includes\structs\Matrix4x4.h" />
+    <ClInclude Include="includes\structs\Texture2D.h" />
     <ClInclude Include="includes\structs\Vector2.h" />
     <ClInclude Include="includes\structs\Quaternion.h" />
     <ClInclude Include="includes\structs\Vector3.h" />
     <ClInclude Include="includes\structs\Vector4.h" />
-    <ClInclude Include="Lighting.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Texture2D.h" />
-    <ClInclude Include="User.h" />
+    <ClInclude Include="includes\_Libraries\imgui\backends\imgui_impl_glut.h" />
+    <ClInclude Include="includes\_Libraries\imgui\backends\imgui_impl_opengl2.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imconfig.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imgui.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="includes\_Libraries\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
@@ -104,50 +118,59 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(ProjectDir);$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(ProjectDir)src\namespaces;$(ProjectDir)src\structs;$(ProjectDir)src\classes;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\classes;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\structs</IncludePath>
     <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)$(LibraryPath)</LibraryPath>
+    <SourcePath>($ProjectDir)src;($ProjectDir)src\classes;($ProjectDir)src\namespaces;($ProjectDir)src\structs;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\_Libraries;$(ProjectDir)includes\classes;$(ProjectDir)includes\structs;$(ProjectDir)includes\namespaces;$(IncludePath)</IncludePath>
-    <SourcePath>$(ProjectDir)src;$(ProjectDir)src\namespaces;$(ProjectDir)src\structs;$(ProjectDir)src\classes;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)includes;$(ProjectDir)includes\classes;$(ProjectDir)includes\namespaces;$(ProjectDir)includes\structs</IncludePath>
     <OutDir>$(SolutionDir)Builds\$(Configuration)\</OutDir>
+    <SourcePath>($ProjectDir)src;($ProjectDir)src\classes;($ProjectDir)src\namespaces;($ProjectDir)src\structs;$(SourcePath)</SourcePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>
+      </SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>Default</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(GLUT_INCLUDE_DIR);$(ProjectDir)includes\_Libraries\;$(ProjectDir)includes\_Libraries\imgui;$(ProjectDir)includes\_Libraries\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);opengl32.lib;freeglut.lib</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(GLUT_ROOT_PATH)\lib;$(ProjectDir)includes\_Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(GLUT_INCLUDE_DIR);$(ProjectDir)includes\_Libraries\;$(ProjectDir)includes\_Libraries\imgui;$(ProjectDir)includes\_Libraries\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);opengl32.lib;freeglut.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(GLUT_ROOT_PATH)\lib;$(ProjectDir)includes\_Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

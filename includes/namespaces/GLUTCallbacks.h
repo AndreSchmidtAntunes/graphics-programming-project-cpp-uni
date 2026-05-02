@@ -10,7 +10,7 @@ namespace GLUTCallbacks {
 
 	GL_entry_point& GetEntryPoint();
 
-	void Display();
+	void UpdateLoop();
 
 	void Timer(int refreshRate);
 }

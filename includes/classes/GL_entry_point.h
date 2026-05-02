@@ -1,6 +1,7 @@
 #pragma once
 
 class Camera;
+struct ImGuiIO;
 
 class GL_entry_point {
 public:
@@ -13,8 +14,8 @@ public:
 
 	void Update();
 
-	void Display();
-	void Draw();
+	void Render();
+	void UI(ImGuiIO& io);
 
 //private:
 	Camera* camera;

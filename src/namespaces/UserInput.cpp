@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <unordered_map>
+#include "imgui_impl_glut.h"
 
 #define intptr uintptr_t
 #define intptr_vec std::vector<intptr>
@@ -60,6 +61,10 @@ namespace UserInput {
 	// Keyboard callbacks
 
 	void KeyboardDownCallback(unsigned char key, int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_KeyboardUpFunc(key, mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard) return;
+
 		if (inputState.keyboard[key] == 0) {
 			RunCallbacksInPtrVector(keyboard_down_callback_dict[key]);
 			inputState.keyboard.set(key);
@@ -67,6 +72,10 @@ namespace UserInput {
 	}
 
 	void KeyboardUpCallback(unsigned char key, int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_KeyboardFunc(key, mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard) return;
+
 		if (inputState.keyboard[key] == 1) {
 			RunCallbacksInPtrVector(keyboard_up_callback_dict[key]);
 			inputState.keyboard.reset(key);
@@ -75,6 +84,9 @@ namespace UserInput {
 
 	// Special callbacks
 	void SpecialDownCallback(int key, int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_SpecialFunc(key, mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard) return;
 
 		// For some reason all other special keys 
 		// after number 12 (being the F12 key) continue from 100 onwards, 
@@ -90,6 +102,9 @@ namespace UserInput {
 	}
 
 	void SpecialUpCallback(int key, int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_SpecialUpFunc(key, mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard) return;
 
 		if (key >= 100) key -= 87;
 
@@ -102,6 +117,9 @@ namespace UserInput {
 	}
 
 	void MouseCallback(int button, int state, int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_MouseFunc(button, state, mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureMouse) return;
 
 		size_t state_index;
 		switch (button) {
@@ -133,16 +151,22 @@ namespace UserInput {
 	}
 
 	void MouseDragCallback(int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_MotionFunc(mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+
 		_mousePos.x = mouse_x;
 		_mousePos.y = mouse_y;
-		RunCallbacksInPtrVector(mouse_drag_callbacks);
+		if (!io.WantCaptureMouse) RunCallbacksInPtrVector(mouse_drag_callbacks);
 		_oldMousePos = _mousePos;
 	}
 
 	void MouseMoveCallback(int mouse_x, int mouse_y) {
+		ImGui_ImplGLUT_MotionFunc(mouse_x, mouse_y);
+		ImGuiIO& io = ImGui::GetIO();
+
 		_mousePos.x = mouse_x;
 		_mousePos.y = mouse_y;
-		RunCallbacksInPtrVector(mouse_move_callbacks);
+		if (! io.WantCaptureMouse) RunCallbacksInPtrVector(mouse_move_callbacks);
 		_oldMousePos = _mousePos;
 	}
 	

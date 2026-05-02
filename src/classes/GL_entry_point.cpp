@@ -1,18 +1,22 @@
 ﻿#include "GL_entry_point.h"
 
 #include "AssetCache.h"
-#include "Scene.h"
-#include "Transform.h"
 #include "Camera.h"
 #include "common.h" 
 #include "GLExtras.h"
 #include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
+#include "Material.h"
 #include "Matrix4x4.h"
 #include "Mesh.h"
-#include "Material.h"
+#include "Scene.h"
+#include "Transform.h"
 #include "UserInput.h"
 #include "Vector2.h"
 #include <Windows.h>
+
+#include "imgui.h"
+#include "imgui_impl_glut.h"
+#include "imgui_impl_opengl2.h"
 
 	static const double PI = 3.141592653589793;
 	static const double PHI = 1.570796326794897;
@@ -50,12 +54,25 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	rot = 0.0f;
 
-	glutInitWindowSize(800, 800);
-
 	glutInit(&argc, argv);
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("Graphics Programming App");
-		
-	glutDisplayFunc(GLUTCallbacks::Display);
+	glutDisplayFunc(GLUTCallbacks::UpdateLoop);
+	glutTimerFunc(16, GLUTCallbacks::Timer, 16);
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGui::StyleColorsDark();
+	
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3);
+
+	ImGui_ImplGLUT_Init();
+	ImGui_ImplOpenGL2_Init();
+	ImGui_ImplGLUT_InstallFuncs();
 
 	GLUTCallbacks::Init(this);
 
@@ -74,8 +91,6 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	UserInput::AddKeyboardActiveCallback('s', MoveBack);
 
 	UserInput::AddMouseDragCallback(CameraDragRotate);
-
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -130,12 +145,16 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	//	║	╚══	B
 	//	║		╚══ C
 	//	╚══	D
-
-	glutTimerFunc(16, GLUTCallbacks::Timer, 16);
+		
 	glutMainLoop();
 }
 
 GL_entry_point::~GL_entry_point(void) {
+
+	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplGLUT_Shutdown();
+	ImGui::DestroyContext();
+
 	delete camera;
 }
 
@@ -146,25 +165,43 @@ GL_entry_point::~GL_entry_point(void) {
 /// TODO: a visual representation of which transform is selected
 /// TODO: a visual representation of which transoform the user is hovering over
 
-void GL_entry_point::Display() {
+void GL_entry_point::Render() {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clears out the last frame
 
-	Draw();	// Draw vertices: 
+
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplGLUT_NewFrame();
+	ImGui::NewFrame();
+	ImGuiIO& io = ImGui::GetIO();
+	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
+
+	UI(io);
+	ImGui::Render();
+	scene->Draw(camera);
+
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+
 	glFlush(); // Passes the scene draw to the graphics card
 	glutSwapBuffers();
+	glutPostRedisplay();
 }
 
-void GL_entry_point::Draw() {
-	//mesh->Render(camera, Vector3(0, 0, -5), Vector3::Zero);
-	transform_A->setLocalRotation(Quaternion::Euler(0.0, rot * DEG2RAD, 0.0));
+static bool show_fps = true;
 
-	transform_B->setLocalRotation(Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0));
-	transform_B->setLocalScale(Vector3::One * (sin(rot * DEG2RAD) + 1.5f));
-	scene->Draw(camera);
+void GL_entry_point::UI(ImGuiIO& io) {
+	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
+	ImGui::Begin("Frame data", &show_fps,  ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS) ", deltaTime, 1.0f / deltaTime);
+	ImGui::End();
 }
 
 void GL_entry_point::Update() {
 	rot += 1.0f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
+
+	transform_A->setLocalRotation(Quaternion::Euler(0.0, rot * DEG2RAD, 0.0));
+	transform_B->setLocalRotation(Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0));
+	transform_B->setLocalScale(Vector3::One * (sin(rot * DEG2RAD) + 1.5f));
 }

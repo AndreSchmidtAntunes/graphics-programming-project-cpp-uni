@@ -18,9 +18,9 @@ namespace GLUTCallbacks {
 		}
 	}
 
-	void Display() {
+	void UpdateLoop() {
 		if (entry_point != nullptr) {
-			entry_point->Display();
+			entry_point->Render();
 		}
 	}
 
@@ -40,7 +40,5 @@ namespace GLUTCallbacks {
 
 		entry_point->deltaTime = (glutGet(GLUT_ELAPSED_TIME) - old_elapsed_time) * 0.001f;
 		old_elapsed_time = glutGet(GLUT_ELAPSED_TIME);
-
-		glutPostRedisplay();
 	}
 }	
