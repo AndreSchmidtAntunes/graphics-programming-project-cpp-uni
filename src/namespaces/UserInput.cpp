@@ -126,6 +126,7 @@ namespace UserInput {
 		case GLUT_LEFT_BUTTON: state_index = 0; break;
 		case GLUT_MIDDLE_BUTTON: state_index = 1; break;
 		case GLUT_RIGHT_BUTTON: state_index = 2; break;
+		default:return;
 		}
 
 		bool is_down = !state; // mouse state has UP as 1 and DOWN as 0, so invert it

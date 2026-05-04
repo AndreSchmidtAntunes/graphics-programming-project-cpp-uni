@@ -41,7 +41,6 @@ public:
 	void Render(Camera* const camera, const Vector3& position = Vector3::Zero, const Quaternion& rotation = Quaternion::Identity, const Vector3& scale = Vector3::One) const;
 
 	bool LoadFromFile(const char* file_name);
-	bool LoadFromFile(const char* file_name, const char* raw_texture_filename, const size_t texture_width, const size_t texture_height);
 
 	Mesh(const char* file_name) { LoadFromFile(file_name); }
 

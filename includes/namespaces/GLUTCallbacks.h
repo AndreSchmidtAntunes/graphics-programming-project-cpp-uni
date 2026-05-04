@@ -10,6 +10,8 @@ namespace GLUTCallbacks {
 
 	GL_entry_point& GetEntryPoint();
 
+	void Reshape(int x, int y);
+
 	void UpdateLoop();
 
 	void Timer(int refreshRate);

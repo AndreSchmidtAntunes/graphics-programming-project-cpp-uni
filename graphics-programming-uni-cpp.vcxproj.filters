@@ -40,6 +40,18 @@
     <Filter Include="Resource Files\Defines">
       <UniqueIdentifier>{8c58d274-9816-4f6f-b830-ca90db400ef0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Libraries">
+      <UniqueIdentifier>{68f3f2fd-8749-40b4-a7fa-789bba64b344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libraries\imgui">
+      <UniqueIdentifier>{ed720928-c9ef-43ad-a84e-b2b63e340f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries">
+      <UniqueIdentifier>{31966efe-0681-475c-9e3a-0eb2d4513892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\imgui">
+      <UniqueIdentifier>{8e47cd49-36fc-43f8-ac2c-bcc2af29b02e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\classes\Camera.cpp">
@@ -69,17 +81,35 @@
     <ClCompile Include="src\FastInvSqrt.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
+    <ClCompile Include="src\namespaces\ImGuiHelper.cpp">
+      <Filter>Source Files\Namespaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\structs\Texture2D.cpp">
       <Filter>Source Files\Structs</Filter>
     </ClCompile>
-    <ClCompile Include="AssetCache.cpp">
-      <Filter>Source Files\Structs</Filter>
+    <ClCompile Include="includes\_Libraries\imgui\imgui.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="User.cpp">
+    <ClCompile Include="includes\_Libraries\imgui\imgui_draw.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\_Libraries\imgui\backends\imgui_impl_glut.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\_Libraries\imgui\backends\imgui_impl_opengl2.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\_Libraries\imgui\imgui_tables.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\_Libraries\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\classes\Scene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Classes</Filter>
+    <ClCompile Include="src\namespaces\AssetCache.cpp">
+      <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,22 +181,46 @@
     <ClInclude Include="includes\FastInvSqrt.h">
       <Filter>Header Files\Namespaces</Filter>
     </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>Header Files\Structs</Filter>
-    </ClInclude>
-    <ClInclude Include="Lighting.h">
-      <Filter>Header Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="User.h">
-      <Filter>Header Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetCache.h">
+    <ClInclude Include="includes\namespaces\ImGuiHelper.h">
       <Filter>Header Files\Namespaces</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="includes\classes\Scene.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\namespaces\AssetCache.h">
+      <Filter>Header Files\Namespaces</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imconfig.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imgui.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\backends\imgui_impl_glut.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\backends\imgui_impl_opengl2.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imgui_internal.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imstb_rectpack.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imstb_textedit.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\imgui\imstb_truetype.h">
+      <Filter>Header Files\Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Texture2D.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Material.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\structs\Lighting.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>

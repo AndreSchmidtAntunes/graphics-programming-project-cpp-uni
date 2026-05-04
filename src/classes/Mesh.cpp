@@ -7,7 +7,6 @@
 
 #include "Camera.h"
 
-
 #define TYPE GLfloat
 #define DEFAULT_VERT_COLOUR Colour::Red
 

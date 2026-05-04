@@ -17,6 +17,7 @@
 #include "imgui.h"
 #include "imgui_impl_glut.h"
 #include "imgui_impl_opengl2.h"
+#include "ImGuiHelper.h"
 
 	static const double PI = 3.141592653589793;
 	static const double PHI = 1.570796326794897;
@@ -44,6 +45,8 @@ void MoveBack()    { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME; 
 void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 
+static Colour clear_colour;
+
 static Scene* scene;
 static Transform* transform_A;
 static Transform* transform_B;
@@ -56,23 +59,25 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(1500, 1000);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
 	glutCreateWindow("Graphics Programming App");
+
 	glutDisplayFunc(GLUTCallbacks::UpdateLoop);
 	glutTimerFunc(16, GLUTCallbacks::Timer, 16);
+	glutReshapeFunc(GLUTCallbacks::Reshape);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	ImGui::StyleColorsDark();
 	
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3);
+	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3);
 
 	ImGui_ImplGLUT_Init();
 	ImGui_ImplOpenGL2_Init();
-	ImGui_ImplGLUT_InstallFuncs();
 
 	GLUTCallbacks::Init(this);
 
@@ -99,12 +104,7 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-	glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glViewport(0, 0, 800, 800);
-		gluPerspective(80, 1, 0.1, 10000.0);
-	glMatrixMode(GL_MODELVIEW);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 	Texture2D* penguins_texture = new Texture2D("textures/penguins.raw", 512, 512);
 	Material* shiny_blue_material = new Material(Colour::Blue, Colour(0.75, 0.75, 0.75, 1), Colour::White, 1);
@@ -117,24 +117,24 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	scene = new Scene;
 
-	transform_A = new Transform(scene->root, Vector3(5, -1, -5));
-	transform_A->setLocalScale(Vector3::One * 0.5);
+	transform_A = new Transform("green suzanne", scene->root, Vector3(5, -1, -5));
+	transform_A->local_scale = Vector3::One * 0.5;
 	transform_A->setMesh(suzanne_mesh);
 	transform_A->setMaterial(bight_green_material);
 
-	transform_B = new Transform(transform_A, Vector3(0, 0, -10));
-	transform_B->setLocalScale(Vector3::One * 10);
+	transform_B = new Transform("cube", transform_A, Vector3(0, 0, -10));
+	transform_B->local_scale = Vector3::One * 10;
 	transform_B->setMesh(cube_mesh);
 	transform_B->setMaterial(bight_magenta_material);
 
-	transform_C = new Transform(scene->root, Vector3(-3, -3, -4));
+	transform_C = new Transform("red suzanne", scene->root, Vector3(-3, -3, -4));
 	transform_C->setParent(transform_B); // changed C's parent from root to B.
-	transform_C->setLocalScale(Vector3::One * 0.2);
+	transform_C->local_scale = Vector3::One * 0.2;
 	transform_C->setMaterial(matt_red_material);
 	transform_C->setMesh(suzanne_mesh);
 
-	transform_D = new Transform(scene->root);
-	transform_D->setLocalPosition(Vector3::Back * 5 + Vector3::Left * 2);
+	transform_D = new Transform("blue suzanne", scene->root);
+	transform_D->local_position = Vector3::Back * 5 + Vector3::Left * 2;
 	transform_D->setMesh(suzanne_mesh);
 	transform_D->setTexture(penguins_texture);
 	transform_D->setMaterial(shiny_blue_material);
@@ -163,22 +163,24 @@ GL_entry_point::~GL_entry_point(void) {
 /// TODO: make lights a transform derived class and add light support to the scene graph
 /// TODO: display text showing the current transform's properties, and current fps
 /// TODO: a visual representation of which transform is selected
-/// TODO: a visual representation of which transoform the user is hovering over
+/// TODO: a visual representation of which transform the user is hovering over
 
 void GL_entry_point::Render() {
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clears out the last frame
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+	ImGuiIO& io = ImGui::GetIO();
+	glViewport(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplGLUT_NewFrame();
 	ImGui::NewFrame();
-	ImGuiIO& io = ImGui::GetIO();
-	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
 
-	UI(io);
-	ImGui::Render();
+	ImGuiHelper::FPS(io, deltaTime);
+	ImGuiHelper::SceneTree(io, scene, &clear_colour);
+
 	scene->Draw(camera);
+
+	ImGui::Render();
 
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
@@ -187,21 +189,12 @@ void GL_entry_point::Render() {
 	glutPostRedisplay();
 }
 
-static bool show_fps = true;
-
-void GL_entry_point::UI(ImGuiIO& io) {
-	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
-	ImGui::Begin("Frame data", &show_fps,  ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS) ", deltaTime, 1.0f / deltaTime);
-	ImGui::End();
-}
-
 void GL_entry_point::Update() {
 	rot += 1.0f;
 	if (rot >= 360.0f)
 		rot = 0.0f;
 
-	transform_A->setLocalRotation(Quaternion::Euler(0.0, rot * DEG2RAD, 0.0));
-	transform_B->setLocalRotation(Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0));
-	transform_B->setLocalScale(Vector3::One * (sin(rot * DEG2RAD) + 1.5f));
+	transform_A->local_rotation = Quaternion::Euler(0.0, rot * DEG2RAD, 0.0);
+	transform_B->local_rotation = Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0);
+	transform_B->local_scale = Vector3::One * (sin(rot * DEG2RAD) + 1.5f);
 }

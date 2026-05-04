@@ -14,28 +14,26 @@ class Material;
 class Texture2D;
 
 class Transform {
-
-	Vector3 local_position = Vector3::Zero;
-	Quaternion local_rotation = Quaternion::Identity;
-	Vector3 local_scale = Vector3::One;
-
+	const char* name;
 	Transform* parent;
 	size_t child_index;
-	std::vector<Transform*> children{ };
-
+	std::vector<Transform*> children;
 	
 	Mesh* mesh = nullptr;
 	Texture2D* texture = nullptr;
 	Material* material = nullptr;
 
 	Scene* scene; // scene which this transform is inside of
+	int scene_transform_id; // the unique id assigned to the transform when added to a scene
 	const bool is_root = false;
 
 	constexpr Transform(Scene* const scene) :
 		scene(scene), 
+		scene_transform_id(0),
 		is_root(true), 
 		parent(nullptr),
-		child_index(0)
+		child_index(0),
+		name("root")
 	{} // used by the scene class to make a root transform 
 
 	friend class Scene;
@@ -49,14 +47,19 @@ class Transform {
 
 public:
 
+	Vector3 local_position = Vector3::Zero;
+	Quaternion local_rotation = Quaternion::Identity;
+	Vector3 local_scale = Vector3::One;
+
 	bool is_mesh_enabled = true;
 
 	static_assert(std::is_arithmetic<TYPE>::value,
 		"Transform: TYPE must be arithmetic!");
 
-	inline void setLocalPosition(const Vector3& position) { local_position = position; }
-	inline void setLocalRotation(const Quaternion& rotation) { local_rotation = rotation; }
-	inline void setLocalScale(const Vector3& scale) { local_scale = scale; }
+	inline void setName(const char* name) {
+		delete[] this->name;
+		this->name = name;
+	}
 
 	inline void setParent(Transform* const parent, const size_t index) {
 
@@ -70,33 +73,36 @@ public:
 		else
 			parent->children.insert(parent->children.begin() + index, this);
 		
-		this->parent = parent;
-
 		// Insert transform into new parent's child array
-
-
-		/// TODO: Test if the insert section works!!!
+		this->parent = parent;
 	}
+
 	inline void setParent(Transform* const parent) { setParent(parent, -1); }
 
 	inline void setMesh(Mesh* const mesh) { this->mesh = mesh; }
 	inline void setTexture(Texture2D* const texture) { this->texture = texture; }
 	inline void setMaterial(Material* const material) { this->material = material; }
 
-	inline const Vector3 getWorldPosition() const;
-	inline const Quaternion getWorldRotation() const;
+	inline const char* const getName() const { return name; }
 
-	inline constexpr const Vector3& getLocalScale() const { return local_scale; }
-	inline constexpr const Vector3& getLocalPosition() const { return local_position; }
-	inline constexpr const Quaternion& getLocalRotation() const { return local_rotation; }
+	const Vector3 getWorldPosition() const;
+	const Quaternion getWorldRotation() const;
 
 	inline constexpr Transform* const getParent() const { return parent; }
 	inline constexpr Scene* const getScene() const { return scene; }
+	inline constexpr const int& getSceneTransformID() const { return scene_transform_id; }
 	inline constexpr Transform* const getChild(const size_t index) const { return children[index]; }
 	inline constexpr const std::vector<Transform*>& getChildren() const { return children; }
 
 	inline constexpr const size_t getChildIndex() const { return child_index; };
 	inline constexpr const size_t childCount() const { return children.size(); }
+	inline constexpr const size_t descendantCount() const { 
+		size_t count = children.size();
+		for (auto child : children) {
+			count += child->descendantCount();
+		}
+		return count;
+	}
 
 	constexpr inline const bool getIsRoot() const { return is_root; }
 
@@ -106,25 +112,6 @@ public:
 
 	inline constexpr void Destroy() { this->~Transform(); }
 	
-	constexpr Transform(Transform* const parent, const size_t child_index, const Vector3& local_position = Vector3::Zero, const Quaternion& local_rotation = Quaternion::Identity, const Vector3& local_scale = Vector3::One)
-	:	parent(parent), local_position(local_position), local_rotation(local_rotation), local_scale(local_scale), is_root(false)
-	{
-		if (child_index >= parent->childCount()) {
-			this->child_index = parent->childCount();
-			parent->children.push_back(this);
-		}
-		else {
-			this->child_index = child_index;
-			parent->children.insert(parent->children.begin() + child_index, this);
-		}
-
-		this->scene = parent->scene;
-	};
-	constexpr Transform(Transform* const parent, const Vector3& local_position = Vector3::Zero, const Quaternion& local_rotation = Quaternion::Identity, const Vector3 & local_scale = Vector3::One)
-	:	parent(parent), local_position(local_position), local_rotation(local_rotation), local_scale(local_scale), is_root(false)
-	{
-		this->child_index = parent->childCount();
-		parent->children.push_back(this);
-		this->scene = parent->scene;
-	};
+	Transform(const char* name, Transform* const parent, const size_t child_index, const Vector3& local_position = Vector3::Zero, const Quaternion& local_rotation = Quaternion::Identity, const Vector3& local_scale = Vector3::One);
+	Transform(const char* name, Transform* const parent, const Vector3& local_position = Vector3::Zero, const Quaternion& local_rotation = Quaternion::Identity, const Vector3& local_scale = Vector3::One);
 };

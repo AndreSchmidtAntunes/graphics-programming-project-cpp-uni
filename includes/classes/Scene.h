@@ -2,14 +2,17 @@
 
 #include <vector>
 
-class Transform;
 class Camera;
+class Transform;
 
 class Scene {
+
 public:
 
 	// the overarching parent transform of the scene
 	Transform* const root;
+
+	Transform* focused_transform = nullptr;
 
 	Scene(void);
 	~Scene(void);
@@ -25,4 +28,6 @@ public:
 	void DrawFamilyHierarchy(Transform* const parent) const;
 
 	void Draw(Camera* const camera) const;
+
+	const int GetNextAvailableObjectID() const;
 };

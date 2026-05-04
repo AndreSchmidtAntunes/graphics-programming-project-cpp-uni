@@ -2,6 +2,7 @@
 
 class Camera;
 struct ImGuiIO;
+class Scene;
 
 class GL_entry_point {
 public:
@@ -13,10 +14,7 @@ public:
 	~GL_entry_point(void);
 
 	void Update();
-
 	void Render();
-	void UI(ImGuiIO& io);
 
-//private:
 	Camera* camera;
 };
