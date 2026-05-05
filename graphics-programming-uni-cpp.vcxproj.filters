@@ -111,6 +111,9 @@
     <ClCompile Include="src\namespaces\AssetCache.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
+    <ClCompile Include="src\classes\Basic_Transform.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\teapot.obj">
@@ -220,8 +223,11 @@
     <ClInclude Include="includes\structs\Material.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="includes\classes\Basic_Transform.h">
+      <Filter>Header Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="includes\structs\Lighting.h">
-      <Filter>Header Files\Structs</Filter>
+      <Filter>Header Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

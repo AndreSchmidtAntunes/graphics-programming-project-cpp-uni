@@ -5,7 +5,7 @@
 #include "Quaternion.h"
 
 struct ImGuiIO;
-class Transform;
+class Basic_Transform;
 class Scene;
 
 namespace ImGuiHelper {
@@ -22,6 +22,6 @@ void DrawImGuiQuaternion(Quaternion& quat, const char* label, const char* w_labe
 
 void SceneTree(ImGuiIO& io, Scene* const scene, Colour* bg_colour = nullptr);
 
-void DrawImGuiTransformFamily(Transform* const transform, int* camera_following_radio_value, int* camera_following_radio_index);
+void DrawImGuiTransformFamily(Basic_Transform* transform, int* camera_following_radio_value);
 
 } // namespace ImGuiHelper

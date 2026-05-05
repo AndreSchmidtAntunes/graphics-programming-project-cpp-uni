@@ -52,7 +52,6 @@ void Camera::DrawScene() const {
 
 	GLExtras::LookAt(position, camera_target, up);
 
-
 	for (auto child : _scene->root->getChildren()) {
 		DrawFamilyHierarchy(child);
 	}
@@ -71,10 +70,9 @@ void Camera::DrawFamilyHierarchy(const Basic_Transform* const parent) const {
 	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
 
 	// switch case for drawing light transform and model transform
-
-	if (parent->getMesh() != nullptr && parent->is_mesh_enabled)
-		parent->getMesh()->DrawElements(parent->getMaterial(), parent->getTexture());
-
+	
+	parent->Draw();
+	
 	for (auto child : parent->getChildren()) {
 		DrawFamilyHierarchy(child);
 	}
@@ -83,7 +81,7 @@ void Camera::DrawFamilyHierarchy(const Basic_Transform* const parent) const {
 
 void Camera::RotateFirstPerson(const Vector3& look_dir) {
 
-	if (isTargetSelected()) return; // dont allow rotating the camera if it is locked on an object
+	if (isTargetSelected()) return; // don't allow rotating the camera if it is locked on an object
 
 	float x =  -look_dir.y * DEG2RAD;
 	float y =  -look_dir.x * DEG2RAD;

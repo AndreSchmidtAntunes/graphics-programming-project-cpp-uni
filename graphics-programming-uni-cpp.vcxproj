@@ -17,6 +17,7 @@
     <ClCompile Include="includes\_Libraries\imgui\imgui_draw.cpp" />
     <ClCompile Include="includes\_Libraries\imgui\imgui_tables.cpp" />
     <ClCompile Include="includes\_Libraries\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\classes\Basic_Transform.cpp" />
     <ClCompile Include="src\classes\Camera.cpp" />
     <ClCompile Include="src\classes\GL_entry_point.cpp" />
     <ClCompile Include="src\classes\Mesh.cpp" />
@@ -46,6 +47,7 @@
     </Object>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\classes\Basic_Transform.h" />
     <ClInclude Include="includes\classes\Camera.h" />
     <ClInclude Include="includes\classes\GL_entry_point.h" />
     <ClInclude Include="includes\classes\Mesh.h" />

@@ -31,17 +31,14 @@ namespace ImGuiHelper {
 			glClearColor((*bg_colour).r, (*bg_colour).g, (*bg_colour).b, (*bg_colour).a);
 		}
 
-		int camera_following_radio_index = -1;
-
 		for (auto child : scene->root->getChildren()) {
-			DrawImGuiTransformFamily(child, &camera_following_radio_value, &camera_following_radio_index);
+			DrawImGuiTransformFamily(child, &camera_following_radio_value);
 		}
 
 		ImGui::End();
 	}
 
-	void DrawImGuiTransformFamily(Basic_Transform* const transform, int* camera_following_radio_value, int* camera_following_radio_index) {
-		(*camera_following_radio_index)++;
+	void DrawImGuiTransformFamily(Basic_Transform* transform, int* camera_following_radio_value) {
 		std::string name = "transform " + std::to_string(transform->getChildIndex());
 		const char* heading = name.c_str();
 
@@ -72,7 +69,6 @@ namespace ImGuiHelper {
 					DrawImGuiQuaternion(transform->local_rotation, "Rotation");
 				}
 
-
 				if (transform->childCount() > 0)
 				if (ImGui::CollapsingHeader("children", ImGuiTreeNodeFlags_Bullet)) {
 
@@ -81,7 +77,7 @@ namespace ImGuiHelper {
 						ImGui::SameLine(0);
 						ImGui::BeginGroup();
 							
-							DrawImGuiTransformFamily(child, camera_following_radio_value, camera_following_radio_index);
+						DrawImGuiTransformFamily(child, camera_following_radio_value);
 						ImGui::EndGroup();
 					}
 				}
