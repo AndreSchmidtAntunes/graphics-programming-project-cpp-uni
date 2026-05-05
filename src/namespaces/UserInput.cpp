@@ -19,6 +19,8 @@ namespace UserInput {
 
 	static bool has_namespace_been_initialised = false;
 
+	bool enabled = false; // If Input events should fire
+
 	static struct InputState {
 		std::bitset<128> keyboard = 0;
 		std::bitset<32> special = 0;
@@ -58,9 +60,23 @@ namespace UserInput {
 		}
 	}
 
+	Vector2I _oldMousePos;
+	Vector2I _mousePos;
+
+	const Vector2I& getMousePos() {
+		return _mousePos;
+	}
+
+	const Vector2I getMouseDelta() {
+		return _mousePos - _oldMousePos;
+	}
+
 	// Keyboard callbacks
 
 	void KeyboardDownCallback(unsigned char key, int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_KeyboardUpFunc(key, mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard) return;
@@ -72,6 +88,9 @@ namespace UserInput {
 	}
 
 	void KeyboardUpCallback(unsigned char key, int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_KeyboardFunc(key, mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard) return;
@@ -84,6 +103,9 @@ namespace UserInput {
 
 	// Special callbacks
 	void SpecialDownCallback(int key, int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_SpecialFunc(key, mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard) return;
@@ -102,6 +124,9 @@ namespace UserInput {
 	}
 
 	void SpecialUpCallback(int key, int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_SpecialUpFunc(key, mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureKeyboard) return;
@@ -117,6 +142,9 @@ namespace UserInput {
 	}
 
 	void MouseCallback(int button, int state, int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_MouseFunc(button, state, mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.WantCaptureMouse) return;
@@ -140,18 +168,10 @@ namespace UserInput {
 		}
 	}
 
-	Vector2I _oldMousePos;
-	Vector2I _mousePos;
-
-	const Vector2I& getMousePos() {
-		return _mousePos;
-	}
-
-	const Vector2I getMouseDelta() {
-		return _mousePos - _oldMousePos;
-	}
-
 	void MouseDragCallback(int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_MotionFunc(mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -162,6 +182,9 @@ namespace UserInput {
 	}
 
 	void MouseMoveCallback(int mouse_x, int mouse_y) {
+
+		if (!enabled) return;
+
 		ImGui_ImplGLUT_MotionFunc(mouse_x, mouse_y);
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -170,10 +193,8 @@ namespace UserInput {
 		if (! io.WantCaptureMouse) RunCallbacksInPtrVector(mouse_move_callbacks);
 		_oldMousePos = _mousePos;
 	}
-	
 
-
-	const int Init() {
+	const int Init(bool enable_emediatly) {
 		if (glutGet(GLUT_INIT_STATE) == 1 && !has_namespace_been_initialised) {
 
 			glutKeyboardFunc(KeyboardDownCallback);
@@ -188,6 +209,7 @@ namespace UserInput {
 			glutPassiveMotionFunc(MouseMoveCallback);
 
 			has_namespace_been_initialised = true;
+			enabled = enable_emediatly;
 			
 			return 0;
 
@@ -195,6 +217,18 @@ namespace UserInput {
 
 		std::cerr << "GLUT must be initialised before initialising UserInput." << std::endl;
 		return -1;
+	}
+
+
+	void Enable() {
+		enabled = true;
+	}
+
+	void Disable() {
+		enabled = false;
+		inputState.keyboard = 0;
+		inputState.special = 0;
+		inputState.mouse = 0;
 	}
 
 	/// <summary>
@@ -389,7 +423,7 @@ namespace UserInput {
 	}
 
 	void RunAllActiveCallbacks() {
-		if (has_namespace_been_initialised)
+		if (has_namespace_been_initialised && enabled)
 			RunActiveCallbacks(keyboard_active_callback_dict, inputState.keyboard);
 			RunActiveCallbacks(special_active_callback_dict, inputState.special);
 			RunActiveCallbacks(mouse_active_callback_dict, inputState.mouse);

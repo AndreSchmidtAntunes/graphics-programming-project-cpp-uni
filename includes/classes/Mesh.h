@@ -34,7 +34,7 @@ public:
 	bool has_colours = false, has_normals = false, has_tex_coords = false;
 
 
-	void DrawElements(Material* const material = nullptr, Texture2D* const texture = nullptr) const;
+	void DrawElements(const Material* const material = nullptr, const Texture2D* const texture = nullptr) const;
 
 	void RenderWithoutMatrices(Camera* const camera, const Vector3& position = Vector3::Zero, const Quaternion& rotation = Quaternion::Identity, const Vector3& scale = Vector3::One) const;
 

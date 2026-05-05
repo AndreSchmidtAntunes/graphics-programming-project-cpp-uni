@@ -15,7 +15,7 @@ class Texture2D;
 
 class Transform {
 	const char* name;
-	Transform* parent;
+	Transform* _parent;
 	size_t child_index;
 	std::vector<Transform*> children;
 	
@@ -31,7 +31,7 @@ class Transform {
 		scene(scene), 
 		scene_transform_id(0),
 		is_root(true), 
-		parent(nullptr),
+		_parent(nullptr),
 		child_index(0),
 		name("root")
 	{} // used by the scene class to make a root transform 
@@ -42,8 +42,12 @@ class Transform {
 		for (auto child : children) {
 			child->~Transform();
 		}
-		parent->children.erase(parent->children.begin() + child_index);
+		_parent->children.erase(_parent->children.begin() + child_index);
 	}
+
+	const Matrix4x4 getLocalTransformMatrix() const;
+	const Matrix4x4 getWorldTransformMatrix() const;
+
 
 public:
 
@@ -63,10 +67,10 @@ public:
 
 	inline void setParent(Transform* const parent, const size_t index) {
 
-		if (parent == this->parent) return;
+		if (parent == this->_parent) return;
 
 		// Remove transform from old parent's child array
-		this->parent->children.erase(this->parent->children.begin() + child_index);
+		this->_parent->children.erase(this->_parent->children.begin() + child_index);
 
 		if (index >= parent->childCount())
 			parent->children.push_back(this);
@@ -74,7 +78,7 @@ public:
 			parent->children.insert(parent->children.begin() + index, this);
 		
 		// Insert transform into new parent's child array
-		this->parent = parent;
+		this->_parent = parent;
 	}
 
 	inline void setParent(Transform* const parent) { setParent(parent, -1); }
@@ -88,8 +92,13 @@ public:
 	const Vector3 getWorldPosition() const;
 	const Quaternion getWorldRotation() const;
 
-	inline constexpr Transform* const getParent() const { return parent; }
+	inline constexpr const Mesh* const getMesh() const { return mesh; }
+	inline constexpr const Material* const getMaterial() const { return material; }
+	inline constexpr const Texture2D* const getTexture() const { return texture; }
+
+	inline constexpr Transform* const parent() const { return _parent; }
 	inline constexpr Scene* const getScene() const { return scene; }
+
 	inline constexpr const int& getSceneTransformID() const { return scene_transform_id; }
 	inline constexpr Transform* const getChild(const size_t index) const { return children[index]; }
 	inline constexpr const std::vector<Transform*>& getChildren() const { return children; }
@@ -104,7 +113,7 @@ public:
 		return count;
 	}
 
-	constexpr inline const bool getIsRoot() const { return is_root; }
+	constexpr inline const bool isRoot() const { return is_root; }
 
 	inline constexpr void DestroyChild(const size_t child_index) {
 		children[child_index]->Destroy();

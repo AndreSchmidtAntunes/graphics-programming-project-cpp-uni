@@ -1,11 +1,12 @@
 #include "ImGuiHelper.h"
 
+#include "Camera.h"
+#include "GLExtras.h"
 #include "imgui.h"
 #include "imgui_impl_glut.h"
 #include "imgui_impl_opengl2.h"
-#include "GLExtras.h"
-#include "Transform.h"
 #include "Scene.h"
+#include "Transform.h"
 #include "Vector3.h"
 #include <string>
 
@@ -52,15 +53,25 @@ namespace ImGuiHelper {
 		{
 			ImGui::BeginChild(heading, ImVec2(0, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
 			{
+				if (ImGui::RadioButton("Follow", camera_following_radio_value, transform->getSceneTransformID())) {
+					transform->getScene()->getCamera()->focused_transform = transform;
+				}
+
+				if (*camera_following_radio_value == transform->getSceneTransformID()) {
+					ImGui::SameLine(0);
+					if (ImGui::Button("Deselect")) {
+						transform->getScene()->getCamera()->focused_transform = nullptr;
+						*camera_following_radio_value = -1;
+					}
+				}
+
 				if (ImGui::CollapsingHeader("Transforms", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					DrawImGuiVector3(transform->local_position, "Position");
 					DrawImGuiVector3(transform->local_scale, "Scale   ");
 					DrawImGuiQuaternion(transform->local_rotation, "Rotation");
 				}
-				if (ImGui::RadioButton("Follow", camera_following_radio_value, transform->getSceneTransformID())) {
-					transform->getScene()->focused_transform = transform;
-				}
+
 
 				if (transform->childCount() > 0)
 				if (ImGui::CollapsingHeader("children", ImGuiTreeNodeFlags_Bullet)) {

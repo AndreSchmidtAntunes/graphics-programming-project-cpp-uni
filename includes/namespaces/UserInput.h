@@ -24,7 +24,10 @@ namespace UserInput {
 	const Vector2I& getMousePos();
 	const Vector2I getMouseDelta();
 
-	const int Init();
+	const int Init(bool enable_imediatly);
+
+	void Enable();
+	void Disable();
 
 	const bool IsKeyboardKeyDown(const unsigned char key);
 	const bool IsSpecialKeyDown(const SpecialInputs key);

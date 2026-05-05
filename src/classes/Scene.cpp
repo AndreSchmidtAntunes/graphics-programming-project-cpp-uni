@@ -1,10 +1,15 @@
 #include "Scene.h"
 
-#include "Camera.h"
-#include "GLExtras.h"
-#include "Mesh.h"
 #include "Transform.h"
 #include "Vector3.h"
+#include "Camera.h"
+
+void Scene::setCamera(Camera* const camera) {
+	if (_camera)
+		_camera->_scene = nullptr;
+	_camera = camera;
+
+}
 
 Scene::Scene(void) : root(new Transform(this)) {}
 Scene::~Scene(void) { delete root; }
@@ -24,41 +29,6 @@ const std::vector<Transform*> Scene::getAllChildren() const {
 
 std::vector<Transform*> Scene::getAllChildren() {
 	return root->getChildren();
-}
-
-void Scene::DrawFamilyHierarchy(Transform* const parent) const {
-	glPushMatrix();
-
-	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
-
-	if (parent->mesh != nullptr && parent->is_mesh_enabled)
-		parent->mesh->DrawElements(parent->material, parent->texture);
-
-	for (auto child : parent->getChildren()) {
-		DrawFamilyHierarchy(child);
-	}
-	glPopMatrix();
-}
-#include <iostream>
-void Scene::Draw(Camera* const camera) const {
-	glPushMatrix();
-	glLoadIdentity();
-
-	if ((focused_transform != nullptr) && (focused_transform->scene == this) && (focused_transform != root)) {
-		GLExtras::LookAt(camera->position, focused_transform->getWorldPosition(), camera->up);
-
-		/// TODO: Broken view and cant turn off yet
-	}
-	else
-		GLExtras::LookAt(camera->position, camera->position - camera->forward, camera->up);
-
-
-	for (auto child : root->getChildren()) {
-		DrawFamilyHierarchy(child);
-	}
-
-
-	glPopMatrix();
 }
 
 const int GetLowestAvailableID(const Transform* const root, int& lowest_unused_id) {

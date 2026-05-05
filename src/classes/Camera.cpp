@@ -1,7 +1,11 @@
 #include "Camera.h"
 
+#include "GLExtras.h"
 #include "Matrix3x3.h"
+#include "Mesh.h"
 #include "Quaternion.h"
+#include "Scene.h"
+#include "Transform.h"
 
 #define DEG2RAD 0.017453292f
 #define HALF_PI 1.570796327f
@@ -22,7 +26,62 @@ void Camera::UpdateDirections() {
 	euler_rotation = rotation.Euler();
 }
 
+void Camera::setScene(Scene* const scene) {
+	if (_scene)
+		_scene->setCamera(nullptr);
+	scene->setCamera(this);
+	_scene = scene;
+}
+
+void Camera::DrawScene() const {
+
+	if (!_scene) {
+		std::cerr << "[!] ERROR: No Scene has been set in the current camera. DrawScene() failed." << std::endl;
+		return;
+	}
+
+	glPushMatrix();
+	glLoadIdentity();
+
+	Vector3 camera_target;
+
+	if (isTargetSelected())
+		camera_target = focused_transform->getWorldPosition();
+	else
+		camera_target = position - forward;
+
+	GLExtras::LookAt(position, camera_target, up);
+
+
+	for (auto child : _scene->root->getChildren()) {
+		DrawFamilyHierarchy(child);
+	}
+
+	glPopMatrix();
+}
+
+const bool Camera::isTargetSelected() const {
+	return (focused_transform != nullptr) && (focused_transform->getScene() == _scene) && (focused_transform != _scene->root);
+}
+
+void Camera::DrawFamilyHierarchy(const Transform* const parent) const {
+	glPushMatrix();
+
+	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
+
+	if (parent->getMesh() != nullptr && parent->is_mesh_enabled)
+		parent->getMesh()->DrawElements(parent->getMaterial(), parent->getTexture());
+
+	for (auto child : parent->getChildren()) {
+		DrawFamilyHierarchy(child);
+	}
+	glPopMatrix();
+}
+
 void Camera::RotateFirstPerson(const Vector3& look_dir) {
+
+	if (isTargetSelected()) return; // dont allow rotating the camera if it is locked on an object
+
 	float x =  -look_dir.y * DEG2RAD;
 	float y =  -look_dir.x * DEG2RAD;
 

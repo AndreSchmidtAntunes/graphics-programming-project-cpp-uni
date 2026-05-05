@@ -208,7 +208,7 @@ bool Mesh::LoadFromFile(const char* file_name) {
 
 #define VERTEX_DATA_STRIDE 48
 
-void Mesh::DrawElements(Material* const material, Texture2D* const texture) const {
+void Mesh::DrawElements(const Material* const material, const Texture2D* const texture) const {
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, VERTEX_DATA_STRIDE, vertices );
 

@@ -45,7 +45,7 @@ void MoveBack()    { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME; 
 void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 
-static Colour clear_colour;
+static Colour clear_colour = Colour(0.396f, 0.396f, 0.502f, 1.0f);
 
 static Scene* scene;
 static Transform* transform_A;
@@ -53,7 +53,7 @@ static Transform* transform_B;
 static Transform* transform_C;
 static Transform* transform_D;
 
-GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vector3::Forward, Vector3::Zero, Vector3::Up, Vector3::Right)), deltaTime(0) {
+GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), deltaTime(0) {
 
 	rot = 0.0f;
 
@@ -83,7 +83,7 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 
 	// --- User Input --- //
 
-	UserInput::Init();
+	UserInput::Init(false); // don't enable inputs while initialising the entry point.
 
 	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::LEFT, RotateLeft);
 	UserInput::AddSpecialActiveCallback(UserInput::SpecialInputs::UP, RotateUp);
@@ -104,7 +104,6 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 	Texture2D* penguins_texture = new Texture2D("textures/penguins.raw", 512, 512);
 	Material* shiny_blue_material = new Material(Colour::Blue, Colour(0.75, 0.75, 0.75, 1), Colour::White, 1);
@@ -116,6 +115,8 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	Mesh* cube_mesh = new Mesh("models/cube.obj");
 
 	scene = new Scene;
+
+	camera->setScene(scene);
 
 	transform_A = new Transform("green suzanne", scene->root, Vector3(5, -1, -5));
 	transform_A->local_scale = Vector3::One * 0.5;
@@ -145,6 +146,8 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera(Vecto
 	//	║	╚══	B
 	//	║		╚══ C
 	//	╚══	D
+
+	UserInput::Enable(); //allow user input after everything has been properly set up.
 		
 	glutMainLoop();
 }
@@ -158,12 +161,9 @@ GL_entry_point::~GL_entry_point(void) {
 	delete camera;
 }
 
-/// TODO: let player click to select a transform
-/// TODO: key which sets forces the user to look at the selected transform
+////////////////////
 /// TODO: make lights a transform derived class and add light support to the scene graph
-/// TODO: display text showing the current transform's properties, and current fps
-/// TODO: a visual representation of which transform is selected
-/// TODO: a visual representation of which transform the user is hovering over
+////////////////////
 
 void GL_entry_point::Render() {
 
@@ -178,7 +178,7 @@ void GL_entry_point::Render() {
 	ImGuiHelper::FPS(io, deltaTime);
 	ImGuiHelper::SceneTree(io, scene, &clear_colour);
 
-	scene->Draw(camera);
+	camera->DrawScene();
 
 	ImGui::Render();
 
@@ -197,4 +197,5 @@ void GL_entry_point::Update() {
 	transform_A->local_rotation = Quaternion::Euler(0.0, rot * DEG2RAD, 0.0);
 	transform_B->local_rotation = Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0);
 	transform_B->local_scale = Vector3::One * (sin(rot * DEG2RAD) + 1.5f);
+	//transform_D->local_position = Vector3(sin(rot * DEG2RAD), 0.0f, -5.0f);
 }

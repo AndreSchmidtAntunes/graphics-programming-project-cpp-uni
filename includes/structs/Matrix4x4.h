@@ -38,7 +38,7 @@ public:
 			}
 	}
 
-	constexpr Matrix4x4(const Vector4& row_1, const Vector4& row_2, const Vector4& row_3, const Vector4& row_4) {
+	constexpr Matrix4x4(const _Vector4T<TYPE>& row_1, const _Vector4T<TYPE>& row_2, const _Vector4T<TYPE>& row_3, const _Vector4T<TYPE>& row_4) {
 		setRow(0, row_1);
 		setRow(1, row_2);
 		setRow(2, row_3);
@@ -56,7 +56,7 @@ public:
 
 	// Static operations
 
-	constexpr static const Matrix4x4 ScaleMatrix(const Vector3& scale) {
+	constexpr static const Matrix4x4 ScaleMatrix(const _Vector3T<TYPE>& scale) {
 		return Matrix4x4(
 			scale.x, 0.0f, 0.0f, 0.0f,
 			0.0f, scale.y, 0.0f, 0.0f,
@@ -66,17 +66,17 @@ public:
 	};
 
 	// Used the formula half way through this page: http://www.fastgraph.com/makegames/3drotation/
-	static const Matrix4x4 RotationMatrix(const Vector3& axis, const TYPE radians) {
+	static const Matrix4x4 RotationMatrix(const _Vector3T<TYPE>& axis, const TYPE radians) {
 
 		TYPE c = cos(radians);
 		TYPE s = sin(radians);
 		TYPE t = 1 - c;
 
 		return Matrix4x4(
-			(t * axis.x * axis.x) + c, (t * axis.x * axis.y) - (s * axis.z), (t * axis.x * axis.z) + (s * axis.y), 0,
-			(t * axis.x * axis.y) + (s * axis.z), (t * axis.y * axis.y) + c, (t * axis.y * axis.z) - (s * axis.x), 0,
-			(t * axis.x * axis.z) - (s * axis.y), (t * axis.y * axis.z) + (s * axis.x), (t * axis.z * axis.z) + c, 0,
-			0, 0, 0, 1
+			(t * axis.x * axis.x) + c, (t * axis.x * axis.y) - (s * axis.z), (t * axis.x * axis.z) + (s * axis.y), 0.0f,
+			(t * axis.x * axis.y) + (s * axis.z), (t * axis.y * axis.y) + c, (t * axis.y * axis.z) - (s * axis.x), 0.0f,
+			(t * axis.x * axis.z) - (s * axis.y), (t * axis.y * axis.z) + (s * axis.x), (t * axis.z * axis.z) + c, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	};
 
@@ -85,24 +85,23 @@ public:
 	static const Matrix4x4 RotationMatrix(const Quaternion& q) { /// WARNING: might be the cause of a circular include 
 
 		TYPE a2 = q.w * q.w, b2 = q.x * q.x, c2 = q.y * q.y, d2 = q.z * q.z;
-		TYPE ab = q.w * q.x, ac = q.w * q.y, ad = q.w * q.z;
-		TYPE bc = q.x * q.y, bd = q.x * q.z;
-		TYPE cd = q.y * q.z;
+		TYPE wx = q.w * q.x, ac = q.w * q.y, ad = q.w * q.z;
+		TYPE xy = q.x * q.y, bd = q.x * q.z;
+		TYPE yz = q.y * q.z;
 
 		return Matrix4x4(
-			a2 + b2 - c2 - d2,	2 * (bc - ad),		2 * (bd + ac),		0.0f,
-			2 * (bc + ad),		a2 - b2 + c2 - d2,	2 * (cd - ab),		0.0f,
-			2 * (bd - ac),		2 * (cd + ab),		a2 - b2 - c2 + d2,	0.0f,
+			a2 + b2 - c2 - d2,	2 * (xy - ad),		2 * (bd + ac),		0.0f,
+			2 * (xy + ad),		a2 - b2 + c2 - d2,	2 * (yz - wx),		0.0f,
+			2 * (bd - ac),		2 * (yz + wx),		a2 - b2 - c2 + d2,	0.0f,
 			0.0f,				0.0f,				0.0f,				1.0f);
 	}
 
-
-	constexpr static const Matrix4x4 TranslationMatrix(const Vector3& translation) {
+	constexpr static const Matrix4x4 TranslationMatrix(const _Vector3T<TYPE>& translation) {
 		return Matrix4x4(
-			1, 0, 0, translation.x,
-			0, 1, 0, translation.y,
-			0, 0, 1, translation.z,
-			0, 0, 0, 1
+			1.0f, 0.0f, 0.0f, translation.x,
+			0.0f, 1.0f, 0.0f, translation.y,
+			0.0f, 0.0f, 1.0f, translation.z,
+			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	};
 
@@ -112,13 +111,13 @@ public:
 		(*this)[row_index][column_index] = value;
 	}
 
-	constexpr void setRow(const size_t row_index, const Vector4& elements) {
+	constexpr void setRow(const size_t row_index, const _Vector4T<TYPE>& elements) {
 		for (size_t i = 0; i < DIMENTIONS; i++)
 			(*this)[row_index][i] = elements[i];
 	}
 
 
-	constexpr void setColumn(const size_t column_index, const Vector4& elements) {
+	constexpr void setColumn(const size_t column_index, const _Vector4T<TYPE>& elements) {
 		for (size_t i = 0; i < DIMENTIONS; i++)
 			(*this)[i][column_index] = elements[i];
 	}
@@ -130,13 +129,13 @@ public:
 	}
 
 
-	constexpr const Vector4 getRow(const size_t row_index) const {
-		return Vector4((*this)[row_index][0], (*this)[row_index][1], (*this)[row_index][2], (*this)[row_index][3]);
+	constexpr const _Vector4T<TYPE> getRow(const size_t row_index) const {
+		return _Vector4T<TYPE>((*this)[row_index][0], (*this)[row_index][1], (*this)[row_index][2], (*this)[row_index][3]);
 	}
 
 
-	constexpr const Vector4 getColumn(const size_t column_index) const {
-		return Vector4((*this)[0][column_index], (*this)[1][column_index], (*this)[2][column_index], (*this)[3][column_index]);
+	constexpr const _Vector4T<TYPE> getColumn(const size_t column_index) const {
+		return _Vector4T<TYPE>((*this)[0][column_index], (*this)[1][column_index], (*this)[2][column_index], (*this)[3][column_index]);
 	}
 
 
@@ -145,25 +144,49 @@ public:
 	}
 
 
-	constexpr const std::array<TYPE, DIMENTIONS>& operator[](const size_t idx) const {
+	constexpr const std::array<TYPE, DIMENTIONS>& operator [] (const size_t idx) const {
 		return data[idx];
 	}
 
-
-	constexpr Matrix4x4& operator = (const Matrix4x4& other) {
+	constexpr void operator = (const Matrix4x4& other) {
 		for (size_t row = 0; row < DIMENTIONS; row++)
 			for (size_t col = 0; col < DIMENTIONS; col++)
 				(*this)[row][col] = other[row][col];
-
-		return (*this);
 	}
 
+	constexpr const _Vector4T<TYPE> operator * (const _Vector4T<TYPE>& mult) const {
+		return _Vector4T<TYPE> {
+			(*this)[0][0] * mult.x + (*this)[0][1] * mult.y + (*this)[0][2] * mult.z + (*this)[0][3] * mult.w,
+			(*this)[1][0] * mult.x + (*this)[1][1] * mult.y + (*this)[1][2] * mult.z + (*this)[1][3] * mult.w,
+			(*this)[2][0] * mult.x + (*this)[2][1] * mult.y + (*this)[2][2] * mult.z + (*this)[2][3] * mult.w,
+			(*this)[3][0] * mult.x + (*this)[3][1] * mult.y + (*this)[3][2] * mult.z + (*this)[3][3] * mult.w
+		};
+	}
+
+	constexpr _Vector4T<TYPE>& operator *= (_Vector4T<TYPE>& vec) {
+		vec.x = (*this)[0][0] * vec.x + (*this)[0][1] * vec.y + (*this)[0][2] * vec.z + (*this)[0][3] * vec.w;
+		vec.y = (*this)[1][0] * vec.x + (*this)[1][1] * vec.y + (*this)[1][2] * vec.z + (*this)[1][3] * vec.w;
+		vec.z = (*this)[2][0] * vec.x + (*this)[2][1] * vec.y + (*this)[2][2] * vec.z + (*this)[2][3] * vec.w;
+		vec.w = (*this)[3][0] * vec.x + (*this)[3][1] * vec.y + (*this)[3][2] * vec.z + (*this)[3][3] * vec.w;
+		return vec;
+	}
+
+	constexpr const Matrix4x4 operator * (const Matrix4x4& other) const {
+
+		Matrix4x4 result;
+		for (size_t row = 0; row < DIMENTIONS; row++) {
+			for (size_t col = 0; col < DIMENTIONS; col++) {
+				TYPE dot = getRow(row).Dot(other.getColumn(col));
+				result[row][col] = dot;
+			}
+		}
+		return result;
+	}
 
 	constexpr Matrix4x4& operator *= (const Matrix4x4& other) {
 		(*this) = (*this) * other;
 		return (*this);
 	}
-
 
 	constexpr Matrix4x4& operator *= (const TYPE mult) {
 		for (size_t row = 0; row < DIMENTIONS; row++)
@@ -173,46 +196,13 @@ public:
 		return (*this);
 	}
 
-
-	constexpr const Vector4 operator * (const Vector4& mult) const {
-		Vector4 result = Vector4();
-
-		for (size_t i = 0; i < DIMENTIONS; i++) {
-
-			TYPE sum = 0;
-			for (size_t j = 0; j < DIMENTIONS; j++) {
-				sum += ((*this)[i][j] * mult[j]);
-			}
-			result[i] = sum;
-		}
-		return result;
-	}
-
-
-	constexpr const Vector3 operator * (const Vector3& mult) const {
-		Vector4 result = (*this) * Vector4(mult);
-		return (Vector3)result;
-	}
-
-
-	constexpr const Matrix4x4 operator * (const Matrix4x4& other) const {
-		Matrix4x4 result = Matrix4x4();
-		for (size_t row = 0; row < DIMENTIONS; row++)
-			for (size_t col = 0; col < DIMENTIONS; col++) {
-				result[row][col] *= other[row][col];
-			}
-		return result;
-	}
-
-
 	constexpr const Matrix4x4 operator * (const TYPE mult) const {
-		Matrix4x4 result = Matrix4x4();
-		for (size_t row = 0; row < DIMENTIONS; row++)
-			for (size_t col = 0; col < DIMENTIONS; col++) {
-				result[row][col] *= mult;
-			}
-		return result;
+		return Matrix4x4(*this) *= mult;
 	}
+
+	constexpr const _Vector3T<TYPE> ApplyTransform(const _Vector3T<TYPE>& point = _Vector3T<TYPE>::Zero) const {
+		return _Vector3T<TYPE>((*this) * _Vector4T<TYPE>(point + _Vector4T<TYPE>::Ana));
+	};
 
 	// Constants
 

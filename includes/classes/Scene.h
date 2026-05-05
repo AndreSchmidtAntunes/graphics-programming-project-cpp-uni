@@ -7,12 +7,15 @@ class Transform;
 
 class Scene {
 
+	Camera* _camera = nullptr;
+
 public:
 
 	// the overarching parent transform of the scene
 	Transform* const root;
 
-	Transform* focused_transform = nullptr;
+	inline Camera* const getCamera() const { return _camera; }
+	void setCamera(Camera* const camera);
 
 	Scene(void);
 	~Scene(void);
@@ -24,10 +27,6 @@ public:
 	const std::vector<Transform*> getAllChildren() const;
 
 	std::vector<Transform*> getAllChildren();
-
-	void DrawFamilyHierarchy(Transform* const parent) const;
-
-	void Draw(Camera* const camera) const;
 
 	const int GetNextAvailableObjectID() const;
 };
