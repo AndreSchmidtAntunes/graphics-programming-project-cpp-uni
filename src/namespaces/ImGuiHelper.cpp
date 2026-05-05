@@ -40,7 +40,7 @@ namespace ImGuiHelper {
 		ImGui::End();
 	}
 
-	void DrawImGuiTransformFamily(Transform* const transform, int* camera_following_radio_value, int* camera_following_radio_index) {
+	void DrawImGuiTransformFamily(Basic_Transform* const transform, int* camera_following_radio_value, int* camera_following_radio_index) {
 		(*camera_following_radio_index)++;
 		std::string name = "transform " + std::to_string(transform->getChildIndex());
 		const char* heading = name.c_str();

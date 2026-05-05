@@ -64,10 +64,13 @@ const bool Camera::isTargetSelected() const {
 	return (focused_transform != nullptr) && (focused_transform->getScene() == _scene) && (focused_transform != _scene->root);
 }
 
-void Camera::DrawFamilyHierarchy(const Transform* const parent) const {
+
+void Camera::DrawFamilyHierarchy(const Basic_Transform* const parent) const {
 	glPushMatrix();
 
 	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
+
+	// switch case for drawing light transform and model transform
 
 	if (parent->getMesh() != nullptr && parent->is_mesh_enabled)
 		parent->getMesh()->DrawElements(parent->getMaterial(), parent->getTexture());

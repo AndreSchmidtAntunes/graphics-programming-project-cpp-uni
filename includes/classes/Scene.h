@@ -3,7 +3,7 @@
 #include <vector>
 
 class Camera;
-class Transform;
+class Basic_Transform;
 
 class Scene {
 
@@ -12,7 +12,7 @@ class Scene {
 public:
 
 	// the overarching parent transform of the scene
-	Transform* const root;
+	Basic_Transform* const root;
 
 	inline Camera* const getCamera() const { return _camera; }
 	void setCamera(Camera* const camera);
@@ -22,11 +22,11 @@ public:
 
 	void Clear(const size_t child_index) const;
 
-	Transform* const getChild(const size_t index) const;
+	Basic_Transform* const getChild(const size_t index) const;
 
-	const std::vector<Transform*> getAllChildren() const;
+	const std::vector<Basic_Transform*> getAllChildren() const;
 
-	std::vector<Transform*> getAllChildren();
+	std::vector<Basic_Transform*> getAllChildren();
 
 	const int GetNextAvailableObjectID() const;
 };
