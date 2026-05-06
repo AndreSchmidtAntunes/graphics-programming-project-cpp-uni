@@ -3,9 +3,10 @@
 #include <array>
 #include "Vector.h"
 #include "GLLibs.h"
+#include "GLExtras.h"
 
 #define N_DIMS 2
-#define ID_TYPE GLuint
+#define ID_TYPE size_t
 
 struct Texture2D {
 
@@ -41,7 +42,7 @@ protected:
 #undef ID_TYPE
 
 #define N_DIMS 2
-#define TYPE GLfloat
+#define TYPE float
 
 struct TEX_COORD_MEM_STRUCT {
 	union {
@@ -50,7 +51,7 @@ struct TEX_COORD_MEM_STRUCT {
 	};
 };
 
-struct TexCoord : public Vector::_VectorT<TYPE, N_DIMS, TEX_COORD_MEM_STRUCT> {};
+struct TexCoord : public Vector::_Basic_Vector<TYPE, N_DIMS, TEX_COORD_MEM_STRUCT> {};
 
 #undef N_DIMS
 #undef TYPE

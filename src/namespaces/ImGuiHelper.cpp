@@ -2,9 +2,7 @@
 
 #include "Camera.h"
 #include "GLExtras.h"
-#include "imgui.h"
-#include "imgui_impl_glut.h"
-#include "imgui_impl_opengl2.h"
+#include "imguiLibs.h"
 #include "Scene.h"
 #include "Transform.h"
 #include "Vector3.h"
@@ -62,25 +60,7 @@ namespace ImGuiHelper {
 					}
 				}
 
-				if (ImGui::CollapsingHeader("Transforms", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					DrawImGuiVector3(transform->local_position, "Position");
-					DrawImGuiVector3(transform->local_scale, "Scale   ");
-					DrawImGuiQuaternion(transform->local_rotation, "Rotation");
-				}
-
-				if (transform->childCount() > 0)
-				if (ImGui::CollapsingHeader("children", ImGuiTreeNodeFlags_Bullet)) {
-
-					for (auto child : transform->getChildren()) {
-						ImGui::Text("     ");
-						ImGui::SameLine(0);
-						ImGui::BeginGroup();
-							
-						DrawImGuiTransformFamily(child, camera_following_radio_value);
-						ImGui::EndGroup();
-					}
-				}
+				
 			}
 			ImGui::EndChild();
 		}

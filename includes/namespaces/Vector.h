@@ -35,16 +35,16 @@ namespace Vector {
 
 	// -- Defines for readability -- //
 
-#define THIS_TYPE _VectorT<T, nDim, MEMORY_STRUCTURE>
+#define THIS_TYPE _Basic_Vector<T, nDim, MEMORY_STRUCTURE>
 
 #define OTHER_ARITHMETIC_TYPE T1
 
 #define OTHER_DIMENTION_COUNT nDim1
 #define OTHER_MEMORY_STRUCTURE MEMORY_STRUCTURE1
 
-#define OTHER_TYPE _VectorT<T1, nDim1, MEMORY_STRUCTURE1>
+#define OTHER_TYPE _Basic_Vector<T1, nDim1, MEMORY_STRUCTURE1>
 
-#define COMBINED_TYPE _VectorT<std::common_type_t<T,T1>, std::max<unsigned int>(nDim,nDim1)>
+#define COMBINED_TYPE _Basic_Vector<std::common_type_t<T,T1>, std::max<unsigned int>(nDim,nDim1)>
 
 #define OTHER_TYPE_TEMPLATE template<typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
 #define THIS_AND_OTHER_TYPE_TEMPLATE template<typename T, size_t nDim, typename MEMORY_STRUCTURE, typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
@@ -54,7 +54,7 @@ namespace Vector {
 	// -- The Vector struct -- //
 
 	template <typename T, size_t nDim, class MEMORY_STRUCTURE = DEFAULT_MEMORY_STRUCTURE<T, nDim>>
-	struct _VectorT : public MEMORY_STRUCTURE {
+	struct _Basic_Vector : public MEMORY_STRUCTURE {
 
 	private:
 
@@ -105,18 +105,18 @@ namespace Vector {
 
 		static constexpr size_t dimensionCount = nDim;
 
-		explicit constexpr _VectorT() = default;
+		constexpr _Basic_Vector() = default;
 
 		template<typename... Args> requires ( // Variadic constructor is used if:
 			(sizeof...(Args) + 1 <= nDim) &&		// - number of args is less than or equal to number of stated dimensions.
 			(std::conjunction_v<std::is_convertible<Args, T>...>)) // - if all of the given parameters are convertible to a numeric type.
-			explicit constexpr _VectorT(const T first, const Args... args) : _VectorT() {
+			constexpr _Basic_Vector(const T first, const Args... args) : _Basic_Vector() {
 			set_from_variadic(first, args...);
 		}
 
 		// Implicitly converts to a vector with more or an equal number of dimensions:
 		OTHER_TYPE_TEMPLATE requires (OTHER_DIMENTION_COUNT <= nDim)
-			constexpr _VectorT(const OTHER_TYPE& other) : _VectorT() {
+			constexpr _Basic_Vector(const OTHER_TYPE& other) : _Basic_Vector() {
 			for (size_t i = 0; i < OTHER_DIMENTION_COUNT; i++) {
 				data[i] = static_cast<T>(other[i]);
 			}
@@ -124,7 +124,7 @@ namespace Vector {
 
 		// Converts to a vector with less dimensions:
 		OTHER_TYPE_TEMPLATE requires (OTHER_DIMENTION_COUNT > nDim)
-			explicit constexpr _VectorT(const OTHER_TYPE& other) : _VectorT() {
+			explicit constexpr _Basic_Vector(const OTHER_TYPE& other) : _Basic_Vector() {
 			for (size_t i = 0; i < nDim; i++) {
 				data[i] = static_cast<T>(other[i]);
 			}
@@ -304,7 +304,11 @@ namespace Vector {
 			return THIS_TYPE(vector) *= value;
 		}
 
-		constexpr const THIS_TYPE operator - () const {
+		constexpr THIS_TYPE operator + () const {
+			return *this;
+		}
+
+		constexpr THIS_TYPE operator - () const {
 			THIS_TYPE return_vector = (*this);
 			for (size_t i = 0; i < nDim; i++) {
 				return_vector[i] = -return_vector[i];
@@ -466,20 +470,20 @@ namespace Vector {
 		return lhs.Dot(rhs);
 	}
 
-	inline constexpr const _VectorT<int, 1> Left				( -1 );
-	inline constexpr const _VectorT<int, 1> Right				(  1 );
-	inline constexpr const _VectorT<int, 2> Up				(  0,  1 );
-	inline constexpr const _VectorT<int, 2> Down			(  0, -1 );
-	inline constexpr const _VectorT<int, 3> Back		(  0,  0, -1 );
-	inline constexpr const _VectorT<int, 3> Forward		(  0,  0,  1 );
-	inline constexpr const _VectorT<int, 4> Ana		(  0,  0,  0,  1 );
-	inline constexpr const _VectorT<int, 4> Kata	(  0,  0,  0, -1 );
+	inline constexpr const _Basic_Vector<int, 1> Left				( -1 );
+	inline constexpr const _Basic_Vector<int, 1> Right				(  1 );
+	inline constexpr const _Basic_Vector<int, 2> Up				(  0,  1 );
+	inline constexpr const _Basic_Vector<int, 2> Down			(  0, -1 );
+	inline constexpr const _Basic_Vector<int, 3> Back		(  0,  0, -1 );
+	inline constexpr const _Basic_Vector<int, 3> Forward		(  0,  0,  1 );
+	inline constexpr const _Basic_Vector<int, 4> Ana		(  0,  0,  0,  1 );
+	inline constexpr const _Basic_Vector<int, 4> Kata	(  0,  0,  0, -1 );
 
 	template<size_t nDim>
-	static constexpr const _VectorT<int, nDim> Zero = _VectorT<int, nDim>::Fill(0);
+	static constexpr const _Basic_Vector<int, nDim> Zero = _Basic_Vector<int, nDim>::Fill(0);
 
 	template<size_t nDim>
-	static constexpr const _VectorT<int, nDim> One = _VectorT<int, nDim>::Fill(1);
+	static constexpr const _Basic_Vector<int, nDim> One = _Basic_Vector<int, nDim>::Fill(1);
 
 #undef THIS_TYPE
 

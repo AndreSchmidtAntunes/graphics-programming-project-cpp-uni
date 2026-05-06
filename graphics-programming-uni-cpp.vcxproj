@@ -20,6 +20,7 @@
     <ClCompile Include="src\classes\Basic_Transform.cpp" />
     <ClCompile Include="src\classes\Camera.cpp" />
     <ClCompile Include="src\classes\GL_entry_point.cpp" />
+    <ClCompile Include="src\classes\Lighting.cpp" />
     <ClCompile Include="src\classes\Mesh.cpp" />
     <ClCompile Include="src\classes\Scene.cpp" />
     <ClCompile Include="src\classes\Transform.cpp" />
@@ -28,7 +29,7 @@
     <ClCompile Include="src\namespaces\AssetCache.cpp" />
     <ClCompile Include="src\namespaces\GLExtras.cpp" />
     <ClCompile Include="src\namespaces\GLUTCallbacks.cpp" />
-    <ClCompile Include="src\namespaces\ImGuiHelper.cpp" />
+    <ClCompile Include="src\namespaces\imguiHelper.cpp" />
     <ClCompile Include="src\namespaces\UserInput.cpp" />
     <ClCompile Include="src\structs\Texture2D.cpp" />
   </ItemGroup>
@@ -54,18 +55,21 @@
     <ClInclude Include="includes\classes\Scene.h" />
     <ClInclude Include="includes\classes\Transform.h" />
     <ClInclude Include="includes\common.h" />
+    <ClInclude Include="includes\common_rendering.h" />
     <ClInclude Include="includes\FastInvSqrt.h" />
     <ClInclude Include="includes\GLLibs.h" />
+    <ClInclude Include="includes\imguiLibs.h" />
+    <ClInclude Include="includes\custom_math.h" />
     <ClInclude Include="includes\namespaces\AssetCache.h" />
     <ClInclude Include="includes\namespaces\GLExtras.h" />
     <ClInclude Include="includes\namespaces\GLUTCallbacks.h" />
     <ClInclude Include="includes\namespaces\ImGuiHelper.h" />
     <ClInclude Include="includes\namespaces\UserInput.h" />
     <ClInclude Include="includes\namespaces\Vector.h" />
+    <ClInclude Include="includes\rendering_structures.h" />
     <ClInclude Include="includes\structs\Colour.h" />
     <ClInclude Include="includes\structs\Lighting.h" />
     <ClInclude Include="includes\structs\Material.h" />
-    <ClInclude Include="includes\structs\Matrix3x3.h" />
     <ClInclude Include="includes\structs\Matrix4x4.h" />
     <ClInclude Include="includes\structs\Texture2D.h" />
     <ClInclude Include="includes\structs\Vector2.h" />

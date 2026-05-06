@@ -49,7 +49,7 @@ namespace GLExtras {
 
 		glTranslatef(position.x, position.y, position.z);
 
-		Vector3 euler_rot = rotation.Euler();
+		Vector3 euler_rot = rotation.ToEuler();
 
 		glRotatef(2 * acos(rotation.w) * RAD2DEG, rotation.x, rotation.y, rotation.z);
 

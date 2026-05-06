@@ -81,7 +81,7 @@
     <ClCompile Include="src\FastInvSqrt.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
-    <ClCompile Include="src\namespaces\ImGuiHelper.cpp">
+    <ClCompile Include="src\namespaces\imguiHelper.cpp">
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
     <ClCompile Include="src\structs\Texture2D.cpp">
@@ -112,6 +112,9 @@
       <Filter>Source Files\Namespaces</Filter>
     </ClCompile>
     <ClCompile Include="src\classes\Basic_Transform.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\classes\Lighting.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,9 +152,6 @@
       <Filter>Header Files\Namespaces</Filter>
     </ClInclude>
     <ClInclude Include="includes\structs\Colour.h">
-      <Filter>Header Files\Structs</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\structs\Matrix3x3.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
     <ClInclude Include="includes\structs\Matrix4x4.h">
@@ -228,6 +228,18 @@
     </ClInclude>
     <ClInclude Include="includes\structs\Lighting.h">
       <Filter>Header Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\imguiLibs.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\custom_math.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\rendering_structures.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\common_rendering.h">
+      <Filter>Resource Files\Includes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@
 
 #include "Camera.h"
 
-#define TYPE GLfloat
+#define TYPE float
 #define DEFAULT_VERT_COLOUR Colour::Red
 
 static const double PI  = 3.141592653589793;

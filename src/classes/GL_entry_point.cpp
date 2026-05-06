@@ -1,28 +1,16 @@
 ﻿#include "GL_entry_point.h"
 
 #include "AssetCache.h"
-#include "Camera.h"
-#include "common.h" 
-#include "GLExtras.h"
-#include "GLUTCallbacks.h" // Placed here so that GLUTCallbacks.h doesn't include itself.
-#include "Material.h"
-#include "Matrix4x4.h"
-#include "Mesh.h"
-#include "Scene.h"
-#include "Transform.h"
+
+#include "common.h"
+
+#include "GLUTCallbacks.h"
+
 #include "UserInput.h"
-#include "Vector2.h"
 #include <Windows.h>
 
-#include "imgui.h"
-#include "imgui_impl_glut.h"
-#include "imgui_impl_opengl2.h"
-#include "ImGuiHelper.h"
-
-	static const double PI = 3.141592653589793;
-	static const double PHI = 1.570796326794897;
-	static const double RAD2DEG = 57.29577951308232;
-	static const double DEG2RAD = 0.017453292519943;
+#include "imguiHelper.h"
+#include "imguiLibs.h"
 
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime

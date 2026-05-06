@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "Matrix4x4.h"
 #include "Quaternion.h"
 #include "Vector3.h"
 #include <type_traits>
@@ -8,8 +8,8 @@
 
 #define TYPE float
 
-struct Matrix4x4;
 struct Scene;
+struct ImGuiIO;
 
 class Basic_Transform {
 protected:
@@ -36,6 +36,8 @@ protected:
 
 	const Matrix4x4 getLocalTransformMatrix() const;
 	const Matrix4x4 getWorldTransformMatrix() const;
+
+	virtual void DrawImGuiData(ImGuiIO& io);
 
 public:
 

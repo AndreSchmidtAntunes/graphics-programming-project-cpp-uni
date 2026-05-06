@@ -2,33 +2,11 @@
 
 #include "Vector.h"
 
-// --- Cariable defines for convinience --- //
-
-// - THIS_TYPE - //
-
-// This is a shorthand define for the base class of the current class being worked on.
-
-#define N_DIMS
-#define THIS_ARITHMETIC_TYPE
-#define THIS_TYPE
-
-// - VECTOR_TYPE - //
-	
-// This is a _VectorT type with the same number of dimentions and the same arithmetic type as THIS_TYPE,
-// but with a variable memory structure:
-
-#define VECTOR_TYPE_TEMPLATE
-#define VECTOR_TYPE
+#define T _Ty
 
 // --- Colour type --- //
 
-#undef N_DIMS
-#undef VECTOR_TYPE_TEMPLATE
-#undef VECTOR_TYPE
-
 #define N_DIMS 4
-#define VECTOR_TYPE_TEMPLATE template <typename T1, typename MEMORY_STRUCTURE1>
-#define VECTOR_TYPE Vector::_VectorT<T1, N_DIMS, MEMORY_STRUCTURE1>
 
 template<typename T>
 struct _COLOUR4_MEM_STRUCT {
@@ -38,32 +16,28 @@ struct _COLOUR4_MEM_STRUCT {
 	};
 };
 
-#undef THIS_ARITHMETIC_TYPE
-#undef THIS_TYPE
+#define BASE Vector::_Basic_Vector<float, N_DIMS, _COLOUR4_MEM_STRUCT<float>>
 
-#define THIS_ARITHMETIC_TYPE float
-#define THIS_TYPE Vector::_VectorT<THIS_ARITHMETIC_TYPE, N_DIMS, _COLOUR4_MEM_STRUCT<THIS_ARITHMETIC_TYPE>>
+struct Colour : public BASE {
 
-struct Colour : public THIS_TYPE {
+	using BASE::_Basic_Vector;
 
-	using THIS_TYPE::_VectorT;
-
-	VECTOR_TYPE_TEMPLATE
-		Colour(VECTOR_TYPE other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		Colour(Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1> other) {
 		for (size_t i = 0; i < N_DIMS; i++) {
 			(*this)[i] = other[i];
 		}
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		constexpr Colour& operator *= (const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		constexpr Colour& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		for (size_t i = 0; i < N_DIMS; i++)
 			(*this)[i] *= other[i];
 		return (*this);
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		friend const constexpr Colour operator * (const Colour& first, const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		friend const constexpr Colour operator * (const Colour& first, const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		return Colour(first) *= other;
 
 	}
@@ -114,32 +88,30 @@ inline const Colour Colour::White		( 1, 1, 1, 1 );
 inline const Colour Colour::Black		( 0, 0, 0, 1 );
 inline const Colour Colour::Null, Colour::Empty ( 0, 0, 0, 0 );
 
-#undef THIS_ARITHMETIC_TYPE
-#undef THIS_TYPE
+#undef BASE
 
-#define THIS_ARITHMETIC_TYPE uint8_t
-#define THIS_TYPE Vector::_VectorT<THIS_ARITHMETIC_TYPE, N_DIMS, _COLOUR4_MEM_STRUCT<THIS_ARITHMETIC_TYPE>>
+#define BASE Vector::_Basic_Vector<uint8_t, N_DIMS, _COLOUR4_MEM_STRUCT<uint8_t>>
 
-struct Colour255 : public THIS_TYPE {
+struct Colour255 : public BASE {
 
-	using THIS_TYPE::_VectorT;
+	using BASE::_Basic_Vector;
 
-	VECTOR_TYPE_TEMPLATE
-		Colour255(VECTOR_TYPE other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		Colour255(Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1> other) {
 		for (size_t i = 0; i < N_DIMS; i++) {
 			(*this)[i] = other[i];
 		}
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		constexpr Colour255& operator *= (const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		constexpr Colour255& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		for (size_t i = 0; i < N_DIMS; i++)
 			(*this)[i] *= other[i];
 		return (*this);
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		friend const constexpr Colour255 operator * (const Colour255& first, const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		friend const constexpr Colour255 operator * (const Colour255& first, const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		return Colour255(first) *= other;
 
 	}
@@ -188,18 +160,11 @@ inline const Colour255 Colour255::Black		(   0,   0,   0, 255 );
 inline const Colour255 Colour255::Null,Colour255::Empty ( 0, 0, 0, 0 );
 
 #undef N_DIMS
-#undef VECTOR_TYPE
-
-#undef THIS_ARITHMETIC_TYPE
-#undef THIS_TYPE
-
-#undef VECTOR_TYPE_TEMPLATE
+#undef BASE
 
 // --- ColourRGB type --- //
 
 #define N_DIMS 3
-#define VECTOR_TYPE Vector::_VectorT<T1, N_DIMS, MEMORY_STRUCTURE1>
-#define VECTOR_TYPE_TEMPLATE template <typename T1, typename MEMORY_STRUCTURE1>
 
 template<typename T>
 struct _COLOUR3_MEM_STRUCT {
@@ -209,29 +174,28 @@ struct _COLOUR3_MEM_STRUCT {
 	};
 };
 
-#define THIS_ARITHMETIC_TYPE float
-#define THIS_TYPE Vector::_VectorT<THIS_ARITHMETIC_TYPE, N_DIMS, _COLOUR3_MEM_STRUCT<THIS_ARITHMETIC_TYPE>>
+#define BASE Vector::_Basic_Vector<float, N_DIMS, _COLOUR3_MEM_STRUCT<float>>
 
-struct ColourRGB : public THIS_TYPE {
+struct ColourRGB : public BASE {
 
-	using THIS_TYPE::_VectorT;
+	using BASE::_Basic_Vector;
 
-	VECTOR_TYPE_TEMPLATE
-		ColourRGB(VECTOR_TYPE other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		ColourRGB(Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1> other) {
 		for (size_t i = 0; i < N_DIMS; i++) {
 			(*this)[i] = other[i];
 		}
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		constexpr ColourRGB& operator *= (const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		constexpr ColourRGB& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		for (size_t i = 0; i < N_DIMS; i++)
 			(*this)[i] *= other[i];
 		return (*this);
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		friend const constexpr ColourRGB operator * (const ColourRGB& first, const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		friend const constexpr ColourRGB operator * (const ColourRGB& first, const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		return ColourRGB(first) *= other;
 	}
 
@@ -276,32 +240,30 @@ inline const ColourRGB ColourRGB::Magenta	( 1, 0, 1 );
 inline const ColourRGB ColourRGB::White		( 1, 1, 1 );
 inline const ColourRGB ColourRGB::Black,ColourRGB::Null,ColourRGB::Empty ( 0, 0, 0 );
 
-#undef THIS_ARITHMETIC_TYPE
-#undef THIS_TYPE
+#undef BASE
 
-#define THIS_ARITHMETIC_TYPE uint8_t
-#define THIS_TYPE Vector::_VectorT<THIS_ARITHMETIC_TYPE, N_DIMS, _COLOUR3_MEM_STRUCT<THIS_ARITHMETIC_TYPE>>
+#define BASE Vector::_Basic_Vector<uint8_t, N_DIMS, _COLOUR3_MEM_STRUCT<uint8_t>>
 
-struct ColourRGB255 : public THIS_TYPE {
+struct ColourRGB255 : public BASE {
 
-	using THIS_TYPE::_VectorT;
+	using BASE::_Basic_Vector;
 
-	VECTOR_TYPE_TEMPLATE
-		ColourRGB255(VECTOR_TYPE other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		ColourRGB255(Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1> other) {
 		for (size_t i = 0; i < N_DIMS; i++) {
 			(*this)[i] = other[i];
 		}
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		constexpr ColourRGB255& operator *= (const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		constexpr ColourRGB255& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		for (size_t i = 0; i < N_DIMS; i++)
 			(*this)[i] *= other[i];
 		return (*this);
 	}
 
-	VECTOR_TYPE_TEMPLATE
-		friend const constexpr ColourRGB255 operator * (const ColourRGB255& first, const VECTOR_TYPE& other) {
+	template <typename T1, typename MEMORY_STRUCTURE1>
+		friend const constexpr ColourRGB255 operator * (const ColourRGB255& first, const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		return ColourRGB255(first) *= other;
 
 	}
@@ -345,9 +307,4 @@ inline const ColourRGB255 ColourRGB255::White		( 255, 255, 255 );
 inline const ColourRGB255 ColourRGB255::Black,ColourRGB255::Null,ColourRGB255::Empty ( 0, 0, 0 );
 
 #undef N_DIMS
-#undef VECTOR_TYPE
-
-#undef THIS_ARITHMETIC_TYPE
-#undef THIS_TYPE
-
-#undef VECTOR_TYPE_TEMPLATE
+#undef BASE

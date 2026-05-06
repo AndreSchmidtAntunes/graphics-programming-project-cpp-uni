@@ -8,8 +8,6 @@
 class Camera;
 struct Material;
 
-#define TYPE GLfloat
-
 struct vertex_data {
 
 	Vector3 position;

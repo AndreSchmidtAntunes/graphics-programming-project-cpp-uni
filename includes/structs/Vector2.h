@@ -2,6 +2,7 @@
 
 #include "Vector.h"
 
+#define T _Ty
 #define N_DIMS 2
 
 template<typename T>
@@ -12,12 +13,12 @@ struct _VEC2_MEM_STRUCT {
 	};
 };
 
-#define THIS_TYPE Vector::_VectorT<T, N_DIMS, _VEC2_MEM_STRUCT<T>>
+#define THIS_TYPE Vector::_Basic_Vector<T, N_DIMS, _VEC2_MEM_STRUCT<T>>
 
 template<typename T>
 struct _Vector2T : public THIS_TYPE {
 
-	using THIS_TYPE::_VectorT;
+	using THIS_TYPE::_Basic_Vector;
 
 	constexpr _Vector2T(THIS_TYPE other) {
 		for (unsigned int i = 0; i < N_DIMS; i++) {

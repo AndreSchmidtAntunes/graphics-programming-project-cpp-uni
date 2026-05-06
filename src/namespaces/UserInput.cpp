@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <unordered_map>
-#include "imgui_impl_glut.h"
+#include "imguiLibs.h"
 
 #define intptr uintptr_t
 #define intptr_vec std::vector<intptr>

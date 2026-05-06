@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 #include "GLExtras.h"
-#include "Matrix3x3.h"
+#include "Matrix4x4.h"
 #include "Mesh.h"
 #include "Quaternion.h"
 #include "Scene.h"
@@ -19,11 +19,11 @@ void Camera::Rotate(const Quaternion& rotation)
 }
 
 void Camera::UpdateDirections() {
-	const Matrix3x3 rot_matrix = Matrix3x3::RotationMatrix(rotation);
+	const Matrix4x4 rot_matrix = Matrix4x4::RotationMatrix(rotation);
 	up		= rot_matrix * Vector3::Up;
 	forward = rot_matrix * Vector3::Forward;
 	right	= rot_matrix * Vector3::Right;
-	euler_rotation = rotation.Euler();
+	euler_rotation = rotation.ToEuler();
 }
 
 void Camera::setScene(Scene* const scene) {
