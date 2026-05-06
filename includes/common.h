@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 
-#include "custom_math.h"
-#include "rendering_structures.h"
+#include "common_math.h"
 #include "common_rendering.h"
+#include "rendering_structures.h"
+

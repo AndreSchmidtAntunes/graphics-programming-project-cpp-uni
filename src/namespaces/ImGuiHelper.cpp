@@ -1,4 +1,4 @@
-#include "ImGuiHelper.h"
+#include "imguiHelper.h"
 
 #include "Camera.h"
 #include "GLExtras.h"
@@ -30,13 +30,13 @@ namespace ImGuiHelper {
 		}
 
 		for (auto child : scene->root->getChildren()) {
-			DrawImGuiTransformFamily(child, &camera_following_radio_value);
+			DrawImGuiTransformFamily(io, child, &camera_following_radio_value);
 		}
 
 		ImGui::End();
 	}
 
-	void DrawImGuiTransformFamily(Basic_Transform* transform, int* camera_following_radio_value) {
+	void DrawImGuiTransformFamily(ImGuiIO& io, Basic_Transform* transform, int* camera_following_radio_value) {
 		std::string name = "transform " + std::to_string(transform->getChildIndex());
 		const char* heading = name.c_str();
 
@@ -60,7 +60,26 @@ namespace ImGuiHelper {
 					}
 				}
 
-				
+				if (ImGui::CollapsingHeader("Transforms", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGuiHelper::DrawImGuiVector3(transform->local_position, "Position");
+					ImGuiHelper::DrawImGuiVector3(transform->local_scale, "Scale   ");
+					ImGuiHelper::DrawImGuiQuaternion(transform->local_rotation, "Rotation");
+				}
+
+				if (transform->childCount() > 0)
+					if (ImGui::CollapsingHeader("children", ImGuiTreeNodeFlags_Bullet)) {
+
+						for (auto child : transform->getChildren()) {
+							ImGui::Text("     ");
+							ImGui::SameLine(0);
+							ImGui::BeginGroup();
+
+							ImGuiHelper::DrawImGuiTransformFamily(io, child, &ImGuiHelper::camera_following_radio_value);
+							ImGui::EndGroup();
+						}
+					}
+				transform->DrawImGuiData(io);
 			}
 			ImGui::EndChild();
 		}
@@ -95,10 +114,10 @@ namespace ImGuiHelper {
 	void DrawImGuiQuaternion(Quaternion& quat, const char* label, const char* w_label,  const char* x_label, const char* y_label, const char* z_label) {
 
 		ImGui::Text(label);ImGui::SameLine(0);	
-			ImGui::BeginChild(label, ImVec2(0, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
-		DrawImGuiInlineFloat3(&quat.x, "Real", x_label, y_label, z_label);
+		ImGui::BeginChild(label, ImVec2(0, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
+		DrawImGuiInlineFloat3(&(quat.x), "Real", x_label, y_label, z_label);
 		ImGui::Text("Imaginary"); ImGui::SameLine(0);	
-			ImGui::SliderFloat(w_label, &quat.w, -1, 1, "%.3f");
+		ImGui::SliderFloat(w_label, &(quat.w), -1, 1, "%.3f");
 		ImGui::EndChild();
 	}
 } // namespace ImGuiHelper

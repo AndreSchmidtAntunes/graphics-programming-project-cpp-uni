@@ -1,5 +1,7 @@
 #include "Basic_Transform.h"
 
+#include "imguiHelper.h"
+#include "imguiLibs.h"
 #include "Matrix4x4.h"
 #include "Scene.h"
 
@@ -18,29 +20,8 @@ const Matrix4x4 Basic_Transform::getWorldTransformMatrix() const {
 		return _parent->getWorldTransformMatrix() * getLocalTransformMatrix();
 }
 
-#include "imguiLibs.h"
-#include "imguiHelper.h"
-
 void Basic_Transform::DrawImGuiData(ImGuiIO& io) {
-	if (ImGui::CollapsingHeader("Transforms", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		DrawImGuiVector3(transform->local_position, "Position");
-		DrawImGuiVector3(transform->local_scale, "Scale   ");
-		DrawImGuiQuaternion(transform->local_rotation, "Rotation");
-	}
-
-	if (transform->childCount() > 0)
-		if (ImGui::CollapsingHeader("children", ImGuiTreeNodeFlags_Bullet)) {
-
-			for (auto child : transform->getChildren()) {
-				ImGui::Text("     ");
-				ImGui::SameLine(0);
-				ImGui::BeginGroup();
-
-				DrawImGuiTransformFamily(child, camera_following_radio_value);
-				ImGui::EndGroup();
-			}
-		}
+	
 }
 
 const Vector3 Basic_Transform::getWorldPosition() const {

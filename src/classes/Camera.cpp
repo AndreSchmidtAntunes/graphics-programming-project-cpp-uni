@@ -1,15 +1,10 @@
 #include "Camera.h"
 
 #include "GLExtras.h"
-#include "Matrix4x4.h"
-#include "Mesh.h"
-#include "Quaternion.h"
+
 #include "Scene.h"
-#include "Transform.h"
-
-#define DEG2RAD 0.017453292f
-#define HALF_PI 1.570796327f
-
+#include "common_math.h"
+#include "Basic_Transform.h"
 #include <iostream>
 
 void Camera::Rotate(const Quaternion& rotation)
@@ -20,9 +15,9 @@ void Camera::Rotate(const Quaternion& rotation)
 
 void Camera::UpdateDirections() {
 	const Matrix4x4 rot_matrix = Matrix4x4::RotationMatrix(rotation);
-	up		= rot_matrix * Vector3::Up;
-	forward = rot_matrix * Vector3::Forward;
-	right	= rot_matrix * Vector3::Right;
+	up		= rot_matrix.ApplyTransform(Vector3::Up);
+	forward = rot_matrix.ApplyTransform(Vector3::Forward);
+	right	= rot_matrix.ApplyTransform(Vector3::Right);
 	euler_rotation = rotation.ToEuler();
 }
 
@@ -63,13 +58,10 @@ const bool Camera::isTargetSelected() const {
 	return (focused_transform != nullptr) && (focused_transform->getScene() == _scene) && (focused_transform != _scene->root);
 }
 
-
 void Camera::DrawFamilyHierarchy(const Basic_Transform* const parent) const {
 	glPushMatrix();
 
 	GLExtras::PerformTransformation(parent->local_position, parent->local_rotation, parent->local_scale);
-
-	// switch case for drawing light transform and model transform
 	
 	parent->Draw();
 	
@@ -92,4 +84,6 @@ void Camera::RotateFirstPerson(const Vector3& look_dir) {
 	rotation = rotation * Quaternion::Euler(x, 0.0f, 0.0f);
 
 	UpdateDirections();
+
+	std::cout << "Camera rotation: " << euler_rotation << std::endl;
 }

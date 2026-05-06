@@ -30,7 +30,7 @@ struct Colour : public BASE {
 	}
 
 	template <typename T1, typename MEMORY_STRUCTURE1>
-		constexpr Colour& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
+		constexpr const Colour& operator *= (const Vector::_Basic_Vector<T1, N_DIMS, MEMORY_STRUCTURE1>& other) {
 		for (size_t i = 0; i < N_DIMS; i++)
 			(*this)[i] *= other[i];
 		return (*this);

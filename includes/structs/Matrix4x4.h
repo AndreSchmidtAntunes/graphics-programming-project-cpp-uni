@@ -48,21 +48,6 @@ struct _Matrix4x4T {
 
 	constexpr ~_Matrix4x4T(void) {};
 
-	// Constants
-
-	inline static const _Matrix4x4T<T> Identity{
-		{ 1, 0, 0, 0 },
-		{ 0, 1, 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ 0, 0, 0, 1 }
-	};
-	inline static const _Matrix4x4T<T> Zero{
-		{ 0, 0, 0, 0 },
-		{ 0, 0, 0, 0 },
-		{ 0, 0, 0, 0 },
-		{ 0, 0, 0, 0 }
-	};
-
 	constexpr _Matrix4x4T(void) : _Matrix4x4T(Identity) {};
 
 	// Static operations
@@ -165,6 +150,8 @@ struct _Matrix4x4T {
 				(*this)[row][col] = other[row][col];
 	}
 
+	// --- Vector 4 --- //
+
 	constexpr const _Vector4T<T> operator * (const _Vector4T<T>& mult) const {
 		return _Vector4T<T> {
 			(*this)[0][0] * mult.x + (*this)[0][1] * mult.y + (*this)[0][2] * mult.z + (*this)[0][3] * mult.w,
@@ -214,6 +201,28 @@ struct _Matrix4x4T {
 	constexpr const _Vector3T<T> ApplyTransform(const _Vector3T<T>& point = _Vector3T<T>::Zero) const {
 		return _Vector3T<T>((*this) * _Vector4T<T>(point + _Vector4T<T>::Ana));
 	};
+
+	// Constants
+
+	static const _Matrix4x4T<T> Identity;
+
+	static const _Matrix4x4T<T> Zero;
+};
+
+template <typename T> requires (std::is_arithmetic<T>::value)
+inline const _Matrix4x4T<T> _Matrix4x4T<T>::Identity {
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1
+};
+
+template <typename T> requires (std::is_arithmetic<T>::value)
+inline const _Matrix4x4T<T> _Matrix4x4T<T>::Zero {
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0,
+	0, 0, 0, 0
 };
 
 #undef N_DIMS

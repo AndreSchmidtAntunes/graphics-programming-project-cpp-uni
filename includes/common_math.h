@@ -5,7 +5,6 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "Quaternion.h"
-#include "FastInvSqrt.h"
 
 static const float PI = 3.141592653589793;
 static const float PHI = 1.570796326794897;

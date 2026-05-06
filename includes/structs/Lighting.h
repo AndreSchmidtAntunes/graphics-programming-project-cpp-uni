@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Basic_Transform.h"
-
 #include "Colour.h"
 #include "Vector3.h"
 #include <bitset>
@@ -32,3 +31,5 @@ public:
 
 	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position, const Colour& ambient = Colour(0.65, 0.65, 0.65, 1), const Colour& diffuse = Colour(0.75, 0.75, 0.75, 1), const Colour& specular = Colour(0.5, 0.5, 0.5, 1));
 };
+
+inline std::bitset<SAFE_MINIMUM_LIGHT_COUNT> Light::_taken_IDs = 0;

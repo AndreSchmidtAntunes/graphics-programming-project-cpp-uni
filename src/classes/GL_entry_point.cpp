@@ -1,16 +1,12 @@
 ﻿#include "GL_entry_point.h"
 
 #include "AssetCache.h"
-
 #include "common.h"
-
 #include "GLUTCallbacks.h"
-
+#include "imguiHelper.h"
 #include "UserInput.h"
 #include <Windows.h>
 
-#include "imguiHelper.h"
-#include "imguiLibs.h"
 
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
@@ -182,8 +178,8 @@ void GL_entry_point::Update() {
 	if (rot >= 360.0f)
 		rot = 0.0f;
 
-	transform_A->local_rotation = Quaternion::Euler(0.0, rot * DEG2RAD, 0.0);
-	transform_B->local_rotation = Quaternion::Euler(rot * DEG2RAD, 0.0, 0.0);
+	transform_A->local_rotation = Quaternion::Euler(0.0f, rot * DEG2RAD, 0.0f);
+	transform_B->local_rotation = Quaternion::Euler(rot * DEG2RAD, 0.0f, 0.0f);
 	transform_B->local_scale = Vector3::One * (sin(rot * DEG2RAD) + 1.5f);
 	//transform_D->local_position = Vector3(sin(rot * DEG2RAD), 0.0f, -5.0f);
 }

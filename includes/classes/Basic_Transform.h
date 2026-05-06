@@ -37,11 +37,12 @@ protected:
 	const Matrix4x4 getLocalTransformMatrix() const;
 	const Matrix4x4 getWorldTransformMatrix() const;
 
-	virtual void DrawImGuiData(ImGuiIO& io);
 
 public:
 
 	virtual void Draw() const {} // override this with how the transform type will be drawn
+	virtual void DrawImGuiData(ImGuiIO& io); // override this with how the transform's data should display in the scene hierarchy ui
+
 
 	constexpr ~Basic_Transform(void) { // destroy all children, as they would otherwise be orphans
 		for (auto child : _children) {

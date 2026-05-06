@@ -49,7 +49,7 @@ namespace Vector {
 #define OTHER_TYPE_TEMPLATE template<typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
 #define THIS_AND_OTHER_TYPE_TEMPLATE template<typename T, size_t nDim, typename MEMORY_STRUCTURE, typename T1, size_t nDim1, typename MEMORY_STRUCTURE1>
 
-#define OTHER_ARITHMETIC_TYPE_TEMPLATE template <typename T1> requires (std::is_arithmetic<T1>::value)
+#define OTHER_ARITHMETIC_TYPE_TEMPLATE template <typename T1> requires (std::is_convertible<T1,T>::value)
 
 	// -- The Vector struct -- //
 
@@ -110,7 +110,7 @@ namespace Vector {
 		template<typename... Args> requires ( // Variadic constructor is used if:
 			(sizeof...(Args) + 1 <= nDim) &&		// - number of args is less than or equal to number of stated dimensions.
 			(std::conjunction_v<std::is_convertible<Args, T>...>)) // - if all of the given parameters are convertible to a numeric type.
-			constexpr _Basic_Vector(const T first, const Args... args) : _Basic_Vector() {
+			explicit constexpr _Basic_Vector(const T first, const Args... args) : _Basic_Vector() {
 			set_from_variadic(first, args...);
 		}
 

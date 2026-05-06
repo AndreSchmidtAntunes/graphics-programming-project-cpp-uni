@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Vector3.h"
+#include "imguiLibs.h"
 #include "Colour.h"
 #include "Quaternion.h"
+#include "Vector3.h"
 
 struct ImGuiIO;
 class Basic_Transform;
@@ -22,6 +23,6 @@ void DrawImGuiQuaternion(Quaternion& quat, const char* label, const char* w_labe
 
 void SceneTree(ImGuiIO& io, Scene* const scene, Colour* bg_colour = nullptr);
 
-void DrawImGuiTransformFamily(Basic_Transform* transform, int* camera_following_radio_value);
+void DrawImGuiTransformFamily(ImGuiIO& io, Basic_Transform* transform, int* camera_following_radio_value);
 
 } // namespace ImGuiHelper

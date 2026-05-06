@@ -59,11 +59,11 @@
     <ClInclude Include="includes\FastInvSqrt.h" />
     <ClInclude Include="includes\GLLibs.h" />
     <ClInclude Include="includes\imguiLibs.h" />
-    <ClInclude Include="includes\custom_math.h" />
+    <ClInclude Include="includes\common_math.h" />
     <ClInclude Include="includes\namespaces\AssetCache.h" />
     <ClInclude Include="includes\namespaces\GLExtras.h" />
     <ClInclude Include="includes\namespaces\GLUTCallbacks.h" />
-    <ClInclude Include="includes\namespaces\ImGuiHelper.h" />
+    <ClInclude Include="includes\namespaces\imguiHelper.h" />
     <ClInclude Include="includes\namespaces\UserInput.h" />
     <ClInclude Include="includes\namespaces\Vector.h" />
     <ClInclude Include="includes\rendering_structures.h" />
