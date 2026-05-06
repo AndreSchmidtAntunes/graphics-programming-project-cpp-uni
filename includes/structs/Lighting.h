@@ -7,7 +7,12 @@
 
 #define SAFE_MINIMUM_LIGHT_COUNT 8
 
-class Light : public Basic_Transform { /// TODO: get this displaying in editor and allow changing of values
+enum Light_Type : int {
+	Direction = 0,  // the light is positioned at infinity
+	Position = 1
+};
+
+class Light : public Basic_Transform {
 
 	using Basic_Transform::Basic_Transform;
 
@@ -20,6 +25,8 @@ class Light : public Basic_Transform { /// TODO: get this displaying in editor a
 	static void setLight(const Light* const light);
 
 public:
+
+	int light_type = Light_Type::Position; // placed at a position in space within the scene
 
 	void Draw() const {
 		setLight(this);
@@ -35,3 +42,5 @@ public:
 };
 
 inline std::bitset<SAFE_MINIMUM_LIGHT_COUNT> Light::_taken_IDs = 0;
+
+#undef SAFE_MINIMUM_LIGHT_COUNT

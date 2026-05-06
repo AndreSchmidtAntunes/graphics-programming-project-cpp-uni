@@ -158,7 +158,7 @@ GL_entry_point::~GL_entry_point(void) {
 }
 
 ////////////////////
-/// TODO: make lights a transform derived class and add light support to the scene graph
+/// TODO: reimport cube mesh and use it to make a small scene with some lights
 ////////////////////
 
 void GL_entry_point::Render() {

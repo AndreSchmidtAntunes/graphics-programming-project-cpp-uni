@@ -10,7 +10,7 @@
 
 namespace ImGuiHelper {
 
-	const static ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoCollapse;
+	const static ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing;
 	const static ImGuiChildFlags auto_resize_child_flags = ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY;
 
 	void FPS(ImGuiIO& io, float delta_time) {
@@ -46,7 +46,7 @@ namespace ImGuiHelper {
 
 		if (ImGui::CollapsingHeader(transform->getName()))
 		{
-			ImGui::BeginChild(heading, ImVec2(0, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
+			ImGui::BeginChild(heading, ImVec2(-1, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
 			{
 				if (ImGui::RadioButton("Follow", camera_following_radio_value, transform->getSceneTransformID())) {
 					transform->getScene()->getCamera()->focused_transform = transform;
@@ -62,8 +62,9 @@ namespace ImGuiHelper {
 
 				if (ImGui::CollapsingHeader("Transforms", ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					ImGuiHelper::DrawImGuiVector3(transform->local_position, "Position");
-					ImGuiHelper::DrawImGuiVector3(transform->local_scale, "Scale   ");
+					ImGuiHelper::DrawImGuiVector3(transform->local_position,	"\nPosition");
+					ImGuiHelper::DrawImGuiVector3(transform->local_scale,		"\n   Scale");
+					ImGui::Text("\nRotation"); ImGui::SameLine(0);
 					ImGuiHelper::DrawImGuiQuaternion(transform->local_rotation, "Rotation");
 				}
 
@@ -85,39 +86,40 @@ namespace ImGuiHelper {
 		}
 	}
 
-	void DrawImGuiInlineFloat3(float* values, const char* label, const char* x_label, const char* y_label, const char* z_label) {
-		ImGui::BeginChild(label, ImVec2(0, 0), auto_resize_child_flags);
+	void DrawImGuiInlineFloat3(float* values, const char* x_label, const char* y_label, const char* z_label) {
 
 		const float float_input_width = 100.0f;
 
 		ImGui::PushItemWidth(float_input_width);
-
-		ImGui::Text(label);	
-		ImGui::SameLine(0);	ImGui::BeginGroup();
+		
+		//ImGui::SameLine(0);	
+		ImGui::BeginGroup();
 			ImGui::InputFloat(x_label, &values[0], 0.1f, 1.0f, "%.1f");
-			ImGui::SameLine(0); ImGui::BeginGroup();
+			ImGui::SameLine(0); 
+			ImGui::BeginGroup();
 				ImGui::InputFloat(y_label, &values[1], 0.1f, 1.0f, "%.1f");
-				ImGui::SameLine(0); ImGui::BeginGroup();
+				ImGui::SameLine(0); 
+				ImGui::BeginGroup();
 					ImGui::InputFloat(z_label, &values[2], 0.1f, 1.0f, "%.1f");
 				ImGui::EndGroup();
 			ImGui::EndGroup();
 		ImGui::EndGroup();
 
 		ImGui::PopItemWidth();
-		ImGui::EndChild();
 	}
 
 	void DrawImGuiVector3(Vector3& vector3, const char* label, const char* x_label, const char* y_label, const char* z_label) {
-		DrawImGuiInlineFloat3(&vector3[0], label, x_label, y_label, z_label);
+		ImGui::Text(label); ImGui::SameLine(0);
+		ImGui::BeginChild(label, ImVec2(-1, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
+			DrawImGuiInlineFloat3(&vector3[0], x_label, y_label, z_label);
+		ImGui::EndChild();
 	}
 
-	void DrawImGuiQuaternion(Quaternion& quat, const char* label, const char* w_label,  const char* x_label, const char* y_label, const char* z_label) {
-
-		ImGui::Text(label);ImGui::SameLine(0);	
-		ImGui::BeginChild(label, ImVec2(0, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
-		DrawImGuiInlineFloat3(&(quat.x), "Real", x_label, y_label, z_label);
-		ImGui::Text("Imaginary"); ImGui::SameLine(0);	
-		ImGui::SliderFloat(w_label, &(quat.w), -1, 1, "%.3f");
+	void DrawImGuiQuaternion(Quaternion& quat, const char* str_id, const char* w_label,  const char* x_label, const char* y_label, const char* z_label) {
+		ImGui::BeginChild(str_id, ImVec2(-1, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
+			DrawImGuiInlineFloat3(&(quat.x), x_label, y_label, z_label);
+			ImGui::SliderFloat(" ", &(quat.w), -1, 1);
+			ImGui::SameLine(0); ImGui::Text(w_label);
 		ImGui::EndChild();
 	}
 } // namespace ImGuiHelper
