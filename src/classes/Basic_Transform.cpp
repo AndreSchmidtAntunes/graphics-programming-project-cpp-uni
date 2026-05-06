@@ -20,10 +20,6 @@ const Matrix4x4 Basic_Transform::getWorldTransformMatrix() const {
 		return _parent->getWorldTransformMatrix() * getLocalTransformMatrix();
 }
 
-void Basic_Transform::DrawImGuiData(ImGuiIO& io) {
-	
-}
-
 const Vector3 Basic_Transform::getWorldPosition() const {
 
 	if (_is_root) return Vector3::Zero;

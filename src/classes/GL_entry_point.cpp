@@ -1,12 +1,10 @@
 ﻿#include "GL_entry_point.h"
 
-#include "AssetCache.h"
 #include "common.h"
 #include "GLUTCallbacks.h"
 #include "imguiHelper.h"
 #include "UserInput.h"
 #include <Windows.h>
-
 
 #define CAMERA (*GLUTCallbacks::GetEntryPoint().camera)
 #define DELTATIME GLUTCallbacks::GetEntryPoint().deltaTime
@@ -36,6 +34,8 @@ static Transform* transform_A;
 static Transform* transform_B;
 static Transform* transform_C;
 static Transform* transform_D;
+static Light* light_1;
+static Light* light_2;
 
 GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), deltaTime(0) {
 
@@ -124,12 +124,24 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 	transform_D->setTexture(penguins_texture);
 	transform_D->setMaterial(shiny_blue_material);
 
+	light_1 = new Light("Warm Light", transform_D, Vector3(0, 0.5, 1));
+	light_1->ambient = Colour(1, 0.95, 0.95);
+	light_1->diffuse = Colour(1, 0.95, 0.95);
+	light_1->specular = Colour(1, 0.95, 0.95);
+
+	light_2 = new Light("Large Green Light", scene->root, Vector3(-20, -10, 1));
+	light_2->ambient  = Colour::Green * 500;
+	light_2->diffuse  = Colour::Green * 500;
+	light_2->specular = Colour::White * 500;
+
 // hierarchy:
 	//	root
 	//	╟══	A
 	//	║	╚══	B
 	//	║		╚══ C
-	//	╚══	D
+	//	╟══	D
+	//	║	╚══ light1
+	//	╚══ light2
 
 	UserInput::Enable(); //allow user input after everything has been properly set up.
 		

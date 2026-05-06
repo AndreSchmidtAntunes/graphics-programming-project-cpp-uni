@@ -25,11 +25,13 @@ public:
 		setLight(this);
 	}
 
+	void DrawImGuiData(ImGuiIO& io);
+
 	Colour ambient;
 	Colour diffuse;
 	Colour specular;
 
-	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position, const Colour& ambient = Colour(0.65, 0.65, 0.65, 1), const Colour& diffuse = Colour(0.75, 0.75, 0.75, 1), const Colour& specular = Colour(0.5, 0.5, 0.5, 1));
+	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position = Vector3::Zero, const Colour& ambient = Colour(0.5, 0.5, 0.5, 1), const Colour& diffuse = Colour(0.5, 0.5, 0.5, 1), const Colour& specular = Colour(0.5, 0.5, 0.5, 1));
 };
 
 inline std::bitset<SAFE_MINIMUM_LIGHT_COUNT> Light::_taken_IDs = 0;

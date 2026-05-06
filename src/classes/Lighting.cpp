@@ -1,6 +1,7 @@
 #include "Lighting.h"
 
 #include "GLLibs.h"
+#include "imguiLibs.h"
 #include <iostream>
 
 void Light::setLight(const Light* const light) {
@@ -25,4 +26,16 @@ Light::Light(const char* name, Basic_Transform* const parent, const Vector3& loc
 			return;
 		}
 	throw std::out_of_range("All GL Light slots have been filled. Light Object with name \"" + std::string(name) + "\" Failed instantiation.");
+}
+
+static const ImGuiColorEditFlags colourEditImGuiFlags = ImGuiColorEditFlags_DisplayHex | ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_DisplayHSV;
+
+void Light::DrawImGuiData(ImGuiIO& io) {
+	if (ImGui::CollapsingHeader("Emission", ImGuiTreeNodeFlags_Bullet)) {
+		ImGui::BeginChild("Light Colour Values", ImVec2(0, 0), ImGuiChildFlags_Borders);
+			ImGui::ColorPicker4(" Ambiant", &(ambient[0]), colourEditImGuiFlags);
+			ImGui::ColorPicker4(" Diffuse", &(diffuse[0]), colourEditImGuiFlags);
+			ImGui::ColorPicker4("Specular", &(specular[0]), colourEditImGuiFlags);
+		ImGui::EndChild();
+	}
 }

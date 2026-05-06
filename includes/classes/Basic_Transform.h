@@ -30,19 +30,16 @@ protected:
 		_parent(nullptr),
 		_child_index(0),
 		_name("root")
-	{
-	} // used by the scene class to make a root transform 
+	{ } // used by the scene class to make a root transform 
 	friend class Scene;
 
 	const Matrix4x4 getLocalTransformMatrix() const;
 	const Matrix4x4 getWorldTransformMatrix() const;
 
-
 public:
 
-	virtual void Draw() const {} // override this with how the transform type will be drawn
-	virtual void DrawImGuiData(ImGuiIO& io); // override this with how the transform's data should display in the scene hierarchy ui
-
+	virtual void Draw() const { } // override this with how the transform type will be drawn
+	virtual void DrawImGuiData(ImGuiIO& io) { }; // override this with how the transform's data should display in the scene hierarchy ui
 
 	constexpr ~Basic_Transform(void) { // destroy all children, as they would otherwise be orphans
 		for (auto child : _children) {
@@ -93,10 +90,9 @@ public:
 	inline constexpr Basic_Transform* const getChild(const size_t index) const { return _children[index]; }
 	inline constexpr const std::vector<Basic_Transform*>& getChildren() const { return _children; }
 
-	inline constexpr const size_t getChildIndex() const { return _child_index; };
+	inline constexpr const size_t getChildIndex() const { return _child_index;	}
 	inline constexpr const size_t childCount() const { return _children.size(); }
 	inline constexpr const size_t descendantCount() const {
-
 		size_t count = _children.size();
 		for (auto child : _children) {
 			count += child->descendantCount();
