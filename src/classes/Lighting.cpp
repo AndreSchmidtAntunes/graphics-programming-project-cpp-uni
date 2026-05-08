@@ -14,6 +14,7 @@ void Light::setLight(const Light* const light) {
 	glLightfv(GL_LIGHT0 + light->_light_index, GL_DIFFUSE, &(light->diffuse[0]));
 	glLightfv(GL_LIGHT0 + light->_light_index, GL_SPECULAR, &(light->specular[0]));
 	glLightfv(GL_LIGHT0 + light->_light_index, GL_POSITION, &((light->getWorldPosition() + (Vector4::Ana * light->light_type))[0]));
+	glLightf(GL_LIGHT0 +  light->_light_index, GL_QUADRATIC_ATTENUATION, 1 - light->falloff);
 }
 
 Light::Light(const char* name, Basic_Transform* const parent, const Vector3& local_position, const Colour& ambient, const Colour& diffuse, const Colour& specular)
@@ -35,6 +36,8 @@ static const ImGuiColorEditFlags colourEditImGuiFlags = ImGuiColorEditFlags_Disp
 const static ImGuiChildFlags auto_resize_child_flags = ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY;
 
 void Light::DrawImGuiData(ImGuiIO& io) {
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->Colors[ImGuiCol_Header] = ImVec4(0.841, 0.618, 0.195, 0.31);
 	if (ImGui::CollapsingHeader("Emission", ImGuiTreeNodeFlags_Bullet)) {
 
 		static const char* type_list[] = { "Direction", "Position" };
@@ -45,6 +48,8 @@ void Light::DrawImGuiData(ImGuiIO& io) {
 			ImGui::ColorEdit4(" Ambiant",  &(ambient[0]), colourEditImGuiFlags);
 			ImGui::ColorEdit4(" Diffuse",  &(diffuse[0]), colourEditImGuiFlags);
 			ImGui::ColorEdit4("Specular", &(specular[0]), colourEditImGuiFlags);
-		ImGui::EndChild();
+			ImGui::SliderFloat("Attenuation", &falloff, 0, 1, "%.3f", ImGuiSliderFlags_Logarithmic);
+			ImGui::EndChild(); 
 	}
+	style->Colors[ImGuiCol_Header] = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
 }

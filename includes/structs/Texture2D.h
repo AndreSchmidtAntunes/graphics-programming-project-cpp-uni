@@ -14,12 +14,11 @@ struct Texture2D {
 	const size_t& getWidth() const	{ return data[0]; }
 	const size_t& getHeight() const { return data[1]; }
 
-	static const Texture2D* FromFile(const char* file_path, const size_t width, const size_t height);
-	const bool LoadFile(const char* file_path, const size_t width, const size_t height);
-
-	Texture2D(const char* file_path, const size_t width, const size_t height) {
-		LoadFile(file_path, width, height);
-	}
+	static Texture2D* FromFileRAW(const char* file_path, const size_t width, const size_t height);
+	static Texture2D* FromFileBMP(const char* file_path);
+	
+	const bool LoadFileRAW(const char* file_path, const size_t width, const size_t height);
+	const bool LoadFileBMP(const char* file_path);
 
 	constexpr ~Texture2D(void) {
 		if (_ID != 0)
@@ -35,6 +34,8 @@ protected:
 
 	// internal constructor 
 	constexpr Texture2D(void) : data({}) {}
+
+	const bool LoadRawData(const char* data, const size_t width, const size_t height, const char* file_path);
 };
 
 #undef N_DIMS

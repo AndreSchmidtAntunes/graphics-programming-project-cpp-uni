@@ -2,7 +2,7 @@
 
 #include "Mesh.h"
 
-void Transform::Draw() const {
+void Model::Draw() const {
 	if (_mesh && is_mesh_enabled)
 		_mesh->DrawElements(_material, _texture);
 }

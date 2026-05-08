@@ -194,6 +194,16 @@ namespace UserInput {
 		_oldMousePos = _mousePos;
 	}
 
+	void MouseWheelCallback(int wheel, int direction, int x, int y) {
+
+		if (!enabled) return;
+
+		ImGui_ImplGLUT_MouseWheelFunc(wheel, direction, x, y);
+		ImGuiIO& io = ImGui::GetIO();
+
+		// I have not added support for user defined mouse wheel callbacks due to time constraints.
+	}
+
 	const int Init(bool enable_emediatly) {
 		if (glutGet(GLUT_INIT_STATE) == 1 && !has_namespace_been_initialised) {
 
@@ -204,6 +214,7 @@ namespace UserInput {
 			glutSpecialUpFunc(SpecialUpCallback);
 
 			glutMouseFunc(MouseCallback);
+			glutMouseWheelFunc(MouseWheelCallback);
 
 			glutMotionFunc(MouseDragCallback);
 			glutPassiveMotionFunc(MouseMoveCallback);
@@ -216,7 +227,7 @@ namespace UserInput {
 		}
 
 		std::cerr << "GLUT must be initialised before initialising UserInput." << std::endl;
-		return -1;
+		throw -1;
 	}
 
 

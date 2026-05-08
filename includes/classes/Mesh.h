@@ -21,6 +21,7 @@ struct vertex_data {
 };
 
 class Mesh {
+	bool _rendering_enabled = false;
 public:
 
 	vertex_data* vertices = nullptr; size_t vertices_size;
@@ -30,7 +31,6 @@ public:
 	bool shade_smooth = false;
 
 	bool has_colours = false, has_normals = false, has_tex_coords = false;
-
 
 	void DrawElements(const Material* const material = nullptr, const Texture2D* const texture = nullptr) const;
 

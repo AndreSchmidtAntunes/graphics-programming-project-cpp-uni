@@ -27,13 +27,14 @@ void MoveBack()    { CAMERA.position += CAMERA.forward * MOVESPEED * DELTATIME; 
 void MoveRight()   { CAMERA.position += CAMERA.right * MOVESPEED * DELTATIME;	}
 void MoveLeft()	   { CAMERA.position -= CAMERA.right * MOVESPEED * DELTATIME;	}
 
-static Colour clear_colour = Colour(0.396f, 0.396f, 0.502f, 1.0f);
+static Colour clear_colour = Colour(0.565f, 0.617f, 0.725f, 1.000f);
 
 static Scene* scene;
-static Transform* transform_A;
-static Transform* transform_B;
-static Transform* transform_C;
-static Transform* transform_D;
+static Model* transform_A;
+static Model* transform_B;
+static Model* transform_C;
+static Model* transform_D;
+static Model* floor_model;
 static Light* light_1;
 static Light* light_2;
 
@@ -44,7 +45,12 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitWindowSize(1500, 1000);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
+	glutInitDisplayMode(
+		  GLUT_DOUBLE 
+		| GLUT_DEPTH 
+		| GLUT_RGBA 
+		| GLUT_MULTISAMPLE
+	);
 	glutCreateWindow("Graphics Programming App");
 
 	glutDisplayFunc(GLUTCallbacks::UpdateLoop);
@@ -82,14 +88,16 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 	UserInput::AddMouseDragCallback(CameraDragRotate);
 
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &(Colour(0.1f, 0.1f, 0.1f)[0]));
+
+
 	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	Texture2D* penguins_texture = new Texture2D("textures/penguins.raw", 512, 512);
+	glEnable(GL_NORMALIZE);
+
 	Material* shiny_blue_material = new Material(Colour::Blue, Colour(0.75, 0.75, 0.75, 1), Colour::White, 1);
 	Material* matt_red_material = new Material(Colour::Red, Colour::Red, Colour::Red, 0.1);
 	Material* bight_green_material = new Material(Colour::Green, Colour::Green, Colour::White, 1);
@@ -97,54 +105,75 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 
 	Mesh* suzanne_mesh = new Mesh("models/suzanne.obj");
 	Mesh* cube_mesh = new Mesh("models/cube.obj");
+	Mesh* teapot_mesh = new Mesh("models/teapot.obj");
+
+	Texture2D* penguins_texture = Texture2D::FromFileRAW("textures/penguins.raw", 512, 512);
+	Texture2D* snail_texture = Texture2D::FromFileBMP("textures/snail.bmp");
 
 	scene = new Scene;
 
 	camera->setScene(scene);
 
-	transform_A = new Transform("green suzanne", scene->root, Vector3(5, -1, -5));
+	Light* sun_light = new Light("Sun Lighting", scene->root, Vector3(-6, 10, -2.5));
+	sun_light->light_type = Light_Type::Direction;
+	sun_light->ambient = Colour::Hex8(0x8B8477FF);
+	sun_light->diffuse = Colour::Hex8(0xDF691BFF);
+	sun_light->ambient = Colour::Hex8(0x87692EFF);
+
+	floor_model = new Model("floor", scene->root, Vector3(0, -5, 0), Quaternion::Identity, Vector3(100, 1, 100));
+	floor_model->setMesh(cube_mesh);
+	floor_model->setTexture(snail_texture);
+
+	transform_A = new Model("green suzanne", scene->root, Vector3(5, -1, -5));
 	transform_A->local_scale = Vector3::One * 0.5;
 	transform_A->setMesh(suzanne_mesh);
 	transform_A->setMaterial(bight_green_material);
 
-	transform_B = new Transform("cube", transform_A, Vector3(0, 0, -10));
+	transform_B = new Model("cube", transform_A, Vector3(0, 0, -10));
 	transform_B->local_scale = Vector3::One * 10;
 	transform_B->setMesh(cube_mesh);
 	transform_B->setMaterial(bight_magenta_material);
+	transform_B->setTexture(penguins_texture);
 
-	transform_C = new Transform("red suzanne", scene->root, Vector3(-3, -3, -4));
+	transform_C = new Model("red suzanne", scene->root, Vector3(-3, -3, -4));
 	transform_C->setParent(transform_B); // changed C's parent from root to B.
 	transform_C->local_scale = Vector3::One * 0.2;
 	transform_C->setMaterial(matt_red_material);
 	transform_C->setMesh(suzanne_mesh);
 
-	transform_D = new Transform("blue suzanne", scene->root);
-	transform_D->local_position = Vector3::Back * 5 + Vector3::Left * 2;
-	transform_D->setMesh(suzanne_mesh);
-	transform_D->setTexture(penguins_texture);
+	transform_D = new Model("tea pot", scene->root);
+	transform_D->local_position = Vector3::Back * 5 + Vector3::Left * 2 + Vector3::Down * 2;
+	transform_D->setMesh(teapot_mesh);
+	transform_D->setTexture(snail_texture);
 	transform_D->setMaterial(shiny_blue_material);
 
-	light_1 = new Light("Warm Light", transform_D, Vector3(0, 0.5, 1));
-	light_1->ambient = Colour(1, 0.95, 0.95);
-	light_1->diffuse = Colour(1, 0.95, 0.95);
-	light_1->specular = Colour(1, 0.95, 0.95);
+	light_1 = new Light("green light", transform_D, Vector3(-2, 0, 0.5));
+	light_1->light_type = Light_Type::Position;
+	light_1->diffuse = Colour(0.026f, 0.210f, 0.026f, 1.000f);
+	light_1->specular = Colour(0.022f, 1.000f, 0.271f, 1.000f);
+	light_1->ambient = Colour(0.109f, 0.133f, 0.066f, 1.000f);
+	light_1->falloff = 0.922;
 
-	light_2 = new Light("Large Green Light", scene->root, Vector3(-20, -10, 1));
-	light_2->ambient  = Colour::Green * 500;
-	light_2->diffuse  = Colour::Green * 500;
-	light_2->specular = Colour::White * 500;
+	light_2 = new Light("pink light", scene->root, Vector3(-20, -10, 1));
+	light_2->light_type = Light_Type::Position;
+	light_2->specular = Colour(0.200f, 0.000f, 0.000f, 1.000f);
+	light_2->diffuse = Colour(0.200f, 0.000f, 0.000f, 1.000f);
+	light_2->ambient = Colour(1.000f, 0.210f, 0.210f, 1.000f);
+	light_2->falloff = 0.889;
 
 // hierarchy:
 	//	root
+	//	╟══ sun_light
+	//	╟══ floor
 	//	╟══	A
 	//	║	╚══	B
 	//	║		╚══ C
-	//	╟══	D
-	//	║	╚══ light1
+	//	╟══	teapot
+	//	║	╚══ light1	
 	//	╚══ light2
 
 	UserInput::Enable(); //allow user input after everything has been properly set up.
-		
+	
 	glutMainLoop();
 }
 
@@ -156,10 +185,6 @@ GL_entry_point::~GL_entry_point(void) {
 
 	delete camera;
 }
-
-////////////////////
-/// TODO: reimport cube mesh and use it to make a small scene with some lights
-////////////////////
 
 void GL_entry_point::Render() {
 

@@ -5,7 +5,7 @@ struct Material;
 struct Texture2D;
 class Mesh;
 
-class Transform : public Basic_Transform {
+class Model : public Basic_Transform {
 
 	using Basic_Transform::Basic_Transform;
 

@@ -37,8 +37,9 @@ public:
 	Colour ambient;
 	Colour diffuse;
 	Colour specular;
+	float falloff = 0.1f;
 
-	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position = Vector3::Zero, const Colour& ambient = Colour(0.5, 0.5, 0.5, 1), const Colour& diffuse = Colour(0.5, 0.5, 0.5, 1), const Colour& specular = Colour(0.5, 0.5, 0.5, 1));
+	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position = Vector3::Zero, const Colour& ambient = Colour::Black, const Colour& diffuse = Colour::Black, const Colour& specular = Colour::Black);
 };
 
 inline std::bitset<SAFE_MINIMUM_LIGHT_COUNT> Light::_taken_IDs = 0;

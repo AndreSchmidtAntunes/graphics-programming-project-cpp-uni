@@ -38,13 +38,13 @@ Mesh::Mesh(const Vector3* vertices, const size_t vertices_count, const size_t* i
 }
 
 Mesh::~Mesh() {
-	delete[vertices_size] vertices;
-	delete[vert_indices_count] vert_indices;
+	delete[] vertices;
+	delete[] vert_indices;
 }
 
 bool Mesh::LoadFromFile(const char* file_name) {
 
-	/// TODO: add svg support or whatever its called
+	this->_rendering_enabled = false; // disable rendering while loading mesh
 
 	std::vector<Vector3> l_vertices = {}, l_normals = {};
 	std::vector<TexCoord> l_tex_coords = {};
@@ -199,6 +199,7 @@ bool Mesh::LoadFromFile(const char* file_name) {
 	}
 
 	std::cout << "Successfully loaded mesh: " << file_name << std::endl;
+	this->_rendering_enabled = true;
 	return true;
 }
 
@@ -206,18 +207,26 @@ bool Mesh::LoadFromFile(const char* file_name) {
 #include "Texture2D.h"
 #include "Material.h"
 
+const static Material* _default_material = new Material(Colour(.3, .3, .3, 1), Colour(.3, .3, .3, 1));
+
 #define VERTEX_DATA_STRIDE 48
 
 void Mesh::DrawElements(const Material* const material, const Texture2D* const texture) const {
+
+
+	if (!this->_rendering_enabled) return;
+
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, VERTEX_DATA_STRIDE, vertices );
+		glVertexPointer(3, GL_FLOAT, VERTEX_DATA_STRIDE, vertices);
 
 		glShadeModel(shade_smooth ? GL_SMOOTH : GL_FLAT);
 
-		if (has_tex_coords && texture) {
-			glBindTexture(GL_TEXTURE_2D, texture->getID());
+		if (has_tex_coords) {
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glTexCoordPointer(2, GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 12);
+			if (texture && texture->getID() != 0) {
+				glBindTexture(GL_TEXTURE_2D, texture->getID());
+			}
 		} // where should i use uv and normal indicies?
 
 		if (has_normals) {
@@ -225,11 +234,11 @@ void Mesh::DrawElements(const Material* const material, const Texture2D* const t
 			glNormalPointer(GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 20);
 		}
 
-		if (has_tex_coords && has_normals && material) {
-			Material::setMatrial(material);
+		if (has_tex_coords && has_normals) {
+			Material::setMatrial(material ? material : _default_material);
 		}
 
-		if (has_colours) {
+		else if (has_colours) {
 			glEnableClientState(GL_COLOR_ARRAY);
 			glColorPointer(4, GL_FLOAT, VERTEX_DATA_STRIDE, vertices + 32);
 		}

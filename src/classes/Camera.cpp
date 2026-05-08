@@ -84,6 +84,4 @@ void Camera::RotateFirstPerson(const Vector3& look_dir) {
 	rotation = rotation * Quaternion::Euler(x, 0.0f, 0.0f);
 
 	UpdateDirections();
-
-	std::cout << "Camera rotation: " << euler_rotation << std::endl;
 }
