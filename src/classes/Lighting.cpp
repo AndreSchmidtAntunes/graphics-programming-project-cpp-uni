@@ -1,7 +1,6 @@
 #include "Lighting.h"
-
 #include "GLLibs.h"
-#include "imguiLibs.h"
+#include "common_imgui.h"
 #include <iostream>
 
 void Light::setLight(const Light* const light) {
@@ -17,8 +16,8 @@ void Light::setLight(const Light* const light) {
 	glLightf(GL_LIGHT0 +  light->_light_index, GL_QUADRATIC_ATTENUATION, 1 - light->falloff);
 }
 
-Light::Light(const char* name, Basic_Transform* const parent, const Vector3& local_position, const Colour& ambient, const Colour& diffuse, const Colour& specular)
-	: ambient(ambient), diffuse(diffuse), specular(specular), Basic_Transform(name, parent, local_position) {
+Light::Light(const char* name, Transform* const parent, const Vector3& local_position, const Colour& ambient, const Colour& diffuse, const Colour& specular)
+	: ambient(ambient), diffuse(diffuse), specular(specular), Transform(name, parent, local_position) {
 	for (int i = 0; i < _taken_IDs.size(); i++)
 		if (_taken_IDs[i] == false) {
 			_taken_IDs.set(i, true);
@@ -36,8 +35,7 @@ static const ImGuiColorEditFlags colourEditImGuiFlags = ImGuiColorEditFlags_Disp
 const static ImGuiChildFlags auto_resize_child_flags = ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY;
 
 void Light::DrawImGuiData(ImGuiIO& io) {
-	ImGuiStyle* style = &ImGui::GetStyle();
-	style->Colors[ImGuiCol_Header] = ImVec4(0.841, 0.618, 0.195, 0.31);
+
 	if (ImGui::CollapsingHeader("Emission", ImGuiTreeNodeFlags_Bullet)) {
 
 		static const char* type_list[] = { "Direction", "Position" };
@@ -51,5 +49,6 @@ void Light::DrawImGuiData(ImGuiIO& io) {
 			ImGui::SliderFloat("Attenuation", &falloff, 0, 1, "%.3f", ImGuiSliderFlags_Logarithmic);
 			ImGui::EndChild(); 
 	}
-	style->Colors[ImGuiCol_Header] = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
 }
+
+const ImVec4 Light::getHierarchyColour() { return ImVec4(0.841, 0.618, 0.195, 0.31); }

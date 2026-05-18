@@ -1,6 +1,5 @@
 #include "GLUTCallbacks.h"
 
-#include <iostream>
 #include "GLExtras.h"
 #include "UserInput.h"
 

@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Libraries\imgui">
       <UniqueIdentifier>{8e47cd49-36fc-43f8-ac2c-bcc2af29b02e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Libraries\FontAwesome">
+      <UniqueIdentifier>{a6ef28e9-5b66-4491-a24c-084f61146144}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\classes\Camera.cpp">
@@ -63,7 +66,7 @@
     <ClCompile Include="src\classes\Mesh.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="src\classes\Transform.cpp">
+    <ClCompile Include="src\classes\Model.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
     <ClCompile Include="src\namespaces\GLExtras.cpp">
@@ -108,14 +111,14 @@
     <ClCompile Include="src\classes\Scene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="src\namespaces\AssetCache.cpp">
-      <Filter>Source Files\Namespaces</Filter>
-    </ClCompile>
-    <ClCompile Include="src\classes\Basic_Transform.cpp">
+    <ClCompile Include="src\classes\Transform.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
     <ClCompile Include="src\classes\Lighting.cpp">
       <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\_Libraries\FontAwesome\font_awesome.cpp">
+      <Filter>Source Files\Libraries\FontAwesome</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +145,7 @@
     <ClInclude Include="includes\classes\Mesh.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="includes\classes\Transform.h">
+    <ClInclude Include="includes\classes\Model.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="includes\namespaces\GLExtras.h">
@@ -190,9 +193,6 @@
     <ClInclude Include="includes\classes\Scene.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="includes\namespaces\AssetCache.h">
-      <Filter>Header Files\Namespaces</Filter>
-    </ClInclude>
     <ClInclude Include="includes\_Libraries\imgui\imconfig.h">
       <Filter>Header Files\Libraries\imgui</Filter>
     </ClInclude>
@@ -223,7 +223,7 @@
     <ClInclude Include="includes\structs\Material.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="includes\classes\Basic_Transform.h">
+    <ClInclude Include="includes\classes\Transform.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="includes\structs\Lighting.h">
@@ -240,6 +240,12 @@
     </ClInclude>
     <ClInclude Include="includes\common_rendering.h">
       <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\common_imgui.h">
+      <Filter>Resource Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\_Libraries\FontAwesome\font_awesome.h">
+      <Filter>Header Files\Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

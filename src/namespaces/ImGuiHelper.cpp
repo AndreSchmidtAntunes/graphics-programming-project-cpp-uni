@@ -3,8 +3,8 @@
 #include "Camera.h"
 #include "GLExtras.h"
 #include "imguiLibs.h"
+#include "Model.h"
 #include "Scene.h"
-#include "Transform.h"
 #include "Vector3.h"
 #include <string>
 
@@ -36,15 +36,22 @@ namespace ImGuiHelper {
 		ImGui::End();
 	}
 
-	void DrawImGuiTransformFamily(ImGuiIO& io, Basic_Transform* transform, int* camera_following_radio_value) {
+	void DrawImGuiTransformFamily(ImGuiIO& io, Transform* transform, int* camera_following_radio_value) {
 		std::string name = "transform " + std::to_string(transform->getChildIndex());
 		const char* heading = name.c_str();
 
 		ImVec2 offset = ImGui::GetWindowPos();
 		offset.y += 20;
 		offset.x += 50;
+		
+		std::string display_name = transform->getIcon();
+		display_name += " ";
+		display_name += transform->getName();
+		ImGuiStyle* style = &ImGui::GetStyle();
 
-		if (ImGui::CollapsingHeader(transform->getName()))
+		style->Colors[ImGuiCol_Header] = transform->getHierarchyColour();
+
+		if (ImGui::CollapsingHeader(display_name.c_str()))
 		{
 			ImGui::BeginChild(heading, ImVec2(-1, 0), auto_resize_child_flags | ImGuiChildFlags_Borders);
 			{

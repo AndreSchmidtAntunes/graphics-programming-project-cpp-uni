@@ -66,6 +66,15 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3);
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 3);
 
+	io.Fonts->AddFontDefault();
+
+	static const ImWchar nerd_font_ranges[] = { 0xe000, 0xf8ff, 0 };
+
+	//ImFontConfig config;
+	//config.MergeMode = true;
+	//config.PixelSnapH = true;
+	//io.Fonts->AddFontFromFileTTF("fonts/HurmitNerdFont-Regular.otf", 16.0f, &config, nerd_font_ranges);
+
 	ImGui_ImplGLUT_Init();
 	ImGui_ImplOpenGL2_Init();
 
@@ -89,7 +98,6 @@ GL_entry_point::GL_entry_point(int argc, char* argv[]) : camera(new Camera), del
 
 	glEnable(GL_LIGHTING);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &(Colour(0.1f, 0.1f, 0.1f)[0]));
-
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);

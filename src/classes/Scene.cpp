@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "Transform.h"
+#include "Model.h"
 #include "Vector3.h"
 #include "Camera.h"
 
@@ -10,7 +10,7 @@ void Scene::setCamera(Camera* const camera) {
 	_camera = camera;
 }
 
-Scene::Scene(void) : root(new Basic_Transform(this)) {}
+Scene::Scene(void) : root(new Transform(this)) {}
 Scene::~Scene(void) { delete root; }
 
 void Scene::Clear(const size_t child_index) const {
@@ -18,19 +18,19 @@ void Scene::Clear(const size_t child_index) const {
 		root->DestroyChild(i);
 }
 
-Basic_Transform* const Scene::getChild(const size_t index) const {
+Transform* const Scene::getChild(const size_t index) const {
 	return root->getChild(index);
 }
 
-const std::vector<Basic_Transform*> Scene::getAllChildren() const {
+const std::vector<Transform*> Scene::getAllChildren() const {
 	return root->getChildren();
 }
 
-std::vector<Basic_Transform*> Scene::getAllChildren() {
+std::vector<Transform*> Scene::getAllChildren() {
 	return root->getChildren();
 }
 
-const int GetLowestAvailableID(const Basic_Transform* const root, int& lowest_unused_id) {
+const int GetLowestAvailableID(const Transform* const root, int& lowest_unused_id) {
 	if (root->getSceneTransformID() == lowest_unused_id)
 		lowest_unused_id++;
 

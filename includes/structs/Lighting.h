@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-#include "Basic_Transform.h"
+#include "Transform.h"
 #include "Colour.h"
 #include "Vector3.h"
 #include <bitset>
@@ -12,16 +12,15 @@ enum Light_Type : int {
 	Position = 1
 };
 
-class Light : public Basic_Transform {
+class Light : public Transform {
 
-	using Basic_Transform::Basic_Transform;
+	using Transform::Transform;
 
 	size_t _light_index;
 
 	bool _dirty_light = true; // A dirty light means that it was made with no available light slots.
 
 	static std::bitset<SAFE_MINIMUM_LIGHT_COUNT> _taken_IDs; // stores which ids are available to instantiate a light with.
-
 	static void setLight(const Light* const light);
 
 public:
@@ -33,13 +32,18 @@ public:
 	}
 
 	void DrawImGuiData(ImGuiIO& io);
+	const char* const getIcon() {
+		return "Q";
+	}
+
+	const ImVec4 getHierarchyColour();
 
 	Colour ambient;
 	Colour diffuse;
 	Colour specular;
 	float falloff = 0.1f;
 
-	Light(const char* name, Basic_Transform* const parent, const Vector3& local_position = Vector3::Zero, const Colour& ambient = Colour::Black, const Colour& diffuse = Colour::Black, const Colour& specular = Colour::Black);
+	Light(const char* name, Transform* const parent, const Vector3& local_position = Vector3::Zero, const Colour& ambient = Colour::Black, const Colour& diffuse = Colour::Black, const Colour& specular = Colour::Black);
 };
 
 inline std::bitset<SAFE_MINIMUM_LIGHT_COUNT> Light::_taken_IDs = 0;

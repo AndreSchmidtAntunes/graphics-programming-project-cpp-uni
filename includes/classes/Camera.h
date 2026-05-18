@@ -4,11 +4,11 @@
 #include "Quaternion.h"
 
 class Scene;
-class Basic_Transform;
+class Transform;
 
 class Camera {
 
-	void DrawFamilyHierarchy(const Basic_Transform* const parent) const;
+	void DrawFamilyHierarchy(const Transform* const parent) const;
 
 	Scene* _scene = nullptr;
 
@@ -24,7 +24,7 @@ public:
 
 	Quaternion rotation;
 
-	Basic_Transform* focused_transform = nullptr;
+	Transform* focused_transform = nullptr;
 
 	Camera(Vector3 eye, Vector3 position, Vector3 up, Vector3 right, Scene* const scene = nullptr) 
 		: eye(eye), position(position), up(up), right(right), _scene(scene) {}
